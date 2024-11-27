@@ -2,13 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 
 @Injectable()
-export class KafkaUsersService {
+export class KafkaHumanResourceService {
   constructor(
-    @Inject('users_service') private readonly kafKaUsersService: ClientKafka,
+    @Inject('hr_service')
+    private readonly kafKaHumanResourceService: ClientKafka,
   ) {}
   CreateUser(payload: any) {
-    this.kafKaUsersService.emit(
-      'create_user',
+    this.kafKaHumanResourceService.emit(
+      'create_personnel',
       JSON.stringify({ name: 'reza', id: 0, family: 'salmani' }),
     );
   }

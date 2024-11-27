@@ -1,25 +1,25 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { KafkaUsersService } from 'src/services/kafka.users';
+import { KafkaHumanResourceService } from 'src/services/kafka.hr';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: 'users_service',
+        name: 'hr_service',
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'users',
+            clientId: 'hr',
             brokers: ['localhost:9092'],
           },
           consumer: {
-            groupId: 'users_comsumer',
+            groupId: 'hr_comsumer',
           },
         },
       },
     ]),
   ],
-  providers: [KafkaUsersService],
+  providers: [KafkaHumanResourceService],
 })
 export class KafkaModule {}

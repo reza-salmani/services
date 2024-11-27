@@ -1,11 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { KafkaUsersService } from 'src/services/kafka.users';
+import { Controller } from '@nestjs/common';
 
 @Controller('users')
 export class UsersController {
-  constructor(private kafkaUserService: KafkaUsersService) {}
-  @Post()
-  CreateUser(@Body() payload: any) {
-    return this.kafkaUserService.CreateUser(payload);
-  }
+  constructor() {}
 }
