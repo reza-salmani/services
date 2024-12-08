@@ -13,18 +13,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  userName String @db.String
-  password String @db.String
-  email String @db.String
-  phone String @db.String
-  createDate String? @db.String
-  updateDate String? @db.String
-  deleteDate String? @db.String
-  isActive Boolean @db.Bool @default(false)
-  rules Rules @default(Guest)
+model User {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName  String   @db.String
+  lastName   String   @db.String
+  userName   String   @unique() @db.String
+  password   String   @db.String
+  email      String   @unique() @db.String
+  phone      String   @unique() @db.String
+  createDate String?  @db.String
+  updateDate String?  @db.String
+  deleteDate String?  @db.String
+  isDeleted  Boolean  @default(false) @db.Bool
+  isActive   Boolean  @default(false) @db.Bool
+  rules      String[] @default(["Guest"])
 }
+
 enum Rules {
   Guest
   Base

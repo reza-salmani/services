@@ -14,7 +14,7 @@ import { KafkaHumanResourceService } from 'src/services/kafka.hr';
             brokers: ['localhost:9092'],
           },
           consumer: {
-            groupId: 'hr_comsumer',
+            groupId: 'hr_consumer',
           },
         },
       },
