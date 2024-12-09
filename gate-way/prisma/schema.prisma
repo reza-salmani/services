@@ -26,7 +26,7 @@ model User {
   deleteDate String?  @db.String
   isDeleted  Boolean  @default(false) @db.Bool
   isActive   Boolean  @default(false) @db.Bool
-  rules      String[] @default(["Guest"])
+  rules      Rules[] @default([Guest])
 }
 
 enum Rules {

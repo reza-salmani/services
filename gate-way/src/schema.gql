@@ -1,0 +1,53 @@
+enum EnumRules {
+  Accountant
+  Admin
+  Base
+  Guest
+  Inspector
+  Manager
+  Security
+  User
+  Viewer
+}
+
+type Query {
+  userQuery(query: String): [Users!]!
+}
+
+type Users {
+  """تاریخ ایجاد"""
+  createDate: String
+
+  """تاریخ حذف"""
+  deleteDate: String
+
+  """ایمیل واقعی"""
+  email: String
+
+  """نام واقعی"""
+  firstName: String
+
+  """شناسه کاربر"""
+  id: String
+
+  """وضعیت فعال بودن کاربر"""
+  isActive: Boolean
+
+  """فامیلی واقعی"""
+  lastName: String
+
+  """رمزعبور"""
+  password: String
+
+  """شماره همراه"""
+  phone: String
+
+  """سطوح دسترسی"""
+  rules: [EnumRules!]
+
+  """تاریخ بروزرسانی"""
+  updateDate: String
+
+  """نام کاربری"""
+  userName: String
+}
