@@ -1,22 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma-client';
 import { User } from '@prisma/client';
+import { PrismaQuery, PrismaSingleQuery } from 'src/models/PrismaQuery';
 
 @Injectable()
 export class PrismaUsersService {
   constructor(private prismaService: PrismaService) {}
 
-  async GetAllUsersByQuery(queries: string) {
-    console.log(queries);
-    return this.prismaService.user
-      .findMany(queries ? JSON.parse(queries) : {})
-      .then();
+  async GetAllUsersByQuery(queries: PrismaQuery) {
+    return this.prismaService.user.findMany(queries).then();
   }
 
-  async GetUserByQuery(query: string) {
-    return this.prismaService.user
-      .findUnique({ where: JSON.parse(query) })
-      .then();
+  async GetUserByQuery(query: PrismaSingleQuery) {
+    return this.prismaService.user.findFirst(query).then();
   }
 
   async CreateUser(user: User) {

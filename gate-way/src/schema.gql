@@ -10,8 +10,23 @@ enum EnumRules {
   Viewer
 }
 
+input PrismaQuery {
+  cursor: cursor
+  distinct: distinct
+  orderBy: orderBy
+  select: select
+  skip: Int
+  take: Int
+  where: where
+}
+
+input PrismaSingleQuery {
+  where: where
+}
+
 type Query {
-  userQuery(query: String): [Users!]!
+  userQueries(queries: PrismaQuery): [Users!]!
+  userQuery(query: PrismaSingleQuery): Users!
 }
 
 type Users {
@@ -51,3 +66,13 @@ type Users {
   """نام کاربری"""
   userName: String
 }
+
+scalar cursor
+
+scalar distinct
+
+scalar orderBy
+
+scalar select
+
+scalar where
