@@ -1,3 +1,39 @@
+input ActiveUserDto {
+  """شناسه ها"""
+  ids: [String!]!
+  state: Boolean! = false
+}
+
+type Counter {
+  """تعداد انجام شده"""
+  count: Int
+}
+
+input CreateUserDto {
+  """ایمیل واقعی"""
+  email: String!
+
+  """نام واقعی"""
+  firstName: String!
+
+  """فامیلی واقعی"""
+  lastName: String!
+
+  """رمزعبور"""
+  password: String!
+
+  """شماره همراه"""
+  phone: String!
+
+  """نام کاربری"""
+  userName: String!
+}
+
+input DeleteUserDto {
+  """شناسه ها"""
+  ids: [String!]!
+}
+
 enum EnumRules {
   Accountant
   Admin
@@ -8,6 +44,15 @@ enum EnumRules {
   Security
   User
   Viewer
+}
+
+type Mutation {
+  ChangeActivation(activationUsersIds: ActiveUserDto!): Counter!
+  HardDeleteUsers(deleteUsersIds: DeleteUserDto!): Counter!
+  RevertDeletedUsers(deleteUsersIds: DeleteUserDto!): Counter!
+  SoftDeleteUsers(deleteUsersIds: DeleteUserDto!): Counter!
+  UpdateUser(userModel: UpdateUserDto!): Users!
+  userModel(userModel: CreateUserDto!): Users!
 }
 
 input PrismaQuery {
@@ -29,7 +74,7 @@ type Query {
   userQuery(query: PrismaSingleQuery): Users!
 }
 
-type Users {
+input UpdateUserDto {
   """تاریخ ایجاد"""
   createDate: String
 
@@ -43,10 +88,13 @@ type Users {
   firstName: String
 
   """شناسه کاربر"""
-  id: String
+  id: String!
 
   """وضعیت فعال بودن کاربر"""
   isActive: Boolean
+
+  """وضعیت حذف بودن کاربر"""
+  isDeleted: Boolean
 
   """فامیلی واقعی"""
   lastName: String
@@ -57,14 +105,61 @@ type Users {
   """شماره همراه"""
   phone: String
 
+  """تاریخ برگشت از حذف موقت"""
+  revertDate: String
+
   """سطوح دسترسی"""
-  rules: [EnumRules!]
+  rules: [EnumRules!] = [Guest]
 
   """تاریخ بروزرسانی"""
   updateDate: String
 
   """نام کاربری"""
   userName: String
+}
+
+type Users {
+  """تاریخ ایجاد"""
+  createDate: String
+
+  """تاریخ حذف"""
+  deleteDate: String
+
+  """ایمیل واقعی"""
+  email: String!
+
+  """نام واقعی"""
+  firstName: String!
+
+  """شناسه کاربر"""
+  id: String!
+
+  """وضعیت فعال بودن کاربر"""
+  isActive: Boolean
+
+  """وضعیت حذف بودن کاربر"""
+  isDeleted: Boolean
+
+  """فامیلی واقعی"""
+  lastName: String!
+
+  """رمزعبور"""
+  password: String!
+
+  """شماره همراه"""
+  phone: String!
+
+  """تاریخ برگشت از حذف موقت"""
+  revertDate: String
+
+  """سطوح دسترسی"""
+  rules: [EnumRules!]!
+
+  """تاریخ بروزرسانی"""
+  updateDate: String
+
+  """نام کاربری"""
+  userName: String!
 }
 
 scalar cursor

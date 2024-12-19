@@ -10,7 +10,7 @@ import { join } from 'path';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
-      playground: true,
+      playground: false,
       introspection: true, // when use production mode it should be true otherwise false
     }),
   ],

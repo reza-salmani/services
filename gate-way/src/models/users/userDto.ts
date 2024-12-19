@@ -4,14 +4,14 @@ import {
   IsPhoneNumber,
   IsStrongPassword,
 } from 'class-validator';
-import { Consts } from '../Utils/consts';
-import { Field, ObjectType, PartialType } from '@nestjs/graphql';
+import { Consts } from '../../Utils/consts';
+import { Field, InputType, PartialType } from '@nestjs/graphql';
 import { Rules } from '@prisma/client';
-import { EnumRules } from './base';
+import { EnumRules } from '../base';
 
-@ObjectType()
+@InputType()
 export class CreateUserDto {
-  @Field({
+  @Field((type) => String, {
     nullable: false,
     name: 'firstName',
     description: Consts.yourRealName,
@@ -19,7 +19,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   firstName: string;
 
-  @Field({
+  @Field((type) => String, {
     nullable: false,
     name: 'lastName',
     description: Consts.yourRealFamily,
@@ -27,16 +27,24 @@ export class CreateUserDto {
   @IsNotEmpty({ message: Consts.lastNameRequiredMessage })
   lastName: string;
 
-  @Field({ nullable: false, name: 'email', description: Consts.yourRealEmail })
+  @Field((type) => String, {
+    nullable: false,
+    name: 'email',
+    description: Consts.yourRealEmail,
+  })
   @IsEmail()
   @IsNotEmpty({ message: Consts.emailRequiredMessage })
   email: string;
 
-  @Field({ nullable: false, name: 'phone', description: Consts.yourRealPhone })
+  @Field((type) => String, {
+    nullable: false,
+    name: 'phone',
+    description: Consts.yourRealPhone,
+  })
   @IsPhoneNumber('IR', { message: Consts.phoneRequiredMessage })
   phone: string;
 
-  @Field({
+  @Field((type) => String, {
     nullable: false,
     name: 'userName',
     description: Consts.yourUserName,
@@ -44,7 +52,7 @@ export class CreateUserDto {
   @IsNotEmpty({ message: Consts.usernameRequiredMessage })
   userName: string;
 
-  @Field({
+  @Field((type) => String, {
     nullable: false,
     name: 'password',
     description: Consts.yourPassword,
@@ -54,37 +62,62 @@ export class CreateUserDto {
   password: string;
 }
 
-@ObjectType()
+@InputType()
 export class UpdateUserDto extends PartialType(CreateUserDto) {
-  @Field({
+  @Field(() => String, {
     nullable: false,
     name: 'id',
     description: Consts.yourUserIdentifier,
   })
   @IsNotEmpty({ message: Consts.UserIdIsRequired })
   id: string;
-  @Field({ nullable: true, name: 'createDate', description: Consts.createDate })
+  @Field(() => String, {
+    nullable: true,
+    name: 'createDate',
+    description: Consts.createDate,
+  })
   createDate: string;
-  @Field({ nullable: true, name: 'updateDate', description: Consts.updateDate })
+  @Field(() => String, {
+    nullable: true,
+    name: 'updateDate',
+    description: Consts.updateDate,
+  })
   updateDate: string;
-  @Field({ nullable: true, name: 'deleteDate', description: Consts.deleteDate })
+  @Field(() => String, {
+    nullable: true,
+    name: 'deleteDate',
+    description: Consts.deleteDate,
+  })
   deleteDate: string;
-  @Field({ nullable: true, name: 'isActive', description: Consts.isActive })
+  @Field(() => String, {
+    nullable: true,
+    name: 'revertDate',
+    description: Consts.revertDate,
+  })
+  revertDate: string;
+  @Field(() => Boolean, {
+    nullable: true,
+    name: 'isActive',
+    description: Consts.isActive,
+  })
   isActive: boolean;
+  @Field(() => Boolean, {
+    nullable: true,
+    name: 'isDeleted',
+    description: Consts.isDeleted,
+  })
+  isDeleted: boolean;
 
   @Field(() => [EnumRules], {
-    nullable: false,
+    nullable: true,
     name: 'rules',
     description: Consts.rules,
     defaultValue: [Rules.Guest],
   })
-  rules: EnumRules[];
+  rules: Rules[];
 }
 
-@ObjectType()
-export class Users extends PartialType(UpdateUserDto) {}
-
-@ObjectType()
+@InputType()
 export class DeleteUserDto {
   @Field(() => [String], {
     nullable: false,
@@ -94,7 +127,7 @@ export class DeleteUserDto {
   ids: string[];
 }
 
-@ObjectType()
+@InputType()
 export class ActiveUserDto {
   @Field(() => [String], {
     nullable: false,
@@ -102,9 +135,11 @@ export class ActiveUserDto {
     description: Consts.ids,
   })
   ids: string[];
+  @Field(() => Boolean, { name: 'state', nullable: false, defaultValue: false })
+  state: boolean;
 }
 
-@ObjectType()
+@InputType()
 export class AddRulesToUserDto {
   @Field(() => [String], {
     nullable: false,
@@ -119,5 +154,5 @@ export class AddRulesToUserDto {
     description: Consts.rules,
     defaultValue: [Rules.Guest],
   })
-  rules: EnumRules[];
+  rules: Rules[];
 }

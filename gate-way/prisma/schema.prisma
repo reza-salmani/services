@@ -24,6 +24,7 @@ model User {
   createDate String?  @db.String
   updateDate String?  @db.String
   deleteDate String?  @db.String
+  revertDate String?  @db.String
   isDeleted  Boolean  @default(false) @db.Bool
   isActive   Boolean  @default(false) @db.Bool
   rules      Rules[] @default([Guest])
