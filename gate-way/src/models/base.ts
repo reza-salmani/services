@@ -1,7 +1,7 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Consts } from 'src/Utils/consts';
 
-export enum EnumRules {
+export enum EnumRoles {
   Guest = 'Guest',
   Base = 'Base',
   User = 'User',
@@ -16,7 +16,7 @@ export enum EnumRules {
 /**
  * for using custom enum in graphql we should register it first
  */
-registerEnumType(EnumRules, { name: 'EnumRules' });
+registerEnumType(EnumRoles, { name: 'EnumRoles' });
 
 @ObjectType()
 export class Counter {

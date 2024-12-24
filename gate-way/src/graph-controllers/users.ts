@@ -1,8 +1,9 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
-  ActiveUserDto,
   CreateUserDto,
   DeleteUserDto,
+  ToggleActiveUserDto,
+  UpdateRolesToUserDto,
   UpdateUserDto,
 } from '../models/users/userDto';
 import { PrismaUsersService } from '../services/prisma.users';
@@ -15,6 +16,7 @@ export class UsersResolver {
   constructor(private prismaRequestService: PrismaUsersService) {}
 
   @Query(() => [Users], { name: 'userQueries' })
+  //@UnUseRoles(EnumRoles.Guest)
   async GetUsersByQuery(
     @Args('queries', { nullable: true, type: () => PrismaQuery })
     query: PrismaQuery,
@@ -31,6 +33,7 @@ export class UsersResolver {
   }
 
   @Mutation(() => Users, { name: 'userModel' })
+  // @UseRoles(EnumRoles.Admin, EnumRoles.User)
   async CreateUser(
     @Args({ nullable: false, name: 'userModel', type: () => CreateUserDto })
     userModel: CreateUserDto,
@@ -86,13 +89,25 @@ export class UsersResolver {
   async ChangeActivation(
     @Args({
       nullable: false,
-      name: 'activationUsersIds',
-      type: () => ActiveUserDto,
+      name: 'ToggleActiveUser',
+      type: () => ToggleActiveUserDto,
     })
-    activationUsersIds: ActiveUserDto,
+    activationUsersIds: ToggleActiveUserDto,
   ) {
     return await this.prismaRequestService.ChangeActivationUsers(
       activationUsersIds,
     );
+  }
+
+  @Mutation(() => Counter)
+  async UpdateUserRoles(
+    @Args({
+      nullable: false,
+      name: 'UpdateRolesToUser',
+      type: () => UpdateRolesToUserDto,
+    })
+    activationUsers: UpdateRolesToUserDto,
+  ) {
+    return await this.prismaRequestService.UpdateUserRoles(activationUsers);
   }
 }

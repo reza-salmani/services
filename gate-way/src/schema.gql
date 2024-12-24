@@ -1,8 +1,6 @@
-input ActiveUserDto {
-  """شناسه ها"""
-  ids: [String!]!
-  state: Boolean! = false
-}
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
 
 type Counter {
   """تعداد انجام شده"""
@@ -34,7 +32,7 @@ input DeleteUserDto {
   ids: [String!]!
 }
 
-enum EnumRules {
+enum EnumRoles {
   Accountant
   Admin
   Base
@@ -46,12 +44,38 @@ enum EnumRules {
   Viewer
 }
 
+input ForgotPasswordDto {
+  """نام کاربری"""
+  username: String! = ""
+}
+
+type ForgotPasswordModel {
+  """نام کاربری"""
+  username: String!
+}
+
+input LoginDto {
+  """رمزعبور"""
+  password: String! = ""
+
+  """نام کاربری"""
+  username: String! = ""
+}
+
+type LoginResponse {
+  """توکن"""
+  access_token: String!
+}
+
 type Mutation {
-  ChangeActivation(activationUsersIds: ActiveUserDto!): Counter!
+  ChangeActivation(ToggleActiveUser: ToggleActiveUserDto!): Counter!
   HardDeleteUsers(deleteUsersIds: DeleteUserDto!): Counter!
   RevertDeletedUsers(deleteUsersIds: DeleteUserDto!): Counter!
   SoftDeleteUsers(deleteUsersIds: DeleteUserDto!): Counter!
   UpdateUser(userModel: UpdateUserDto!): Users!
+  UpdateUserRoles(UpdateRolesToUser: UpdateRolesToUserDto!): Counter!
+  forgotPassword(forgotModel: ForgotPasswordDto!): ForgotPasswordModel!
+  login(loginModel: LoginDto!): LoginResponse!
   userModel(userModel: CreateUserDto!): Users!
 }
 
@@ -74,7 +98,24 @@ type Query {
   userQuery(query: PrismaSingleQuery): Users!
 }
 
+input ToggleActiveUserDto {
+  """شناسه ها"""
+  ids: [String!]!
+  state: Boolean! = false
+}
+
+input UpdateRolesToUserDto {
+  """سطوح دسترسی"""
+  Roles: [EnumRoles!]! = [Guest]
+
+  """شناسه ها"""
+  ids: [String!]!
+}
+
 input UpdateUserDto {
+  """سطوح دسترسی"""
+  Roles: [EnumRoles!] = [Guest]
+
   """تاریخ ایجاد"""
   createDate: String
 
@@ -99,26 +140,20 @@ input UpdateUserDto {
   """فامیلی واقعی"""
   lastName: String
 
-  """رمزعبور"""
-  password: String
-
   """شماره همراه"""
   phone: String
 
   """تاریخ برگشت از حذف موقت"""
   revertDate: String
 
-  """سطوح دسترسی"""
-  rules: [EnumRules!] = [Guest]
-
   """تاریخ بروزرسانی"""
   updateDate: String
-
-  """نام کاربری"""
-  userName: String
 }
 
 type Users {
+  """سطوح دسترسی"""
+  Roles: [EnumRoles!]!
+
   """تاریخ ایجاد"""
   createDate: String
 
@@ -151,9 +186,6 @@ type Users {
 
   """تاریخ برگشت از حذف موقت"""
   revertDate: String
-
-  """سطوح دسترسی"""
-  rules: [EnumRules!]!
 
   """تاریخ بروزرسانی"""
   updateDate: String

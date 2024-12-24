@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bg-custom-color {
+  background: url(/images/OIG4.jpg) no-repeat fixed;
+  background-size: cover;
+  background-position: center;
+}

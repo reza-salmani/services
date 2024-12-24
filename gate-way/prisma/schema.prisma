@@ -14,23 +14,33 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  firstName  String   @db.String
-  lastName   String   @db.String
-  userName   String   @unique() @db.String
-  password   String   @db.String
-  email      String   @unique() @db.String
-  phone      String   @unique() @db.String
-  createDate String?  @db.String
-  updateDate String?  @db.String
-  deleteDate String?  @db.String
-  revertDate String?  @db.String
-  isDeleted  Boolean  @default(false) @db.Bool
-  isActive   Boolean  @default(false) @db.Bool
-  rules      Rules[] @default([Guest])
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  firstName  String  @db.String
+  lastName   String  @db.String
+  userName   String  @unique() @db.String
+  email      String  @unique() @db.String
+  phone      String  @unique() @db.String
+  password   String  @db.String
+  createDate String? @db.String
+  updateDate String? @db.String
+  deleteDate String? @db.String
+  revertDate String? @db.String
+  isDeleted  Boolean @default(false) @db.Bool
+  isActive   Boolean @default(false) @db.Bool
+  roles      Roles[] @default([Guest])
+  Auth       Auth[]
 }
 
-enum Rules {
+model Auth {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  token        String @db.String
+  refreshToken String @db.String
+  timeOut      String @db.String
+  userId       String @db.ObjectId
+  user         User   @relation(fields: [userId], references: [id])
+}
+
+enum Roles {
   Guest
   Base
   User

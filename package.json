@@ -1,0 +1,23 @@
+{
+  "name": "services",
+  "version": "1.0.0",
+  "description": "this is global managing.",
+  "main": "index.js",
+  "scripts": {
+    "gw": "cd gate-way && npm run start:dev",
+    "ui": "cd user-interface && npm run dev PORT=3001",
+    "hr": "cd human-resource && npm run start:debug",
+    "logestic": "cd logestic && npm run start:debug",
+    "messaging": "cd logestic && npm run start:debug",
+    "payroll": "cd logestic && npm run start:debug",
+    "tc": "cd logestic && npm run start:debug"
+  },
+  "keywords": [
+    "microservice",
+    "graphql",
+    "kafka",
+    "react"
+  ],
+  "author": "R.Salmani",
+  "license": "ISC"
+}

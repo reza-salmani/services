@@ -5,10 +5,11 @@ import {
   IsStrongPassword,
 } from 'class-validator';
 import { Consts } from '../../Utils/consts';
-import { Field, InputType, PartialType } from '@nestjs/graphql';
-import { Rules } from '@prisma/client';
-import { EnumRules } from '../base';
+import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
+import { Roles } from '@prisma/client';
+import { EnumRoles } from '../base';
 
+//#region  Create User
 @InputType()
 export class CreateUserDto {
   @Field((type) => String, {
@@ -61,9 +62,13 @@ export class CreateUserDto {
   @IsNotEmpty({ message: Consts.passwordRequiredMessage })
   password: string;
 }
+//#endregion
 
+//#region Update User
 @InputType()
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDto extends PartialType(
+  OmitType(CreateUserDto, ['password', 'userName']),
+) {
   @Field(() => String, {
     nullable: false,
     name: 'id',
@@ -108,15 +113,17 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   })
   isDeleted: boolean;
 
-  @Field(() => [EnumRules], {
+  @Field(() => [EnumRoles], {
     nullable: true,
-    name: 'rules',
-    description: Consts.rules,
-    defaultValue: [Rules.Guest],
+    name: 'Roles',
+    description: Consts.Roles,
+    defaultValue: [Roles.Guest],
   })
-  rules: Rules[];
+  Roles: Roles[];
 }
+//#endregion
 
+//#region Delete Users
 @InputType()
 export class DeleteUserDto {
   @Field(() => [String], {
@@ -126,9 +133,11 @@ export class DeleteUserDto {
   })
   ids: string[];
 }
+//#endregion
 
+//#region Toggle  Active Users
 @InputType()
-export class ActiveUserDto {
+export class ToggleActiveUserDto {
   @Field(() => [String], {
     nullable: false,
     name: 'ids',
@@ -138,9 +147,12 @@ export class ActiveUserDto {
   @Field(() => Boolean, { name: 'state', nullable: false, defaultValue: false })
   state: boolean;
 }
+//#endregion
+
+//#region Update Roles To User
 
 @InputType()
-export class AddRulesToUserDto {
+export class UpdateRolesToUserDto {
   @Field(() => [String], {
     nullable: false,
     name: 'ids',
@@ -148,11 +160,12 @@ export class AddRulesToUserDto {
   })
   ids: string[];
 
-  @Field(() => [EnumRules], {
+  @Field(() => [EnumRoles], {
     nullable: false,
-    name: 'rules',
-    description: Consts.rules,
-    defaultValue: [Rules.Guest],
+    name: 'Roles',
+    description: Consts.Roles,
+    defaultValue: [Roles.Guest],
   })
-  rules: Rules[];
+  Roles: Roles[];
 }
+//#endregion

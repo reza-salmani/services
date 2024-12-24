@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/services/prisma-client';
+import { Tools } from './tools';
 
 @Injectable()
 export class TasksService {
@@ -17,10 +18,10 @@ export class TasksService {
             lastName: 'admin',
             email: 'r.salmani.programming@gmail.com',
             phone: '09356436243',
-            password: 'admin@r.R',
+            password: await Tools.hash('admin@r.R'),
             userName: 'admin',
             createDate: new Date().toISOString(),
-            rules: ['Admin'],
+            roles: ['Admin'],
             isActive: true,
             isDeleted: false,
           },

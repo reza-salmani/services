@@ -1,5 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { Rules } from '@prisma/client';
+import { Roles } from '@prisma/client';
 import {
   IsNotEmpty,
   IsEmail,
@@ -7,7 +7,7 @@ import {
   IsStrongPassword,
 } from 'class-validator';
 import { Consts } from 'src/Utils/consts';
-import { EnumRules } from '../base';
+import { EnumRoles } from '../base';
 
 @ObjectType()
 export class Users {
@@ -104,11 +104,11 @@ export class Users {
   })
   isDeleted: boolean;
 
-  @Field(() => [EnumRules], {
+  @Field(() => [EnumRoles], {
     nullable: false,
-    name: 'rules',
-    description: Consts.rules,
-    defaultValue: [Rules.Guest],
+    name: 'Roles',
+    description: Consts.Roles,
+    defaultValue: [Roles.Guest],
   })
-  rules: Rules[];
+  roles: Roles[];
 }
