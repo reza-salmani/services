@@ -1,17 +1,16 @@
+import { ObjectType, Field } from '@nestjs/graphql';
+import { Roles } from '@prisma/client';
 import {
-  IsEmail,
   IsNotEmpty,
+  IsEmail,
   IsPhoneNumber,
   IsStrongPassword,
 } from 'class-validator';
-import { Consts } from '../../Utils/consts';
-import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
-import { Roles } from '@prisma/client';
-import { EnumRoles } from '../base';
+import { Consts } from 'src/Utils/consts';
+import { EnumRoles } from '../bases/base';
 
-//#region  Create User
-@InputType()
-export class CreateUserDto {
+@ObjectType()
+export class Users {
   @Field((type) => String, {
     nullable: false,
     name: 'firstName',
@@ -61,14 +60,6 @@ export class CreateUserDto {
   @IsStrongPassword({ minLength: 2 }, { message: Consts.minLengthOfPassword })
   @IsNotEmpty({ message: Consts.passwordRequiredMessage })
   password: string;
-}
-//#endregion
-
-//#region Update User
-@InputType()
-export class UpdateUserDto extends PartialType(
-  OmitType(CreateUserDto, ['password', 'userName']),
-) {
   @Field(() => String, {
     nullable: false,
     name: 'id',
@@ -114,58 +105,10 @@ export class UpdateUserDto extends PartialType(
   isDeleted: boolean;
 
   @Field(() => [EnumRoles], {
-    nullable: true,
-    name: 'Roles',
-    description: Consts.Roles,
-    defaultValue: [Roles.Guest],
-  })
-  Roles: Roles[];
-}
-//#endregion
-
-//#region Delete Users
-@InputType()
-export class DeleteUserDto {
-  @Field(() => [String], {
-    nullable: false,
-    name: 'ids',
-    description: Consts.ids,
-  })
-  ids: string[];
-}
-//#endregion
-
-//#region Toggle  Active Users
-@InputType()
-export class ToggleActiveUserDto {
-  @Field(() => [String], {
-    nullable: false,
-    name: 'ids',
-    description: Consts.ids,
-  })
-  ids: string[];
-  @Field(() => Boolean, { name: 'state', nullable: false, defaultValue: false })
-  state: boolean;
-}
-//#endregion
-
-//#region Update Roles To User
-
-@InputType()
-export class UpdateRolesToUserDto {
-  @Field(() => [String], {
-    nullable: false,
-    name: 'ids',
-    description: Consts.ids,
-  })
-  ids: string[];
-
-  @Field(() => [EnumRoles], {
     nullable: false,
     name: 'Roles',
     description: Consts.Roles,
     defaultValue: [Roles.Guest],
   })
-  Roles: Roles[];
+  roles: Roles[];
 }
-//#endregion

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { KafkaHumanResourceService } from 'src/services/kafka.hr';
+import { KafkaHumanResourceService } from 'src/bases/services/kafka.hr';
 
 @Module({
   imports: [

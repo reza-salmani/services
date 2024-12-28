@@ -5,11 +5,11 @@ import {
   ToggleActiveUserDto,
   UpdateRolesToUserDto,
   UpdateUserDto,
-} from '../models/users/userDto';
-import { PrismaUsersService } from '../services/prisma.users';
-import { PrismaQuery, PrismaSingleQuery } from 'src/models/PrismaQuery';
-import { Users } from 'src/models/users/userModel';
-import { Counter } from 'src/models/base';
+} from './users.model.dto';
+import { PrismaUsersService } from './users.prisma.service';
+import { PrismaQuery, PrismaSingleQuery } from 'src/bases/PrismaQuery';
+import { Users } from 'src/users/users.model';
+import { Counter } from 'src/bases/base';
 
 @Resolver(() => [Users])
 export class UsersResolver {

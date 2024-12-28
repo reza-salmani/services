@@ -44,29 +44,6 @@ enum EnumRoles {
   Viewer
 }
 
-input ForgotPasswordDto {
-  """نام کاربری"""
-  username: String! = ""
-}
-
-type ForgotPasswordModel {
-  """نام کاربری"""
-  username: String!
-}
-
-input LoginDto {
-  """رمزعبور"""
-  password: String! = ""
-
-  """نام کاربری"""
-  username: String! = ""
-}
-
-type LoginResponse {
-  """توکن"""
-  access_token: String!
-}
-
 type Mutation {
   ChangeActivation(ToggleActiveUser: ToggleActiveUserDto!): Counter!
   HardDeleteUsers(deleteUsersIds: DeleteUserDto!): Counter!
@@ -74,8 +51,6 @@ type Mutation {
   SoftDeleteUsers(deleteUsersIds: DeleteUserDto!): Counter!
   UpdateUser(userModel: UpdateUserDto!): Users!
   UpdateUserRoles(UpdateRolesToUser: UpdateRolesToUserDto!): Counter!
-  forgotPassword(forgotModel: ForgotPasswordDto!): ForgotPasswordModel!
-  login(loginModel: LoginDto!): LoginResponse!
   userModel(userModel: CreateUserDto!): Users!
 }
 

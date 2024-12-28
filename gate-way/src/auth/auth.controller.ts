@@ -1,10 +1,11 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { ForgotPasswordDto, LoginDto } from 'src/models/auth/authDto';
-import { ForgotPasswordModel, LoginResponse } from 'src/models/auth/authModel';
+import { ForgotPasswordDto, LoginDto } from 'src/auth/auth.model.dto';
+import { ForgotPasswordModel, LoginResponse } from 'src/auth/auth.model';
+import { PrismaService } from 'src/bases/services/prisma-client';
 
 @Resolver()
 export class AuthResolver {
-  constructor() {}
+  constructor(private prismaService: PrismaService) {}
 
   @Mutation(() => LoginResponse, { name: 'login' })
   async Login(

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma-client';
-import { JwtPayLoad, LoginModel } from 'src/models/auth/authModel';
+import { PrismaService } from '../bases/services/prisma-client';
+import { JwtPayLoad, LoginModel } from 'src/auth/auth.model';
 import { Tools } from 'src/Utils/tools';
 import { Consts } from 'src/Utils/consts';
 
