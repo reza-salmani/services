@@ -27,5 +27,8 @@ export const Consts = {
   Count: 'تعداد انجام شده',
   loginParamsIsNotValid: 'مقادیر وارد شده معتبر نیستند',
   accessToken: 'توکن',
+  refreshToken: 'توکن تازه سازی',
   Duplicated: 'تکراری',
+  unAuthorized: 'مجوزی وجود ندارد',
+  successfullyLogOut: 'با موفقیت از برنامه خارج شدید.',
 };

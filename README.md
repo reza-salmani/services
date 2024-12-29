@@ -8,5 +8,4 @@ Graphql Section:
 
 ## project proccessing info
 
-- I was Worked on authentication in gate-way service
-- I created class for auth service, module and models for it
+- I was work on authorization

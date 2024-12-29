@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Roles } from '@prisma/client';
 import { Consts } from 'src/Utils/consts';
 
 //#region Login
@@ -24,6 +25,7 @@ export class ForgotPasswordModel {
 export class JwtPayLoad {
   userName: string;
   sub: string;
+  roles: Roles[];
 }
 
 @ObjectType()
@@ -33,4 +35,9 @@ export class LoginResponse {
     description: Consts.accessToken,
   })
   access_token: string;
+  @Field(() => String, {
+    name: 'refresh_token',
+    description: Consts.refreshToken,
+  })
+  refresh_token: string;
 }

@@ -29,4 +29,10 @@ export let Tools = {
   compareHash: async (password: string, hash: string) => {
     return bcript.compareSync(password, hash);
   },
+  getNumberFromString: (str: string) => {
+    return str.replace(/[^\d]/g, ' ').trim().split(/\s+/).map(Number);
+  },
+  matchs: (item1: string[], item2: string[]) => {
+    return item1.some((x) => item2.some((y) => y === x));
+  },
 };

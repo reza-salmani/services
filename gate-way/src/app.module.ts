@@ -8,6 +8,10 @@ import { ConfigModule } from '@nestjs/config';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { UserModule } from './users/users.module';
 import { PrismaService } from './bases/services/prisma-client';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './auth/jwt.strategy';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -19,8 +23,18 @@ import { PrismaService } from './bases/services/prisma-client';
       http: process.env.NODE_ENV !== 'production',
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [],
-  providers: [PrismaClient, PrismaService, TasksService],
+  providers: [
+    PrismaClient,
+    PrismaService,
+    TasksService,
+    JwtService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}
