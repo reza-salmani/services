@@ -5,13 +5,17 @@ import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { printSchema } from 'graphql/utilities';
 import { GraphQLSchemaHost } from '@nestjs/graphql';
-
+import {} from 'cors';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     snapshot: true,
     abortOnError: false,
   });
   app.useGlobalPipes(new ValidationPipe());
+  app.enableCors({
+    credentials: true,
+    origin: ['http://localhost:3001'],
+  });
   await app.listen(process.env.PORT ?? 3000);
   if (process.env.NODE_ENV === 'production') {
     const { schema } = app.get(GraphQLSchemaHost);

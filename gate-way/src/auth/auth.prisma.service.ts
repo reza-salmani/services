@@ -5,6 +5,7 @@ import { Tools } from 'src/Utils/tools';
 import { Consts } from 'src/Utils/consts';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { ForgotPasswordDto } from './auth.model.dto';
 
 @Injectable()
 export class PrismaAuthService {
@@ -132,5 +133,9 @@ export class PrismaAuthService {
       });
     }
   }
+  //#endregion
+
+  //#region forgot password
+  async ForgotPassword(forgotPasswordModel: ForgotPasswordDto) {}
   //#endregion
 }

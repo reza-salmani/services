@@ -32,6 +32,8 @@ export class AuthResolver {
       name: 'forgotModel',
       type: () => ForgotPasswordDto,
     })
-    loginModel: ForgotPasswordDto,
-  ) {}
+    forgotPasswordModel: ForgotPasswordDto,
+  ) {
+    this.authService.ForgotPassword(forgotPasswordModel);
+  }
 }

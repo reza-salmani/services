@@ -37,11 +37,15 @@ export class JWTRefreshTokenStrategy extends PassportStrategy(
     });
   }
   validate(req: Request, payload: any) {
-    const refreshToken = req.headers
-      .get('authorization')
-      .replace('Bearer', '')
-      .trim();
-    return { ...payload, refreshToken };
+    if (req.headers.get('authorization')) {
+      const refreshToken = req.headers
+        .get('authorization')
+        .replace('Bearer', '')
+        .trim();
+      return { ...payload, refreshToken };
+    } else {
+      return null;
+    }
   }
 }
 
@@ -69,6 +73,9 @@ export class RolesGuard implements CanActivate {
       return true;
     }
     let ctx = GqlExecutionContext.create(context);
+    if (!ctx.getContext().req.get('authorization')) {
+      return false;
+    }
     const headerInfo = this.jwtService.decode(
       ctx.getContext().req.get('authorization').replace('Bearer', '').trim(),
     );

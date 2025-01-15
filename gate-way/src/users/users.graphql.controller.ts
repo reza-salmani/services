@@ -17,7 +17,7 @@ import { GqlAuthGuard, HasNotRoles, HasRoles } from 'src/auth/jwt.strategy';
 export class UsersResolver {
   constructor(private prismaRequestService: PrismaUsersService) {}
   @HasNotRoles([EnumRoles.Guest])
-  @Query(() => [Users], { name: 'userQueries' })
+  @Query(() => [Users], { name: 'GetAllUsersWithQuery' })
   async GetUsersByQuery(
     @Args('queries', { nullable: true, type: () => PrismaQuery })
     query: PrismaQuery,
@@ -26,7 +26,7 @@ export class UsersResolver {
   }
 
   @HasNotRoles([EnumRoles.Guest])
-  @Query(() => Users, { name: 'userQuery' })
+  @Query(() => Users, { name: 'getUserByQuery' })
   async GetUserByQuery(
     @Args('query', { nullable: true, type: () => PrismaSingleQuery })
     query: PrismaSingleQuery,
@@ -35,7 +35,7 @@ export class UsersResolver {
   }
 
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
-  @Mutation(() => Users, { name: 'userModel' })
+  @Mutation(() => Users, { name: 'CreateUser' })
   // @UseRoles(EnumRoles.Admin, EnumRoles.User)
   async CreateUser(
     @Args({ nullable: false, name: 'userModel', type: () => CreateUserDto })
@@ -45,7 +45,7 @@ export class UsersResolver {
   }
 
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
-  @Mutation(() => Users)
+  @Mutation(() => Users, { name: 'UpdateUser' })
   async UpdateUser(
     @Args({ nullable: false, name: 'userModel', type: () => UpdateUserDto })
     userModel: UpdateUserDto,
@@ -54,7 +54,7 @@ export class UsersResolver {
   }
 
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
-  @Mutation(() => Counter)
+  @Mutation(() => Counter, { name: 'DeleteUsers' })
   async SoftDeleteUsers(
     @Args({
       nullable: false,
@@ -67,7 +67,7 @@ export class UsersResolver {
   }
 
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager])
-  @Mutation(() => Counter)
+  @Mutation(() => Counter, { name: 'ReverUsers' })
   async RevertDeletedUsers(
     @Args({
       nullable: false,
@@ -80,7 +80,7 @@ export class UsersResolver {
   }
 
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager])
-  @Mutation(() => Counter)
+  @Mutation(() => Counter, { name: 'DeleteUserPermanently' })
   async HardDeleteUsers(
     @Args({
       nullable: false,
@@ -93,7 +93,7 @@ export class UsersResolver {
   }
 
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
-  @Mutation(() => Counter)
+  @Mutation(() => Counter, { name: 'ChangeActivation' })
   async ChangeActivation(
     @Args({
       nullable: false,
@@ -108,7 +108,7 @@ export class UsersResolver {
   }
 
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager])
-  @Mutation(() => Counter)
+  @Mutation(() => Counter, { name: 'UpdateUserRoles' })
   async UpdateUserRoles(
     @Args({
       nullable: false,

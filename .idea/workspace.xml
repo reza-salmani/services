@@ -5,22 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7482020e-60ae-4b6d-b5c2-46ed84bcc8dd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/gate-way/src/Utils/tasks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/gate-way/src/Utils/tasks.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/gate-way/src/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/graph-controllers/auth.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/graph-controllers/users.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/models/PrismaQuery.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/models/auth/authDto.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/models/auth/authModel.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/models/base.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/models/users/userDto.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/models/users/userModel.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/modules/Graphql.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/modules/kafka.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/services/kafka.hr.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/services/prisma-client.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/services/prisma.auth.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gate-way/src/services/prisma.users.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gate-way/src/auth/auth.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/gate-way/src/auth/auth.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gate-way/src/auth/auth.prisma.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/gate-way/src/auth/auth.prisma.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gate-way/src/auth/jwt.strategy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/gate-way/src/auth/jwt.strategy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gate-way/src/schema.gql" beforeDir="false" afterPath="$PROJECT_DIR$/gate-way/src/schema.gql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gate-way/src/users/users.graphql.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/gate-way/src/users/users.graphql.controller.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,22 +20,22 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "reza-salmani"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;reza-salmani&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/reza-salmani/services.git",
-    "accountId": "7e15f0f5-0a0c-4cd6-8cd6-b9b53160276e"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/reza-salmani/services.git&quot;,
+    &quot;accountId&quot;: &quot;7e15f0f5-0a0c-4cd6-8cd6-b9b53160276e&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 4
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2qoBOX86t3NyEvk5dyeKmkarOy0" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
@@ -60,7 +50,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/projects",
+    "last_opened_file_path": "C:/Users/Rs-Pr/WebstormProjects/multi_language_erp",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -86,6 +76,7 @@
       <option name="presentableId" value="Default" />
       <updated>1735319017150</updated>
       <workItem from="1735319018531" duration="1083000" />
+      <workItem from="1736333311366" duration="28000" />
     </task>
     <servers />
   </component>

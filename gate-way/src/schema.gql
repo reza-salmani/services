@@ -72,16 +72,16 @@ type LoginResponse {
 
 type Mutation {
   ChangeActivation(ToggleActiveUser: ToggleActiveUserDto!): Counter!
-  HardDeleteUsers(deleteUsersIds: DeleteUserDto!): Counter!
-  RevertDeletedUsers(deleteUsersIds: DeleteUserDto!): Counter!
-  SoftDeleteUsers(deleteUsersIds: DeleteUserDto!): Counter!
+  CreateUser(userModel: CreateUserDto!): Users!
+  DeleteUserPermanently(deleteUsersIds: DeleteUserDto!): Counter!
+  DeleteUsers(deleteUsersIds: DeleteUserDto!): Counter!
+  ReverUsers(deleteUsersIds: DeleteUserDto!): Counter!
   UpdateUser(userModel: UpdateUserDto!): Users!
   UpdateUserRoles(UpdateRolesToUser: UpdateRolesToUserDto!): Counter!
   forgotPassword(forgotModel: ForgotPasswordDto!): ForgotPasswordModel!
   login(loginModel: LoginDto!): LoginResponse!
   logout: String!
   refreshToken: LoginResponse!
-  userModel(userModel: CreateUserDto!): Users!
 }
 
 input PrismaQuery {
@@ -99,8 +99,8 @@ input PrismaSingleQuery {
 }
 
 type Query {
-  userQueries(queries: PrismaQuery): [Users!]!
-  userQuery(query: PrismaSingleQuery): Users!
+  GetAllUsersWithQuery(queries: PrismaQuery): [Users!]!
+  getUserByQuery(query: PrismaSingleQuery): Users!
 }
 
 input ToggleActiveUserDto {

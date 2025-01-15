@@ -1,11 +1,22 @@
 "use client";
 import { Consts } from "@/config/consts";
+import { UserServiceGraphql } from "@/config/request.grapghql.service";
+import { useMutation } from "@apollo/client";
 import { Button, Divider, Form, Input, Link } from "@nextui-org/react";
 import { useState } from "react";
 export default function Login() {
   const [loginInfo, setLoginInfo] = useState({ userName: "", password: "" });
-  const login = () => {
-    console.log();
+  const [mutateFunction, { data, loading, error }] = useMutation(
+    UserServiceGraphql.Login,
+    { variables: { userName: "", password: "" } }
+  );
+  const login = (e: any) => {
+    e.preventDefault();
+    mutateFunction({
+      variables: { userName: loginInfo.userName, password: loginInfo.password },
+    }).then((res) => {
+      console.log(res.data);
+    });
   };
   return (
     <div className="h-screen grid justify-center lg:justify-start lg:mr-[35vh] align-middle w-full">
@@ -14,14 +25,13 @@ export default function Login() {
         <div className="my-4 mb-8">
           <Divider />
         </div>
-        <Form
-          className="w-full"
-          validationBehavior="native"
-          onSubmit={() => login}
-        >
+        <Form className="w-full" validationBehavior="native" onSubmit={login}>
           <div className="my-2 w-full">
             <Input
               isRequired
+              onValueChange={(value: string) =>
+                setLoginInfo({ ...loginInfo, userName: value })
+              }
               errorMessage={Consts.login.required.userName}
               radius="md"
               label={Consts.login.userName}
@@ -32,6 +42,9 @@ export default function Login() {
             <Input
               isRequired
               radius="md"
+              onValueChange={(value: string) =>
+                setLoginInfo({ ...loginInfo, password: value })
+              }
               label={Consts.login.password}
               errorMessage={Consts.login.required.password}
               type="password"

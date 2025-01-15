@@ -8,4 +8,4 @@ Graphql Section:
 
 ## project proccessing info
 
-- I was work on authorization
+- I was work on forgot password
