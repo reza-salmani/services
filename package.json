@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "gw": "cd gate-way && npm run start:dev",
-    "ui": "cd user-interface && npm run dev PORT=3001",
+    "ui": "cd user-interface && npm run dev",
     "hr": "cd human-resource && npm run start:debug",
     "logestic": "cd logestic && npm run start:debug",
     "messaging": "cd logestic && npm run start:debug",
@@ -19,5 +19,8 @@
     "react"
   ],
   "author": "R.Salmani",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@angular/cli": "^19.1.3"
+  }
 }

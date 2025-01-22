@@ -1,0 +1,10 @@
+{
+  "/graphql": {
+    "target": "http://localhost:3000/graphql",
+    "secure": false,
+    "rejectUnauthorzied": true,
+    "changeOrigin": true,
+    "strictSSL": false,
+    "withCredentials": true
+  }
+}
