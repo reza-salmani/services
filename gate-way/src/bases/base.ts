@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Consts } from 'src/Utils/consts';
+import { Consts } from '@src/Utils/consts';
 
 export enum EnumRoles {
   Guest = 'Guest',

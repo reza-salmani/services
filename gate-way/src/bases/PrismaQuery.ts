@@ -20,6 +20,7 @@ export class PrismaQuery {
   @Field((type) => PrismaUserWhereInput, { nullable: true })
   where: Prisma.UserWhereInput;
 }
+
 @InputType()
 export class PrismaSingleQuery {
   @Field((type) => PrismaUserWhereInput, { nullable: true })
@@ -38,6 +39,7 @@ export const PrismaUserWhereUniqueInput = new GraphQLScalarType<
     value: Prisma.UserWhereUniqueInput | Prisma.UserScalarFieldEnum[],
   ) => value,
 });
+
 export const PrismaUserScalarFieldEnum = new GraphQLScalarType<
   Prisma.UserScalarFieldEnum,
   Prisma.UserScalarFieldEnum
@@ -46,6 +48,7 @@ export const PrismaUserScalarFieldEnum = new GraphQLScalarType<
   serialize: (value: Prisma.UserScalarFieldEnum) => value,
   parseValue: (value: Prisma.UserScalarFieldEnum) => value,
 });
+
 export const PrismaUserOrderByWithRelationInput = new GraphQLScalarType<
   Prisma.UserOrderByWithRelationInput,
   Prisma.UserOrderByWithRelationInput
@@ -54,6 +57,7 @@ export const PrismaUserOrderByWithRelationInput = new GraphQLScalarType<
   serialize: (value: Prisma.UserOrderByWithRelationInput) => value,
   parseValue: (value: Prisma.UserOrderByWithRelationInput) => value,
 });
+
 export const PrismaUserSelect = new GraphQLScalarType<
   Prisma.UserSelect<DefaultArgs>,
   Prisma.UserSelect<DefaultArgs>
@@ -62,6 +66,7 @@ export const PrismaUserSelect = new GraphQLScalarType<
   serialize: (value: Prisma.UserSelect<DefaultArgs>) => value,
   parseValue: (value: Prisma.UserSelect<DefaultArgs>) => value,
 });
+
 export const PrismaUserWhereInput = new GraphQLScalarType<
   Prisma.UserWhereInput,
   Prisma.UserWhereInput

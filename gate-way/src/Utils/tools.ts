@@ -35,4 +35,7 @@ export let Tools = {
   matchs: (item1: string[], item2: string[]) => {
     return item1.some((x) => item2.some((y) => y === x));
   },
+  equal: (item1: string, item2: string) => {
+    return item1.toLowerCase() === item2.toLowerCase();
+  },
 };

@@ -12,6 +12,7 @@ import { join } from 'path';
       sortSchema: true,
       playground: false,
       introspection: true, // when use production mode it should be true otherwise false
+      context: ({ req, res }) => ({ req, res }),
     }),
   ],
 })

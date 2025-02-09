@@ -6,11 +6,11 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { TasksService } from './Utils/tasks';
 import { ConfigModule } from '@nestjs/config';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
-import { UserModule } from './users/users.module';
+import { UserModule } from './modules/users/users.module';
 import { PrismaService } from './bases/services/prisma-client';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './auth/jwt.strategy';
+import { RolesGuard } from './modules/auth/jwt.strategy';
 import { JwtService } from '@nestjs/jwt';
 
 @Module({

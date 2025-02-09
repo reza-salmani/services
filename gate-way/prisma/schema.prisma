@@ -38,6 +38,7 @@ model Auth {
   loginTime         String?  @db.String
   logoutTime        String?  @db.String
   dailyloginCounter Int?     @default(0) @db.Int
+  totalLoginCounter BigInt   @default(0) @db.Long
   userId            String?  @db.ObjectId
   isLogin           Boolean? @default(false) @db.Bool
   user              User?    @relation(fields: [userId], references: [id])
