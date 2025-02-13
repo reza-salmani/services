@@ -6,6 +6,7 @@ import { PrismaService } from '@src/bases/services/prisma-client';
 import { Consts } from '@src/Utils/consts';
 import { Tools } from '@src/Utils/tools';
 import { LoginModel, JwtPayLoad } from './auth.model';
+import { Context } from 'vm';
 
 @Injectable()
 export class PrismaAuthService {
@@ -156,5 +157,21 @@ export class PrismaAuthService {
 
   //#region forgot password
   async ForgotPassword(forgotPasswordModel: ForgotPasswordDto) {}
+  //#endregion
+
+  //#region is authenticated
+  async IsAuthenticated(ctx: Context) {
+    const { req } = ctx;
+    if (req && !req.cookies['jwt']) {
+      return false;
+    }
+    let verify = await this.jwtService.verifyAsync(req.cookies['jwt'], {
+      secret: this.configService.get('JWT_SECRET'),
+    });
+    if (verify) return true;
+    else {
+      return false;
+    }
+  }
   //#endregion
 }

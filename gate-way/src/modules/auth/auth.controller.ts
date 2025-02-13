@@ -38,6 +38,13 @@ export class AuthResolver {
   //#endregion
 
   //#region
+  @Mutation(() => Boolean, { name: 'isAuth' })
+  async IsAuthenticated(@Context() ctx: any) {
+    return await this.authService.IsAuthenticated(ctx);
+  }
+  //#endregion
+
+  //#region
   @Mutation(() => String, { name: 'logout' })
   async ServerSideLogout(@Context() ctx: Record<string, any>) {
     this.authService.serverSideLogout(ctx);

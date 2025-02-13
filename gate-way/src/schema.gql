@@ -79,6 +79,7 @@ type Mutation {
   UpdateUser(userModel: UpdateUserDto!): Users!
   UpdateUserRoles(UpdateRolesToUser: UpdateRolesToUserDto!): Counter!
   forgotPassword(forgotModel: ForgotPasswordDto!): ForgotPasswordModel!
+  isAuth: Boolean!
   login(loginModel: LoginDto!): LoginResponse!
   logout: String!
   refreshToken: LoginResponse!

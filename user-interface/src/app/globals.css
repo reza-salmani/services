@@ -70,3 +70,9 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.base-style {
+  background: url("/images/OIG4.jpg") no-repeat fixed;
+  background-position: center;
+  background-size: cover;
+}
