@@ -16,8 +16,9 @@ export const consts = {
       enterPassword: "کلمه عیور را وارد نمایید",
     },
     errors: {
-      username: "نام کاربری اجباریست",
-      password: " کلمه عبور اجباریست",
+      requiredUsername: "نام کاربری اجباریست",
+      requiredPassword: " کلمه عبور اجباریست",
+      regexUserName: "فقط از حروف و اعداد انگلیسی استفاده نمایید",
     },
   },
 };

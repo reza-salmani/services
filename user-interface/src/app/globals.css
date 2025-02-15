@@ -76,3 +76,9 @@ body {
   background-position: center;
   background-size: cover;
 }
+
+@layer components {
+  .text-destructive {
+    @apply text-red-400 !important;
+  }
+}

@@ -18,7 +18,7 @@ export class PrismaAuthService {
 
   //#region sign in
   async Login(loginModel: LoginModel) {
-    let existUser = await this.prismaService.user.findFirst({
+    let existUser = await this.prismaService.user.findUnique({
       where: { userName: loginModel.userName },
     });
     if (!existUser) {

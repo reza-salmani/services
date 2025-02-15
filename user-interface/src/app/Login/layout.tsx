@@ -5,5 +5,11 @@ export default function LoginLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="h-[70vh] w-full flex">{children}</div>;
+  return (
+    <div className="h-[70vh] w-[100vw] flex">
+      <div className="m-auto bg-slate-100 dark:bg-slate-950 p-4 rounded-2xl h-auto w-[25rem]">
+        {children}
+      </div>
+    </div>
+  );
 }
