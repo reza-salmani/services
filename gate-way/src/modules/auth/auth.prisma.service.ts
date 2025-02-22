@@ -5,8 +5,14 @@ import { ForgotPasswordDto } from './auth.model.dto';
 import { PrismaService } from '@src/bases/services/prisma-client';
 import { Consts } from '@src/Utils/consts';
 import { Tools } from '@src/Utils/tools';
-import { LoginModel, JwtPayLoad } from './auth.model';
+import { LoginModel, JwtPayLoad, ForgotPasswordModel } from './auth.model';
 import { Context } from 'vm';
+import { DateTime } from '@src/Utils/date-time';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@src/bases/services/error-handler';
 
 @Injectable()
 export class PrismaAuthService {
@@ -16,17 +22,52 @@ export class PrismaAuthService {
     private jwtService: JwtService,
   ) {}
 
-  //#region sign in
-  async Login(loginModel: LoginModel) {
+  //======================================= Sign In ===========================================
+  async Login(loginModel: LoginModel, ctx: Record<string, any>) {
     let existUser = await this.prismaService.user.findUnique({
       where: { userName: loginModel.userName },
     });
     if (!existUser) {
-      throw new Error(Consts.loginParamsIsNotValid);
+      throw new NotFoundException(new Error(), Consts.userNotExist);
     }
-    let pass = await Tools.hash(loginModel.password);
-    if (!Tools.compareHash(pass, existUser.password)) {
-      throw new Error(Consts.loginParamsIsNotValid);
+    if (existUser.wrongPasswordCounter >= 3) {
+      if (DateTime.getDiffTime(new Date(), existUser.lockDownDate) > 3) {
+        let copyOfUser = { ...existUser };
+        delete copyOfUser.id;
+        await this.prismaService.user.update({
+          data: {
+            ...copyOfUser,
+            wrongPasswordCounter: 0,
+            lockDownDate: null,
+          },
+          where: { id: existUser.id },
+        });
+      } else {
+        throw new BadRequestException(new Error(), Consts.LockDownUser);
+      }
+    }
+    if (!(await Tools.compareHash(loginModel.password, existUser.password))) {
+      let copyOfUser = { ...existUser };
+      delete copyOfUser.id;
+      await this.prismaService.user.update({
+        data: {
+          ...copyOfUser,
+          wrongPasswordCounter: existUser.wrongPasswordCounter + 1,
+        },
+        where: { id: existUser.id },
+      });
+      if (existUser.wrongPasswordCounter === 2) {
+        await this.prismaService.user.update({
+          data: {
+            ...copyOfUser,
+            lockDownDate: new Date().toISOString(),
+            wrongPasswordCounter: existUser.wrongPasswordCounter + 1,
+          },
+          where: { id: existUser.id },
+        });
+        throw new BadRequestException(new Error(), Consts.LockDownUser);
+      }
+      throw new BadRequestException(new Error(), Consts.loginParamsIsNotValid);
     }
     let payLoad: JwtPayLoad = {
       userName: existUser.userName,
@@ -37,16 +78,23 @@ export class PrismaAuthService {
       expiresIn: this.configService.get('EXPIRE_TIME'),
       issuer: this.configService.get('ISSUER'),
       secret: this.configService.get('JWT_SECRET'),
-      algorithm: 'HS256',
+      algorithm: 'HS512',
     });
     let refresh_token = await this.jwtService.signAsync(payLoad, {
       expiresIn: this.configService.get('EXPIRE_TIME_REFRESH_TOKEN'),
       issuer: this.configService.get('ISSUER'),
       secret: this.configService.get('JWT_REFRESHTOKEN_SECRET'),
-      algorithm: 'HS256',
+      algorithm: 'HS512',
+    });
+    const { res } = ctx;
+    res.cookie('jwt', access_token, {
+      httpOnly: process.env['HTTP_ONLY'],
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env['SAME_SITE'],
+      maxAge: process.env['MAX_AGE'],
     });
     let userAuthInfo = await this.prismaService.auth.findFirst({
-      where: { userId: existUser.id },
+      where: { userId: { equals: existUser.id } },
     });
     if (!userAuthInfo) {
       await this.prismaService.auth.create({
@@ -79,99 +127,155 @@ export class PrismaAuthService {
       refresh_token: refresh_token,
     };
   }
-
-  //#endregion
-
-  //#region refresh token
-  async RefreshToken(ctx: Record<string, any>) {
-    let userId = this.jwtService.decode(ctx.res.cookies('jwt').trim()).sub;
-    let existItem = await this.prismaService.auth.findFirst({
-      where: { userId: userId },
-    });
-    let existUser = await this.prismaService.user.findFirst({
-      where: { id: userId },
-    });
-    if (existItem && existItem.refreshToken && existItem.isLogin) {
-      let verify = this.jwtService.verifyAsync(existItem.refreshToken);
-      if (verify) {
-        let access_token = await this.jwtService.signAsync({
-          userName: existUser.userName,
-          sub: userId,
-          roles: existUser.roles,
+  //====================================== Logout =============================================
+  async Logout(ctx: any) {
+    try {
+      if (
+        ctx.req &&
+        ctx.req.cookies &&
+        ctx.req.cookies['jwt'] &&
+        ctx.req.cookies['jwt'].length
+      ) {
+        let userId = this.jwtService.decode(ctx.req.cookies['jwt']).sub;
+        let existUserAuth = await this.prismaService.auth.findFirst({
+          where: { userId: { equals: userId } },
         });
-        let refresh_token = await this.jwtService.signAsync(
-          { userName: existUser.userName, sub: userId, roles: existUser.roles },
-          {
-            expiresIn: this.configService.get('EXPIRE_TIME_REFRESH_TOKEN'),
-          },
-        );
         await this.prismaService.auth.update({
           data: {
-            token: access_token,
-            dailyloginCounter: existItem.dailyloginCounter + 1,
-            loginTime: new Date().toISOString(),
-            refreshToken: refresh_token,
+            isLogin: false,
+            refreshToken: '',
+            token: '',
+            logoutTime: new Date().toISOString(),
           },
-          where: { id: existItem.id },
+          where: {
+            id: existUserAuth.id,
+          },
         });
-        const { res } = ctx;
-        res.cookie('jwt', access_token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production', // Set to true in production
-          sameSite: 'strict', // Adjust as per your requirements
-          maxAge: 8 * 60 * 60 * 1000, // 1 hour
+        ctx.res.clearCookie('jwt');
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+  //==================================== IS Authenticated =====================================
+  async IsAuthenticated(ctx: Context) {
+    try {
+      if (ctx.req && ctx.req.cookies && ctx.req.cookies['jwt']) {
+        let userId = this.jwtService.decode(ctx.req.cookies['jwt']).sub;
+        let existUserAuth = await this.prismaService.auth.findFirst({
+          where: { userId: { equals: userId } },
         });
-        return { access_token: access_token, refresh_token: refresh_token };
+        let verify = await this.jwtService.verifyAsync(existUserAuth.token, {
+          secret: this.configService.get('JWT_SECRET'),
+        });
+        if (verify) return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  //====================================== Refresh Token ======================================
+  async RefreshToken(ctx: Record<string, any>) {
+    try {
+      let userId = this.jwtService.decode(ctx.res.cookies('jwt').trim()).sub;
+      let existItem = await this.prismaService.auth.findFirst({
+        where: { userId: { equals: userId } },
+      })[0];
+      let existUser = await this.prismaService.user.findFirst({
+        where: { id: { equals: userId } },
+      })[0];
+      if (existItem && existItem.refreshToken && existItem.isLogin) {
+        let verify = this.jwtService.verifyAsync(existItem.refreshToken);
+        if (verify) {
+          let access_token = await this.jwtService.signAsync({
+            userName: existUser.userName,
+            sub: userId,
+            roles: existUser.roles,
+          });
+          let refresh_token = await this.jwtService.signAsync(
+            {
+              userName: existUser.userName,
+              sub: userId,
+              roles: existUser.roles,
+            },
+            {
+              expiresIn: this.configService.get('EXPIRE_TIME_REFRESH_TOKEN'),
+            },
+          );
+          await this.prismaService.auth.update({
+            data: {
+              token: access_token,
+              dailyloginCounter: existItem.dailyloginCounter + 1,
+              loginTime: new Date().toISOString(),
+              refreshToken: refresh_token,
+            },
+            where: { id: existItem.id },
+          });
+          const { res } = ctx;
+          res.cookie('jwt', access_token, {
+            httpOnly: process.env['HTTP_ONLY'],
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env['SAME_SITE'],
+            maxAge: process.env['MAX_AGE'],
+          });
+          return { access_token: access_token, refresh_token: refresh_token };
+        } else {
+          return { access_token: '', refresh_token: '' };
+        }
       } else {
         return { access_token: '', refresh_token: '' };
       }
-    } else {
-      return { access_token: '', refresh_token: '' };
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   }
 
-  //#endregion
-
-  //#region server side logout
-  async serverSideLogout(ctx: Record<string, any>) {
-    if (ctx.res && ctx.res.cookies) {
-      let userId = this.jwtService.decode(ctx.res.cookies('jwt').trim()).sub;
-      let existUserAuth = await this.prismaService.auth.findFirst({
-        where: { userId: userId },
-      });
-      await this.prismaService.auth.update({
-        data: {
-          isLogin: false,
-          refreshToken: '',
-          token: '',
-          logoutTime: new Date().toISOString(),
-        },
+  //===================================== ForgotPassword ======================================
+  async ForgotPassword(
+    forgotPasswordModel: ForgotPasswordDto,
+  ): Promise<ForgotPasswordModel> {
+    try {
+      let existUser = await this.prismaService.user.findFirst({
         where: {
-          id: existUserAuth.id,
+          OR: [
+            { userName: { equals: forgotPasswordModel.userName } },
+            { email: { equals: forgotPasswordModel.userName } },
+            { phone: { equals: forgotPasswordModel.userName } },
+          ],
         },
       });
-      ctx.res.clearCookie('jwt');
+      if (!existUser) {
+        throw new BadRequestException(
+          new Error(),
+          Consts.wrongIncomingParameters,
+        );
+      }
+      let pass = await Tools.hash(forgotPasswordModel.password);
+      let copyOfuser = { ...existUser };
+      delete copyOfuser.id;
+      await this.prismaService.user.update({
+        data: {
+          ...copyOfuser,
+          password: pass,
+          passwordChangeLastDate: new Date().toISOString(),
+        },
+        where: { id: existUser.id },
+      });
+      return { userName: existUser.userName };
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   }
-  //#endregion
-
-  //#region forgot password
-  async ForgotPassword(forgotPasswordModel: ForgotPasswordDto) {}
-  //#endregion
-
-  //#region is authenticated
-  async IsAuthenticated(ctx: Context) {
-    const { req } = ctx;
-    if (req && !req.cookies['jwt']) {
-      return false;
-    }
-    let verify = await this.jwtService.verifyAsync(req.cookies['jwt'], {
-      secret: this.configService.get('JWT_SECRET'),
-    });
-    if (verify) return true;
-    else {
-      return false;
-    }
+  //======================================= MenuBar =======================================
+  //#region Get Menu
+  async GetPages(context: any) {
+    try {
+      let result = await this.prismaService.menuBar.findMany();
+      return result;
+    } catch (error) {}
   }
   //#endregion
 }

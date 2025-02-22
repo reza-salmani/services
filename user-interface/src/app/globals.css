@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@custom-variant dark (&:where([data-mantine-color-scheme=dark], [data-mantine-color-scheme=dark] *));
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -61,17 +61,23 @@ body {
     --chart-5: 340 75% 55%;
   }
 }
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+@font-face {
+  font-family: "Samim";
+  src: url("/fonts/samim-font-v2.0.1/Samim.eot");
+  src: url("/fonts/samim-font-v2.0.1/Samim.eot?#iefix")
+      format("FontName-opentype"),
+    url("/fonts/samim-font-v2.0.1/Samim.woff") format("woff"),
+    url("/fonts/samim-font-v2.0.1/Samim.ttf") format("truetype");
+  src: url("/fonts/samim-font-v2.0.1/Farsi-Digits/Samim-FD.eot");
+  src: url("/fonts/samim-font-v2.0.1/Farsi-Digits/Samim-FD.eot?#iefix")
+      format("FontName-opentype"),
+    url("/fonts/samim-font-v2.0.1/Farsi-Digits/Samim-FD.woff") format("woff"),
+    url("/fonts/samim-font-v2.0.1/Farsi-Digits/Samim-FD.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
-
 .base-style {
+  font-family: "Samim";
   background: url("/images/OIG4.jpg") no-repeat fixed;
   background-position: center;
   background-size: cover;
@@ -81,4 +87,7 @@ body {
   .text-destructive {
     @apply text-red-400 !important;
   }
+}
+.is-active {
+  @apply bg-sky-400 border-sky-400 dark:bg-sky-950 dark:border-sky-950 !text-white;
 }

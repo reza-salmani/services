@@ -6,6 +6,8 @@ import {
   OperationVariables,
   TypedDocumentNode,
 } from "@apollo/client";
+
+//============================ main function ==========================
 const apolloClient = (cookie: string) =>
   new ApolloClient({
     link: createHttpLink({
@@ -20,22 +22,24 @@ const apolloClient = (cookie: string) =>
     cache: new InMemoryCache(),
   });
 
-export function mutation(
+//============================ exported functions ===============================
+export async function mutation(
   grapgqlSchema: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   variables: any,
   cookie: string = ""
 ) {
-  return apolloClient(cookie).mutate({
+  return await apolloClient(cookie).mutate({
     mutation: grapgqlSchema,
     variables: variables,
   });
 }
-export function query(
+
+export async function query(
   cookie: string,
   variables: any,
   grapgqlSchema: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) {
-  return apolloClient(cookie).watchQuery({
+  return await apolloClient(cookie).query({
     query: grapgqlSchema,
     variables: variables,
   });

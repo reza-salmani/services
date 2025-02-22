@@ -24,7 +24,7 @@ export let Tools = {
     return decryptedText.toString();
   },
   hash: async (password: string) => {
-    return bcript.hashSync(password, bcript.genSaltSync(10));
+    return await bcript.hash(password, await bcript.genSalt(10));
   },
   compareHash: async (password: string, hash: string) => {
     return bcript.compareSync(password, hash);

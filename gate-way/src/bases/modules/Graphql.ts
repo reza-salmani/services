@@ -11,6 +11,18 @@ import { join } from 'path';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       playground: false,
+      formatError: (error) => {
+        const graphQLFormattedError = {
+          message: error.message,
+          extensions: {
+            code: error.extensions.code,
+            statusCode: error.extensions.statusCode,
+            description: error.extensions.description,
+            cause: error.extensions.cause,
+          },
+        };
+        return graphQLFormattedError;
+      },
       introspection: true, // when use production mode it should be true otherwise false
       context: ({ req, res }) => ({ req, res }),
     }),

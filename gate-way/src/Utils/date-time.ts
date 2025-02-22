@@ -18,4 +18,9 @@ export let DateTime = {
         return new Date(date).setMinutes(newDate.getMinutes() + num);
     }
   },
+  getDiffTime: (date_1: Date | string, date_2: Date | string) => {
+    let dateItem_1 = new Date(date_1).getUTCMinutes();
+    let dateItem_2 = new Date(date_2).getUTCMinutes();
+    return Math.abs(dateItem_2 - dateItem_1);
+  },
 };

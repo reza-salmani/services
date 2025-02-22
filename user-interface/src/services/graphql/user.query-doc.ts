@@ -1,18 +1,23 @@
 import { gql } from "@apollo/client";
 export let LoginUser = gql`
-  mutation ($username: String, $password: String) {
-    login(loginModel: { password: $password, username: $username }) {
+  mutation ($userName: String, $password: String) {
+    login(loginModel: { password: $password, userName: $userName }) {
       access_token
     }
   }
 `;
-// export let ForgotPasswordUser = gql`
-//   mutation ($username: String) {
-//     forgotPassword(forgotModel: { username: $userName }) {
-//       username
-//     }
-//   }
-// `;
+export let LogoutUser = gql`
+  mutation {
+    logout
+  }
+`;
+export let ForgotPasswordUser = gql`
+  mutation ($userName: String, $password: String) {
+    forgotPassword(forgotModel: { userName: $userName, password: $password }) {
+      userName
+    }
+  }
+`;
 // export let DeleteUser = gql`
 //     mutation ($ids:String[]) {
 //       DeleteUsers(deleteUsersIds: { ids: $ids }) {
@@ -177,11 +182,7 @@ export let GetOneUser = gql`
 //       }
 //     }
 //   `;
-// export let LogoutUser = gql`
-//   mutation {
-//     logout
-//   }
-// `;
+
 export let IsAuth = gql`
   mutation {
     isAuth

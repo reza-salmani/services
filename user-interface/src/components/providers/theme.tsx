@@ -1,11 +1,36 @@
+// app/components/ThemeSwitcher.tsx
 "use client";
 
-import * as React from "react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { consts } from "@/utils/consts";
+import { Button, Tooltip } from "@heroui/react";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
-export function ThemeProvider({
-  children,
-  ...props
-}: React.ComponentProps<typeof NextThemesProvider>) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+export function ThemeSwitcher() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return (
+    <Tooltip
+      content={theme === "dark" ? consts.theme.light : consts.theme.dark}
+    >
+      <Button
+        variant="flat"
+        color="primary"
+        className="text-cyan-800 dark:text-cyan-400"
+        onPress={() => {
+          setTheme(theme === "light" ? "dark" : "light");
+        }}
+      >
+        {theme === "light" ? <Moon></Moon> : <Sun></Sun>}
+      </Button>
+    </Tooltip>
+  );
 }

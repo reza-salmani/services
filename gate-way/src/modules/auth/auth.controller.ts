@@ -1,58 +1,46 @@
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   ForgotPasswordModel,
   LoginResponse,
+  MenuStructureModel,
 } from 'src/modules/auth/auth.model';
 import { PrismaAuthService } from './auth.prisma.service';
 import { Consts } from 'src/Utils/consts';
 import { ForgotPasswordDto, LoginDto } from './auth.model.dto';
-
 @Resolver()
 export class AuthResolver {
   constructor(private authService: PrismaAuthService) {}
 
-  //#region login
+  //======================================= login =========================================
   @Mutation(() => LoginResponse, { name: 'login' })
   async Login(
     @Args({ nullable: false, name: 'loginModel', type: () => LoginDto })
     loginModel: LoginDto,
     @Context() context,
   ) {
-    const jwt = await this.authService.Login(loginModel);
-    const { res } = context;
-    res.cookie('jwt', jwt.access_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Set to true in production
-      sameSite: 'strict', // Adjust as per your requirements
-      maxAge: 60 * 60 * 1000, // 1 hour
-    });
-    return jwt;
+    return await this.authService.Login(loginModel, context);
   }
-  //#endregion
 
-  //#region
-  @Mutation(() => LoginResponse, { name: 'refreshToken' })
-  async RefreshToken(@Context() ctx: any) {
-    return await this.authService.RefreshToken(ctx);
-  }
-  //#endregion
-
-  //#region
+  //======================================= IsAuthenticated =========================================
   @Mutation(() => Boolean, { name: 'isAuth' })
   async IsAuthenticated(@Context() ctx: any) {
     return await this.authService.IsAuthenticated(ctx);
   }
-  //#endregion
 
-  //#region
+  //======================================= Logout =========================================
   @Mutation(() => String, { name: 'logout' })
-  async ServerSideLogout(@Context() ctx: Record<string, any>) {
-    this.authService.serverSideLogout(ctx);
+  async Logout(@Context() ctx: any) {
+    await this.authService.Logout(ctx);
     return Consts.successfullyLogOut;
   }
-  //#endregion
 
-  //#region
+  //======================================= RefreshToken =========================================
+  @Mutation(() => LoginResponse, { name: 'refreshToken' })
+  async RefreshToken(@Context() ctx: any) {
+    return await this.authService.RefreshToken(ctx);
+  }
+
+  //======================================= ForgotPassword =========================================
   @Mutation(() => ForgotPasswordModel, { name: 'forgotPassword' })
   async ForgotPassword(
     @Args({
@@ -62,7 +50,12 @@ export class AuthResolver {
     })
     forgotPasswordModel: ForgotPasswordDto,
   ) {
-    this.authService.ForgotPassword(forgotPasswordModel);
+    return await this.authService.ForgotPassword(forgotPasswordModel);
   }
-  //#endregion
+
+  //======================================= get Menubar =========================================
+  @Query(() => MenuStructureModel, { name: 'menu' })
+  async MenuBar(@Context() context: any) {
+    return await this.authService.GetPages(context);
+  }
 }

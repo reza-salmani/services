@@ -45,13 +45,16 @@ enum EnumRoles {
 }
 
 input ForgotPasswordDto {
+  """رمزعبور"""
+  password: String! = ""
+
   """نام کاربری"""
-  username: String! = ""
+  userName: String! = ""
 }
 
 type ForgotPasswordModel {
   """نام کاربری"""
-  username: String!
+  userName: String!
 }
 
 input LoginDto {
@@ -59,15 +62,19 @@ input LoginDto {
   password: String! = ""
 
   """نام کاربری"""
-  username: String! = ""
+  userName: String! = ""
 }
 
 type LoginResponse {
   """توکن"""
-  access_token: String!
+  access_token: String
 
   """توکن تازه سازی"""
-  refresh_token: String!
+  refresh_token: String
+}
+
+type MenuStructureModel {
+  data: [json!]
 }
 
 type Mutation {
@@ -102,6 +109,7 @@ input PrismaSingleQuery {
 type Query {
   GetAllUsersWithQuery(queries: PrismaQuery): [Users!]!
   getUserByQuery(query: PrismaSingleQuery): Users!
+  menu: MenuStructureModel!
 }
 
 input ToggleActiveUserDto {
@@ -203,6 +211,8 @@ type Users {
 scalar cursor
 
 scalar distinct
+
+scalar json
 
 scalar orderBy
 
