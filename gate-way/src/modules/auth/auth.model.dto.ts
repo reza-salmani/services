@@ -26,22 +26,10 @@ export class ForgotPasswordDto {
 //#endregion
 
 //#region manage pages in menu
-
-@InputType()
-export class AddPageDto {
-  @Field(() => String, { name: 'name', description: Consts.menuName })
-  name: string = '';
-  @Field(() => String, { name: 'link', description: Consts.menuLink })
-  link: string = '';
-  @Field(() => String, { name: 'parentId', description: Consts.menuParentId })
-  parentId: string;
-  @Field(() => Boolean, { name: 'isReadOnly' })
-  isReadOnly: boolean;
-  @Field(() => [EnumRoles], { name: 'roles' })
-  roles: Roles[];
-}
-export class UpdatePageDto extends AddPageDto {
+export class UpdatePageRolesDto {
   @Field(() => String, { name: 'id' })
   id: string = '';
+  @Field(() => [EnumRoles], { name: 'roles' })
+  roles: Roles[];
 }
 //#endregion

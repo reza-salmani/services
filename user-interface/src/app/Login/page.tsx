@@ -21,8 +21,6 @@ export default function Login() {
   });
 
   function onSubmit(values: IInputLogin) {
-    console.log(values);
-
     loading = true;
     if (values.userName && values.password) {
       mutation(LoginUser, {

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ForgotPasswordDto } from './auth.model.dto';
@@ -102,7 +102,7 @@ export class PrismaAuthService {
           userId: existUser.id,
           token: access_token,
           dailyloginCounter: 1,
-          totalLoginCounter: userAuthInfo.totalLoginCounter + BigInt(1),
+          totalLoginCounter: 1,
           loginTime: new Date().toISOString(),
           isLogin: true,
           refreshToken: refresh_token,
@@ -272,10 +272,20 @@ export class PrismaAuthService {
   //======================================= MenuBar =======================================
   //#region Get Menu
   async GetPages(context: any) {
-    try {
-      let result = await this.prismaService.menuBar.findMany();
-      return result;
-    } catch (error) {}
+    let result = await this.prismaService.page.findMany();
+    const { req } = context;
+    if (req && !req.cookies['jwt']) {
+      throw new UnauthorizedException(Consts.unAuthorized);
+    }
+    const headerInfo = this.jwtService.decode(req.cookies['jwt'].trim());
+
+    let userRoles = await this.prismaService.user.findFirst({
+      where: { id: headerInfo.sub },
+    });
+    result = result.filter((page) =>
+      userRoles.roles.some((b) => page.roles.some((v) => v === b)),
+    );
+    return result;
   }
   //#endregion
 }

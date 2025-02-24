@@ -35,9 +35,9 @@ export async function mutation(
 }
 
 export async function query(
-  cookie: string,
-  variables: any,
-  grapgqlSchema: DocumentNode | TypedDocumentNode<any, OperationVariables>
+  grapgqlSchema: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  variables?: any,
+  cookie: string = ""
 ) {
   return await apolloClient(cookie).query({
     query: grapgqlSchema,

@@ -74,6 +74,21 @@ export let GetAllUser = gql`
     }
   }
 `;
+export let GetPages = gql`
+  query {
+    menu {
+      id
+      isReadOnly
+      link
+      name
+      parentId
+      persianName
+      description
+      roles
+      selfId
+    }
+  }
+`;
 export let GetOneUser = gql`
   query ($query: PrismaQuery) {
     getUserByQuery(query: $query) {

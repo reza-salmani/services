@@ -27,10 +27,11 @@ export class ForgotPasswordModel {
 
 @ObjectType()
 export class MenuStructureModel {
-  @Field(() => Int, {
+  @Field(() => String, {
     name: 'id',
+    nullable: true,
   })
-  id: number = 0;
+  id?: string;
 
   @Field(() => String, {
     name: 'link',
@@ -42,25 +43,50 @@ export class MenuStructureModel {
   @Field(() => String, {
     name: 'name',
     description: Consts.menuName,
+    nullable: true,
   })
-  name: string = '';
+  name?: string = '';
+
+  @Field(() => String, {
+    name: 'description',
+    description: Consts.menuDescription,
+    nullable: true,
+  })
+  description?: string = '';
+
+  @Field(() => String, {
+    name: 'persianName',
+    description: Consts.menuPersianName,
+    nullable: true,
+  })
+  persianName?: string;
+
+  @Field(() => Int, {
+    name: 'selfId',
+    nullable: false,
+    description: Consts.menuSelfId,
+  })
+  selfId?: number;
 
   @Field(() => Int, {
     name: 'parentId',
     nullable: true,
     description: Consts.menuParentId,
   })
-  parentId?: string[] = [];
+  parentId?: number;
 
   @Field(() => Boolean, {
-    name: 'isreadOnly',
-    description: Consts.yourUserName,
+    name: 'isReadOnly',
+    nullable: true,
   })
-  @Field(() => EnumRoles, {
+  isReadOnly?: boolean;
+
+  @Field(() => [EnumRoles], {
     name: 'roles',
-    description: Consts.yourUserName,
+    description: Consts.menuRoles,
+    nullable: true,
   })
-  roles: Roles;
+  roles?: Roles[];
 }
 //#endregion
 

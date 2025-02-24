@@ -18,44 +18,48 @@ import {
 } from "@heroui/react";
 import { ChevronDown, Loader2, LogOut, Users } from "lucide-react";
 import { ThemeSwitcher } from "../providers/Theme";
-import { mutation } from "@/services/graphql/apollo";
-import { LogoutUser } from "@/services/graphql/user.query-doc";
+import { mutation, query } from "@/services/graphql/apollo";
+import { GetPages, LogoutUser } from "@/services/graphql/user.query-doc";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+//================================== main function =====================================
 export default function MenuBar() {
   let router = useRouter();
   let pathName = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [menuItems, setMenuItems] = useState<IMenuItem[]>([]);
   let loading = false;
-  const menuItems: IMenuItem[] = [
-    {
-      parent: null,
-      name: "خانه",
-      link: "/Shell",
-      isReadOnly: false,
-      isHidden: false,
-      children: [],
-    },
-    {
-      parent: null,
-      name: "مدیریت کاربران",
-      link: null,
-      isReadOnly: false,
-      isHidden: false,
-      children: [
-        {
-          parent: "Security",
-          name: "لیست کاربران",
-          link: "/Shell/Security",
-          description: "لیست کاملی از کاربران را در اختیار شما میگذارد",
-          isReadOnly: false,
-          isHidden: false,
-          children: [],
-        },
-      ],
-    },
-  ];
+
+  //#region useEffect
+  useEffect(() => {
+    query(GetPages).then((res) => {
+      let mainPages: any = [];
+      res.data.menu.map((page: any) => {
+        if (!page.parentId) {
+          mainPages = [...mainPages, ...[page]];
+        } else {
+          let pageExist = mainPages.find(
+            (x: any) => x.selfId === page.parentId
+          );
+          if (pageExist)
+            if (!pageExist.children) {
+              mainPages.find((x: any) => x.selfId === page.parentId).children =
+                [page];
+            } else {
+              mainPages
+                .find((x: any) => x.selfId === page.parentId)
+                .children.push(page);
+            }
+        }
+        return page;
+      });
+      setMenuItems(mainPages);
+    });
+  }, []);
+  //#endregion
+
+  //#region logout
   function onLogout() {
     loading = true;
     mutation(LogoutUser, {}).then(() => {
@@ -63,11 +67,15 @@ export default function MenuBar() {
       router.push("/");
     });
   }
-  function checkActivation(links: string[]) {
-    console.log(pathName);
+  //#endregion
 
+  //#region checkActivation
+  function checkActivation(links: string[]) {
     return links.some((x) => x === pathName);
   }
+  //#endregion
+
+  //#region return section
   return (
     <Navbar
       onMenuOpenChange={setIsMenuOpen}
@@ -83,76 +91,79 @@ export default function MenuBar() {
         </NavbarBrand>
       </NavbarContent>
       <NavbarContent className="w-full gap-4 hidden lg:flex" justify="center">
-        {menuItems
-          .filter((q) => !q.isHidden)
-          .map((item, pIndex) => {
-            return item.children.length > 0 ? (
-              <Dropdown key={pIndex}>
-                <NavbarItem
-                  isActive={checkActivation([item.link!]) && !item.isReadOnly}
-                  className="group"
-                >
-                  <DropdownTrigger>
-                    <Button
-                      isDisabled={item.isReadOnly}
-                      color="primary"
-                      className="text-cyan-800 dark:text-cyan-400 text-lg group-data-[active]:bg-cyan-700 group-data-[active]:text-white dark:group-data-[active]:bg-cyan-200 dark:group-data-[active]:text-black"
-                      endContent={<ChevronDown></ChevronDown>}
-                      radius="lg"
-                      variant="flat"
-                    >
-                      {item.name}
-                    </Button>
-                  </DropdownTrigger>
-                </NavbarItem>
-                <DropdownMenu
-                  aria-label="UserManagement features"
-                  itemClasses={{
-                    base: "gap-4",
-                  }}
-                >
-                  {item.children
-                    .filter((x) => !x.isHidden)
-                    .map((child, cIndex) => {
-                      return (
-                        <DropdownItem
-                          isReadOnly={child.isReadOnly}
-                          href={child.link!}
-                          className="text-cyan-800 dark:text-cyan-400"
-                          key={cIndex}
-                          description={child.description}
-                          startContent={<Users></Users>}
-                        >
-                          {child.name}
-                        </DropdownItem>
-                      );
-                    })}
-                </DropdownMenu>
-              </Dropdown>
-            ) : (
+        {menuItems.map((item, pIndex) => {
+          return item.children && item.children.length > 0 ? (
+            <Dropdown key={pIndex}>
               <NavbarItem
-                key={pIndex}
-                isActive={checkActivation([item.link!]) && !item.isReadOnly}
+                isActive={
+                  checkActivation(item.children.map((x) => x.link!)) &&
+                  !item.isReadOnly
+                }
                 className="group"
               >
-                <Link
-                  isDisabled={item.isReadOnly}
-                  aria-current="page"
-                  href={item.link!}
-                >
+                <DropdownTrigger>
                   <Button
                     isDisabled={item.isReadOnly}
                     color="primary"
-                    className="text-cyan-800 dark:text-cyan-400  text-lg group-data-[active]:bg-cyan-700 group-data-[active]:text-white dark:group-data-[active]:bg-cyan-200 dark:group-data-[active]:text-black"
+                    className="text-cyan-800 dark:text-cyan-400 text-lg group-data-[active]:bg-cyan-700 group-data-[active]:text-white dark:group-data-[active]:bg-cyan-200 dark:group-data-[active]:text-black"
+                    endContent={<ChevronDown></ChevronDown>}
                     radius="lg"
                     variant="flat"
                   >
-                    {item.name}
+                    {item.persianName}
                   </Button>
-                </Link>
+                </DropdownTrigger>
               </NavbarItem>
-            );
-          })}
+              <DropdownMenu
+                aria-label="UserManagement features"
+                itemClasses={{
+                  base: "gap-4",
+                }}
+              >
+                {item.children.map((child, cIndex) => {
+                  return (
+                    <DropdownItem
+                      isReadOnly={child.isReadOnly}
+                      href={child.link!}
+                      className={
+                        checkActivation([child.link!])
+                          ? "bg-cyan-100 dark:bg-cyan-950"
+                          : "text-cyan-800 dark:text-cyan-400"
+                      }
+                      key={cIndex}
+                      description={child.description}
+                      startContent={<Users></Users>}
+                    >
+                      {child.persianName}
+                    </DropdownItem>
+                  );
+                })}
+              </DropdownMenu>
+            </Dropdown>
+          ) : (
+            <NavbarItem
+              key={pIndex}
+              isActive={checkActivation([item.link!]) && !item.isReadOnly}
+              className="group"
+            >
+              <Link
+                isDisabled={item.isReadOnly}
+                aria-current="page"
+                href={item.link!}
+              >
+                <Button
+                  isDisabled={item.isReadOnly}
+                  color="primary"
+                  className="text-cyan-800 dark:text-cyan-400  text-lg group-data-[active]:bg-cyan-700 group-data-[active]:text-white dark:group-data-[active]:bg-cyan-200 dark:group-data-[active]:text-black"
+                  radius="lg"
+                  variant="flat"
+                >
+                  {item.persianName}
+                </Button>
+              </Link>
+            </NavbarItem>
+          );
+        })}
       </NavbarContent>
       <NavbarContent justify="end" className="w-full hidden sm:flex">
         <NavbarItem className="w-full">
@@ -184,8 +195,10 @@ export default function MenuBar() {
       </NavbarMenu>
     </Navbar>
   );
+  //#endregion
 }
 
+//===================================== recursive menu creator ===============================
 export function NavbarMenuItems({ menuItems }: { menuItems: IMenuItem[] }) {
   return (
     <div className="">
@@ -199,7 +212,7 @@ export function NavbarMenuItems({ menuItems }: { menuItems: IMenuItem[] }) {
               size="lg"
             >
               <Button className="w-full" color="primary" variant="flat">
-                {item.name}
+                {item.persianName}
               </Button>
             </Link>
           ) : (
@@ -210,7 +223,7 @@ export function NavbarMenuItems({ menuItems }: { menuItems: IMenuItem[] }) {
                 color="default"
                 variant="flat"
               >
-                {item.name}
+                {item.persianName}
               </Button>
             </div>
           )}
@@ -225,12 +238,16 @@ export function NavbarMenuItems({ menuItems }: { menuItems: IMenuItem[] }) {
   );
 }
 
+//===================================== interfaces ===========================================
 interface IMenuItem {
   name: string;
-  parent: string | null;
+  persianName: string;
+  id: string;
+  description: string;
+  selfId: number;
+  parentId: number | null;
   link: string | null;
-  description?: string | null;
-  isHidden: boolean;
   isReadOnly: boolean;
+  roles: string[];
   children: IMenuItem[];
 }

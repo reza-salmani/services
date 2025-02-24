@@ -74,7 +74,28 @@ type LoginResponse {
 }
 
 type MenuStructureModel {
-  data: [json!]
+  """توضیحات تکمیلی از کارکرد صفحه"""
+  description: String
+  id: String
+  isReadOnly: Boolean
+
+  """آدرس صفحه"""
+  link: String
+
+  """عنوان صفحه"""
+  name: String
+
+  """شناسه والد صفحه"""
+  parentId: Int
+
+  """نام فارسی صفحه"""
+  persianName: String
+
+  """نقش های دارای دسترسی به این صفحه"""
+  roles: [EnumRoles!]
+
+  """شناسه شخصی صفحه"""
+  selfId: Int!
 }
 
 type Mutation {
@@ -82,7 +103,7 @@ type Mutation {
   CreateUser(userModel: CreateUserDto!): Users!
   DeleteUserPermanently(deleteUsersIds: DeleteUserDto!): Counter!
   DeleteUsers(deleteUsersIds: DeleteUserDto!): Counter!
-  ReverUsers(deleteUsersIds: DeleteUserDto!): Counter!
+  RevertUsers(deleteUsersIds: DeleteUserDto!): Counter!
   UpdateUser(userModel: UpdateUserDto!): Users!
   UpdateUserRoles(UpdateRolesToUser: UpdateRolesToUserDto!): Counter!
   forgotPassword(forgotModel: ForgotPasswordDto!): ForgotPasswordModel!
@@ -109,7 +130,7 @@ input PrismaSingleQuery {
 type Query {
   GetAllUsersWithQuery(queries: PrismaQuery): [Users!]!
   getUserByQuery(query: PrismaSingleQuery): Users!
-  menu: MenuStructureModel!
+  menu: [MenuStructureModel!]!
 }
 
 input ToggleActiveUserDto {
@@ -211,8 +232,6 @@ type Users {
 scalar cursor
 
 scalar distinct
-
-scalar json
 
 scalar orderBy
 

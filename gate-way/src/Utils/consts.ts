@@ -51,4 +51,8 @@ export const Consts = {
   menuName: 'عنوان صفحه',
   menuParentId: 'شناسه والد صفحه',
   menuRoles: 'نقش های دارای دسترسی به این صفحه',
+  menuSelfId: 'شناسه شخصی صفحه',
+  menuChildren: 'زیرمجموعه های یک صفحه',
+  menuPersianName: 'نام فارسی صفحه',
+  menuDescription: 'توضیحات تکمیلی از کارکرد صفحه',
 };

@@ -14,56 +14,63 @@ datasource db {
 }
 
 model User {
-  id                     String   @id @default(auto()) @map("_id") @db.ObjectId
-  firstName              String   @db.String
-  lastName               String   @db.String
-  userName               String   @unique() @db.String
-  email                  String   @unique() @db.String
-  phone                  String   @unique() @db.String
-  password               String   @db.String
-  wrongPasswordCounter   Int?     @db.Int
-  lockDownDate           String?  @db.String
-  createDate             String?  @db.String
-  updateDate             String?  @db.String
-  deleteDate             String?  @db.String
-  revertDate             String?  @db.String
-  passwordChangeLastDate String?  @db.String
-  isDeleted              Boolean  @default(false) @db.Bool
-  isActive               Boolean  @default(false) @db.Bool
-  roles                  Roles[]  @default([Guest])
-  menuItemIds            String[] @db.String
+  id                     String  @id @default(uuid()) @map("_id")
+  firstName              String  @db.String
+  lastName               String  @db.String
+  userName               String  @unique() @db.String
+  email                  String  @unique() @db.String
+  phone                  String  @unique() @db.String
+  password               String  @db.String
+  wrongPasswordCounter   Int?    @db.Int
+  lockDownDate           String? @db.String
+  createDate             String? @db.String
+  updateDate             String? @db.String
+  deleteDate             String? @db.String
+  revertDate             String? @db.String
+  passwordChangeLastDate String? @db.String
+  isDeleted              Boolean @default(false) @db.Bool
+  isActive               Boolean @default(false) @db.Bool
+  roles                  Roles[] @default([Guest])
+}
+
+model Page {
+  id          String  @id @default(uuid()) @map("_id")
+  selfId      Int     @db.Int
+  parentId    Int?    @db.Int
+  name        String  @unique @db.String
+  persianName String  @db.String
+  link        String? @db.String
+  description String? @db.String
+  isReadOnly  Boolean @db.Bool
+  roles       Roles[] @default([Admin])
 }
 
 model Auth {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  id                String   @id @default(uuid()) @map("_id")
   token             String?  @db.String
   refreshToken      String?  @db.String
   loginTime         String?  @db.String
   logoutTime        String?  @db.String
   dailyloginCounter Int?     @default(0) @db.Int
   totalLoginCounter BigInt   @default(0) @db.Long
-  userId            String?  @db.ObjectId
+  userId            String?  @db.String
   isLogin           Boolean? @default(false) @db.Bool
-}
-
-model MenuBar {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  name       String  @db.String
-  parentId   String? @db.String
-  link       String  @db.String
-  isReadOnly Boolean @db.Bool
-  roles      Roles[] @default([Guest])
 }
 
 enum Roles {
   Guest
   Base
+  BaseViewer
   User
+  UserViewer
   Viewer
   Admin
   Accountant
+  AccountantViewer
   Manager
+  ManagerViewer
   Security
+  SecurityViewer
   Inspector
-  Custom
+  InspectorViewer
 }

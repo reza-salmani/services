@@ -24,7 +24,7 @@ export class UsersResolver {
   constructor(private prismaRequestService: PrismaUsersService) {}
 
   //================================== GetAllUsersByQuery ===========================
-  @HasNotRoles([EnumRoles.Guest])
+  @HasNotRoles([EnumRoles.Guest, EnumRoles.Accountant])
   @Query(() => [Users], { name: 'GetAllUsersWithQuery' })
   async GetUsersByQuery(
     @Args('queries', { nullable: true, type: () => PrismaQuery })
@@ -33,7 +33,7 @@ export class UsersResolver {
     return await this.prismaRequestService.GetAllUsersByQuery(query);
   }
   //================================== GetUserByQuery  ==============================
-  @HasNotRoles([EnumRoles.Guest])
+  @HasNotRoles([EnumRoles.Guest, EnumRoles.Accountant])
   @Query(() => Users, { name: 'getUserByQuery' })
   async GetUserByQuery(
     @Args('query', { nullable: true, type: () => PrismaSingleQuery })
@@ -79,7 +79,7 @@ export class UsersResolver {
 
   //=============================== RevertDeletedUsers ============================
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager])
-  @Mutation(() => Counter, { name: 'ReverUsers' })
+  @Mutation(() => Counter, { name: 'RevertUsers' })
   async RevertDeletedUsers(
     @Args({
       nullable: false,

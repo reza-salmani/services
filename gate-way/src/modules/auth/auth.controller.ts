@@ -7,6 +7,8 @@ import {
 import { PrismaAuthService } from './auth.prisma.service';
 import { Consts } from 'src/Utils/consts';
 import { ForgotPasswordDto, LoginDto } from './auth.model.dto';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from './jwt.strategy';
 @Resolver()
 export class AuthResolver {
   constructor(private authService: PrismaAuthService) {}
@@ -54,7 +56,8 @@ export class AuthResolver {
   }
 
   //======================================= get Menubar =========================================
-  @Query(() => MenuStructureModel, { name: 'menu' })
+  @UseGuards(GqlAuthGuard)
+  @Query(() => [MenuStructureModel], { name: 'menu' })
   async MenuBar(@Context() context: any) {
     return await this.authService.GetPages(context);
   }
