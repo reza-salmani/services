@@ -29,6 +29,7 @@ export class UnauthorizedException extends GraphQLError {
     super(Consts.unAuthorized, {
       extensions: {
         statusCode: HttpStatus.UNAUTHORIZED,
+        code: 'UNAUTHORIZED',
         description: description,
         cause: cause,
       },

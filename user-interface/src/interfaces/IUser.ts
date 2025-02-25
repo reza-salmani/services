@@ -7,3 +7,22 @@ export interface IForgotPassword {
   userName: string;
   newPassword: string;
 }
+export interface IUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  userName: string;
+  email: string;
+  phone: string;
+  password: string;
+  wrongPasswordCounter: number;
+  lockDownDate: string;
+  createDate: string;
+  updateDate: string;
+  deleteDate: string;
+  revertDate: string;
+  passwordChangeLastDate: string;
+  isDeleted: boolean;
+  isActive: boolean;
+  roles: string[];
+}

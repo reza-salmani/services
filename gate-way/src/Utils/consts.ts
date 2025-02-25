@@ -55,4 +55,5 @@ export const Consts = {
   menuChildren: 'زیرمجموعه های یک صفحه',
   menuPersianName: 'نام فارسی صفحه',
   menuDescription: 'توضیحات تکمیلی از کارکرد صفحه',
+  tokenExpired: 'توکن منقضی شده است',
 };

@@ -9,7 +9,7 @@ export default function ShellLayout({
   return (
     <div className="p-4">
       <MenuBar></MenuBar>
-      <div className="m-auto  h-auto w-full mt-4 opacity-95">{children}</div>
+      <div className="m-auto  h-auto w-full mt-4 opacity-[97%]">{children}</div>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   OperationVariables,
   TypedDocumentNode,
 } from "@apollo/client";
+import { redirect } from "next/navigation";
 
 //============================ main function ==========================
 const apolloClient = (cookie: string) =>
@@ -28,10 +29,15 @@ export async function mutation(
   variables: any,
   cookie: string = ""
 ) {
-  return await apolloClient(cookie).mutate({
-    mutation: grapgqlSchema,
-    variables: variables,
-  });
+  return await apolloClient(cookie)
+    .mutate({
+      mutation: grapgqlSchema,
+      variables: variables,
+    })
+    .catch((error) => {
+      if (error.graphQLErrors[0].extensions.statusCode === 401) redirect("/");
+      return error;
+    });
 }
 
 export async function query(
@@ -39,8 +45,13 @@ export async function query(
   variables?: any,
   cookie: string = ""
 ) {
-  return await apolloClient(cookie).query({
-    query: grapgqlSchema,
-    variables: variables,
-  });
+  return await apolloClient(cookie)
+    .query({
+      query: grapgqlSchema,
+      variables: variables,
+    })
+    .catch((error) => {
+      if (error.graphQLErrors[0].extensions.statusCode === 401) redirect("/");
+      return error;
+    });
 }

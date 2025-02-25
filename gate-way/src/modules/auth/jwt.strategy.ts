@@ -10,6 +10,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Context } from 'vm';
 import { EnumRoles } from '@src/bases/base';
 import { PrismaService } from '@src/bases/services/prisma-client';
+import { Consts } from '@src/Utils/consts';
+import { UnauthorizedException } from '@src/bases/services/error-handler';
 
 @Injectable()
 export class JWTStrategy extends PassportStrategy(Strategy) {
@@ -72,12 +74,12 @@ export class GqlAuthGuard implements CanActivate {
     let ctx = GqlExecutionContext.create(context);
     const { req } = ctx.getContext();
     if (req && !req.cookies['jwt']) {
-      return false;
+      throw new UnauthorizedException(null, Consts.tokenExpired);
     }
     let verify = await this.jwtService.verifyAsync(req.cookies['jwt'], {
       secret: this.configService.get('JWT_SECRET'),
     });
-    if (!verify) return false;
+    if (!verify) throw new UnauthorizedException(null, Consts.unAuthorized);
     return true;
   }
 }
@@ -100,7 +102,7 @@ export class RolesGuard implements CanActivate {
     let ctx = GqlExecutionContext.create(context);
     const { req } = ctx.getContext();
     if (req && !req.cookies['jwt']) {
-      return false;
+      throw new UnauthorizedException(null, Consts.tokenExpired);
     }
     const headerInfo = this.jwtService.decode(req.cookies['jwt'].trim());
 
