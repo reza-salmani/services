@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   CreateUserDto,
   DeleteUserDto,
@@ -16,6 +16,7 @@ import {
 import { EnumRoles, Counter } from '@src/bases/base';
 import { PrismaQuery, PrismaSingleQuery } from '@src/bases/PrismaQuery';
 import { Users } from './users.model';
+import { FileUpload } from 'graphql-upload-ts';
 
 //================================ Resulver ===================================
 @UseGuards(GqlAuthGuard)
@@ -23,7 +24,7 @@ import { Users } from './users.model';
 export class UsersResolver {
   constructor(private prismaRequestService: PrismaUsersService) {}
 
-  //================================== GetAllUsersByQuery ===========================
+  //#region ------------- GetAllUsersByQuery --------------
   @HasNotRoles([EnumRoles.Guest, EnumRoles.Accountant])
   @Query(() => [Users], { name: 'GetAllUsersWithQuery' })
   async GetUsersByQuery(
@@ -32,7 +33,9 @@ export class UsersResolver {
   ): Promise<Users[]> {
     return await this.prismaRequestService.GetAllUsersByQuery(query);
   }
-  //================================== GetUserByQuery  ==============================
+  //#endregion
+
+  //#region ------------- GetUserByQuery ------------------
   @HasNotRoles([EnumRoles.Guest, EnumRoles.Accountant])
   @Query(() => Users, { name: 'getUserByQuery' })
   async GetUserByQuery(
@@ -41,19 +44,20 @@ export class UsersResolver {
   ): Promise<Users> {
     return await this.prismaRequestService.GetUserByQuery(query);
   }
+  //#endregion
 
-  //================================== CreateUser ==================================
+  //#region ------------- CreateUser ----------------------
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
   @Mutation(() => Users, { name: 'CreateUser' })
-  // @UseRoles(EnumRoles.Admin, EnumRoles.User)
   async CreateUser(
     @Args({ nullable: false, name: 'userModel', type: () => CreateUserDto })
     userModel: CreateUserDto,
   ): Promise<Users> {
     return await this.prismaRequestService.CreateUser(userModel);
   }
+  //#endregion
 
-  //================================= UpdateUser ==================================
+  //#region ------------- UpdateUser ----------------------
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
   @Mutation(() => Users, { name: 'UpdateUser' })
   async UpdateUser(
@@ -62,8 +66,9 @@ export class UsersResolver {
   ): Promise<Users> {
     return await this.prismaRequestService.UpdateUser(userModel);
   }
+  //#endregion
 
-  //================================ SoftDeleteUsers ==============================
+  //#region ------------- SoftDeleteUsers -----------------
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
   @Mutation(() => Counter, { name: 'DeleteUsers' })
   async SoftDeleteUsers(
@@ -76,8 +81,9 @@ export class UsersResolver {
   ) {
     return await this.prismaRequestService.SoftDeleteUsers(deletedUsers);
   }
+  //#endregion
 
-  //=============================== RevertDeletedUsers ============================
+  //#region ------------- RevertDeletedUsers --------------
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager])
   @Mutation(() => Counter, { name: 'RevertUsers' })
   async RevertDeletedUsers(
@@ -90,8 +96,9 @@ export class UsersResolver {
   ) {
     return await this.prismaRequestService.RevertDeletedUsers(deletedUsers);
   }
+  //#endregion
 
-  //=============================== HardDeleteUsers ===============================
+  //#region ------------- HardDeleteUsers -----------------
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager])
   @Mutation(() => Counter, { name: 'DeleteUserPermanently' })
   async HardDeleteUsers(
@@ -104,8 +111,9 @@ export class UsersResolver {
   ) {
     return await this.prismaRequestService.HardDeleteUsers(deletedUsers);
   }
+  //#endregion
 
-  //=============================== ChangeActivation ==============================
+  //#region ------------- ChangeActivation ----------------
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
   @Mutation(() => Counter, { name: 'ChangeActivation' })
   async ChangeActivation(
@@ -120,8 +128,9 @@ export class UsersResolver {
       activationUsersIds,
     );
   }
+  //#endregion
 
-  //=============================== UpdateUserRoles ================================
+  //#region ------------- UpdateUserRoles -----------------
   @HasRoles([EnumRoles.Admin, EnumRoles.Manager])
   @Mutation(() => Counter, { name: 'UpdateUserRoles' })
   async UpdateUserRoles(
@@ -134,4 +143,20 @@ export class UsersResolver {
   ) {
     return await this.prismaRequestService.UpdateUserRoles(activationUsers);
   }
+  //#endregion
+
+  //#region ------------- ManageUserAvatar ----------------
+  @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
+  @Mutation(() => String, { name: 'manageUserAvatar' })
+  async ManageUserAvatar(
+    @Context() context: any,
+    @Args({ nullable: false, name: 'MangeUserAvatar', type: () => String })
+    fileUpload: FileUpload,
+  ) {
+    return await this.prismaRequestService.ManageUserAvatar(
+      fileUpload,
+      context,
+    );
+  }
+  //#endregion
 }

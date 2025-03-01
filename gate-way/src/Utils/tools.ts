@@ -1,6 +1,8 @@
 import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
 import * as bcript from 'bcrypt';
+import * as os from 'os';
 import { promisify } from 'util';
+import { exec } from 'child_process';
 
 export let Tools = {
   encript: async (text: string) => {
@@ -37,5 +39,37 @@ export let Tools = {
   },
   equal: (item1: string, item2: string) => {
     return item1.toLowerCase() === item2.toLowerCase();
+  },
+  getDriveSize(): Promise<{ total: number; free: number }> {
+    return new Promise((resolve, reject) => {
+      const platform = os.platform();
+      const driveLetter = __dirname.charAt(0).toUpperCase();
+
+      let cmd = '';
+
+      if (platform === 'win32') {
+        cmd = `powershell -command "Get-PSDrive -Name ${driveLetter} | Select-Object Used,Free,UsedCapacity,FreeCapacity"`;
+      } else if (platform === 'darwin' || platform === 'linux') {
+        cmd = `df -k ${__dirname} | tail -1`;
+      }
+
+      exec(cmd, (error, stdout) => {
+        if (error) {
+          return reject(error);
+        }
+
+        let total, free;
+        if (platform === 'win32') {
+          const output = stdout.trim().split(/\s+/);
+          free = Math.ceil((Number(output[9]) - Number(output[8])) / 1000000); // Free space in bytes
+          total = Math.ceil(Number(output[9]) / 1000000); // Total space in bytes
+        } else {
+          const data = stdout.trim().split(/\s+/);
+          total = Number(data[1]) * 1024;
+          free = Number(data[3]) * 1024;
+        }
+        resolve({ total, free });
+      });
+    });
   },
 };

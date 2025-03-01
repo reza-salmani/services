@@ -6,6 +6,7 @@ import { join } from 'path';
 import { printSchema } from 'graphql/utilities';
 import { GraphQLSchemaHost } from '@nestjs/graphql';
 import * as cookieParser from 'cookie-parser';
+import { CustomLogger } from './Utils/logger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     snapshot: true,
@@ -16,6 +17,8 @@ async function bootstrap() {
     credentials: true,
     origin: ['http://localhost:3001'],
   });
+  app.useLogger(app.get(CustomLogger));
+  // app.useGlobalInterceptors(app.get(TimingInterceptor));
   app.use(cookieParser());
   await app.listen(process.env.PORT ?? 3000);
   if (process.env.NODE_ENV === 'production') {

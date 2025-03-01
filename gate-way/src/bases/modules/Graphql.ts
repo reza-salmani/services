@@ -1,6 +1,7 @@
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { GraphQLModule, GraphQLSchemaBuilderModule } from '@nestjs/graphql';
+import { GraphQLLoggingMiddleware } from '@src/Utils/logger';
 import { join } from 'path';
 
 @Module({
@@ -11,6 +12,9 @@ import { join } from 'path';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       playground: false,
+      csrfPrevention: true,
+      hideSchemaDetailsFromClientErrors: true,
+      includeStacktraceInErrorResponses: true,
       formatError: (error) => {
         const graphQLFormattedError = {
           message: error.message,
@@ -28,4 +32,8 @@ import { join } from 'path';
     }),
   ],
 })
-export class GraphqlModule {}
+export class GraphqlModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(GraphQLLoggingMiddleware).forRoutes('/graphql');
+  }
+}

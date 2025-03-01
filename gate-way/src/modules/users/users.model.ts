@@ -9,7 +9,7 @@ import {
   IsStrongPassword,
 } from 'class-validator';
 
-//#region Users
+//#region --------------------- Users ---------------------
 @ObjectType()
 export class Users {
   @Field((type) => String, {
@@ -61,6 +61,7 @@ export class Users {
   @IsStrongPassword({ minLength: 2 }, { message: Consts.minLengthOfPassword })
   @IsNotEmpty({ message: Consts.passwordRequiredMessage })
   password: string;
+
   @Field(() => String, {
     nullable: false,
     name: 'id',
@@ -68,36 +69,49 @@ export class Users {
   })
   @IsNotEmpty({ message: Consts.UserIdIsRequired })
   id: string;
+
   @Field(() => String, {
     nullable: true,
     name: 'createDate',
     description: Consts.createDate,
   })
   createDate: string;
+
   @Field(() => String, {
     nullable: true,
     name: 'updateDate',
     description: Consts.updateDate,
   })
-  updateDate: string;
+  updateDate?: string;
+
   @Field(() => String, {
     nullable: true,
     name: 'deleteDate',
     description: Consts.deleteDate,
   })
-  deleteDate: string;
+  deleteDate?: string;
+
   @Field(() => String, {
     nullable: true,
     name: 'revertDate',
     description: Consts.revertDate,
   })
   revertDate: string;
+
+  @Field(() => String, {
+    nullable: true,
+    name: 'avatar',
+    description: Consts.avatarPath,
+  })
+  avatar?: string;
+
   @Field(() => Boolean, {
     nullable: true,
     name: 'isActive',
     description: Consts.isActive,
   })
   isActive: boolean;
+
   @Field(() => Boolean, {
     nullable: true,
     name: 'isDeleted',
@@ -111,6 +125,6 @@ export class Users {
     description: Consts.Roles,
     defaultValue: [Roles.Guest],
   })
-  roles: Roles[];
+  roles?: Roles[];
 }
 //#endregion

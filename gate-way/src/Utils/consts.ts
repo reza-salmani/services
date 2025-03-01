@@ -56,4 +56,7 @@ export const Consts = {
   menuPersianName: 'نام فارسی صفحه',
   menuDescription: 'توضیحات تکمیلی از کارکرد صفحه',
   tokenExpired: 'توکن منقضی شده است',
+  avatarPath: 'مسیر ذخیره عکس کاربر',
+  avatarImage: 'عکس کاربر',
+  userId: 'شناسه کاربر',
 };

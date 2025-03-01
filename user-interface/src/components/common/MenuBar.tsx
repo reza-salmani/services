@@ -17,11 +17,11 @@ import {
   Tooltip,
 } from "@heroui/react";
 import { ChevronDown, Loader2, LogOut, Users } from "lucide-react";
-import { ThemeSwitcher } from "../providers/Theme";
 import { mutation, query } from "@/services/graphql/apollo";
 import { GetPages, LogoutUser } from "@/services/graphql/user.query-doc";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ThemeSwitcher } from "../providers/theme";
 
 //================================== main function =====================================
 export default function MenuBar() {

@@ -110,6 +110,7 @@ type Mutation {
   isAuth: Boolean!
   login(loginModel: LoginDto!): LoginResponse!
   logout: String!
+  manageUserAvatar(MangeUserAvatar: String!): String!
   refreshToken: LoginResponse!
 }
 
@@ -188,6 +189,9 @@ input UpdateUserDto {
 type Users {
   """سطوح دسترسی"""
   Roles: [EnumRoles!]!
+
+  """مسیر ذخیره عکس کاربر"""
+  avatar: String
 
   """تاریخ ایجاد"""
   createDate: String

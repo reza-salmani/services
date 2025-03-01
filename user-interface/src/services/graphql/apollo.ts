@@ -35,7 +35,11 @@ export async function mutation(
       variables: variables,
     })
     .catch((error) => {
-      if (error.graphQLErrors[0].extensions.statusCode === 401) redirect("/");
+      if (!error.graphQLErrors.length) {
+        redirect("/ServerNotRunning");
+      } else {
+        if (error.graphQLErrors[0].extensions.statusCode === 401) redirect("/");
+      }
       return error;
     });
 }
@@ -51,7 +55,11 @@ export async function query(
       variables: variables,
     })
     .catch((error) => {
-      if (error.graphQLErrors[0].extensions.statusCode === 401) redirect("/");
+      if (!error.graphQLErrors.length) {
+        redirect("/ServerNotRunning");
+      } else {
+        if (error.graphQLErrors[0].extensions.statusCode === 401) redirect("/");
+      }
       return error;
     });
 }

@@ -2,6 +2,7 @@
 import { IUser } from "@/interfaces/IUser";
 import { query } from "@/services/graphql/apollo";
 import { GetAllUser } from "@/services/graphql/user.query-doc";
+import { dateTools } from "@/utils/date";
 import {
   getKeyValue,
   Table,
@@ -34,8 +35,11 @@ export default function UsersList() {
   //#region ------------------ functions -------------------------
   useEffect(() => {
     query(GetAllUser, { take: 10, skip: 0 }).then((res) => {
-      console.log(res.data.GetAllUsersWithQuery as IUser[]);
-
+      console.log();
+      (res.data.GetAllUsersWithQuery as IUser[]).map((user) => {
+        user.createDate = dateTools.toPersian(user.createDate, "long");
+        return user;
+      });
       setRows(res.data.GetAllUsersWithQuery as IUser[]);
     });
   }, []);
@@ -50,7 +54,12 @@ export default function UsersList() {
       <Table aria-label="Example table with dynamic content">
         <TableHeader columns={columns}>
           {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
+            <TableColumn
+              className="bg-blue-400 text-white text-medium"
+              key={column.key}
+            >
+              {column.label}
+            </TableColumn>
           )}
         </TableHeader>
         <TableBody items={rows}>
@@ -58,7 +67,6 @@ export default function UsersList() {
             <TableRow key={item.id}>
               {(columnKey) => (
                 <TableCell>
-                  {" "}
                   {columnKey === "isActive"
                     ? getKeyValue(item, columnKey)
                       ? "فعال"

@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaQuery, PrismaSingleQuery } from '@src/bases/PrismaQuery';
 import { PrismaService } from '@src/bases/services/prisma-client';
@@ -11,10 +15,17 @@ import {
   ToggleActiveUserDto,
   UpdateRolesToUserDto,
 } from './users.model.dto';
+import { JwtService } from '@nestjs/jwt';
+import path, { join } from 'path';
+import { createWriteStream, mkdirSync } from 'fs';
+import { FileUpload } from 'graphql-upload-ts';
 
 @Injectable()
 export class PrismaUsersService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   //========================= GetAllUsersByQuery ============================
   async GetAllUsersByQuery(queries: PrismaQuery): Promise<User[]> {
@@ -95,5 +106,33 @@ export class PrismaUsersService {
       },
       where: { id: { in: updateModel.ids } },
     });
+  }
+
+  //#region ------------- UserAvatarManager ---------------
+  async ManageUserAvatar(fileUpload: FileUpload, context: any) {
+    try {
+      if (context.req && context.req.cookies && context.req.cookies['jwt']) {
+        let userId = this.jwtService.decode(context.req.cookies['jwt']).sub;
+        if (!userId) {
+          throw new NotFoundException(Consts.userNotExist);
+        }
+        let localPath = path.dirname(join(__dirname, '/images/users/avatars'));
+        if (!localPath) {
+          mkdirSync(join(__dirname, '/images/users/avatars'), {
+            recursive: true,
+          });
+        }
+        localPath.concat(`/${userId}`);
+        fileUpload.createReadStream().pipe(createWriteStream(localPath));
+        return await this.prismaService.user.update({
+          data: {
+            avatarPath: localPath,
+          },
+          where: { id: userId },
+        });
+      }
+    } catch (error) {
+      throw new BadRequestException(error, Consts.badRequestMessage);
+    }
   }
 }

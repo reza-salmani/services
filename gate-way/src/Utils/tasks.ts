@@ -34,7 +34,7 @@ export class TasksService {
               selfId: 1,
               parentId: null,
               isReadOnly: false,
-              link: '/UsersManagement',
+              link: '/Shell/UsersManagement',
               roles: [EnumRoles.Admin],
             },
             {
@@ -44,7 +44,7 @@ export class TasksService {
               parentId: 1,
               isReadOnly: false,
               description: 'لیست کاملی از کاربران را در اختیار شما میگذارد',
-              link: '/UsersList',
+              link: '/Shell/UsersManagement/UsersList',
               roles: [EnumRoles.Admin],
             },
             {
@@ -55,7 +55,7 @@ export class TasksService {
               isReadOnly: false,
               description:
                 'مجوز دسترسی هر فرد به صفحات موجود در نرم افزار را میتوانید در این قسمت مدیریت نمایید',
-              link: '/UserClassification',
+              link: '/Shell/UsersManagement/UserClassification',
               roles: [EnumRoles.Admin],
             },
           ],

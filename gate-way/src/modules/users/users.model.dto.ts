@@ -9,7 +9,7 @@ import { Roles } from '@prisma/client';
 import { EnumRoles } from '@src/bases/base';
 import { Consts } from '@src/Utils/consts';
 
-//#region  Create User
+//#region  ------------------  Create User -------------------------------
 @InputType()
 export class CreateUserDto {
   @Field((type) => String, {
@@ -64,7 +64,7 @@ export class CreateUserDto {
 }
 //#endregion
 
-//#region Update User
+//#region -------------------- Update User --------------------------------
 @InputType()
 export class UpdateUserDto extends PartialType(
   OmitType(CreateUserDto, ['password', 'userName']),
@@ -76,36 +76,42 @@ export class UpdateUserDto extends PartialType(
   })
   @IsNotEmpty({ message: Consts.UserIdIsRequired })
   id: string;
+
   @Field(() => String, {
     nullable: true,
     name: 'createDate',
     description: Consts.createDate,
   })
   createDate: string;
+
   @Field(() => String, {
     nullable: true,
     name: 'updateDate',
     description: Consts.updateDate,
   })
   updateDate: string;
+
   @Field(() => String, {
     nullable: true,
     name: 'deleteDate',
     description: Consts.deleteDate,
   })
   deleteDate: string;
+
   @Field(() => String, {
     nullable: true,
     name: 'revertDate',
     description: Consts.revertDate,
   })
   revertDate: string;
+
   @Field(() => Boolean, {
     nullable: true,
     name: 'isActive',
     description: Consts.isActive,
   })
   isActive: boolean;
+
   @Field(() => Boolean, {
     nullable: true,
     name: 'isDeleted',
@@ -123,7 +129,7 @@ export class UpdateUserDto extends PartialType(
 }
 //#endregion
 
-//#region Delete Users
+//#region ------------------------ Delete Users --------------------------
 @InputType()
 export class DeleteUserDto {
   @Field(() => [String], {
@@ -135,7 +141,7 @@ export class DeleteUserDto {
 }
 //#endregion
 
-//#region Toggle  Active Users
+//#region ------------------------- Toggle  Active Users --------------------------
 @InputType()
 export class ToggleActiveUserDto {
   @Field(() => [String], {
@@ -149,7 +155,7 @@ export class ToggleActiveUserDto {
 }
 //#endregion
 
-//#region Update Roles To User
+//#region ---------------------------- Update Roles To User ---------------------------
 @InputType()
 export class UpdateRolesToUserDto {
   @Field(() => [String], {
@@ -166,5 +172,24 @@ export class UpdateRolesToUserDto {
     defaultValue: [Roles.Guest],
   })
   Roles: Roles[];
+}
+//#endregion
+
+//#region ---------------------------- manage User Avatar ---------------------------
+@InputType()
+export class ManageAvatarUserDto {
+  @Field(() => String, {
+    nullable: true,
+    name: 'avatarImage',
+    description: Consts.avatarImage,
+  })
+  avatarImage?: string;
+
+  @Field(() => String, {
+    nullable: false,
+    name: 'userId',
+    description: Consts.userId,
+  })
+  userId: string;
 }
 //#endregion
