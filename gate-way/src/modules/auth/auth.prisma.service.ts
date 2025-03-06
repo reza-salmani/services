@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ForgotPasswordDto } from './auth.model.dto';
@@ -9,9 +9,9 @@ import { LoginModel, JwtPayLoad, ForgotPasswordModel } from './auth.model';
 import { Context } from 'vm';
 import { DateTime } from '@src/Utils/date-time';
 import {
-  BadRequestException,
-  InternalServerErrorException,
-  NotFoundException,
+  GraphQlBadRequestException,
+  GraphQlNotFoundException,
+  GraphQlUnauthorizedException,
 } from '@src/bases/services/error-handler';
 
 @Injectable()
@@ -22,13 +22,16 @@ export class PrismaAuthService {
     private jwtService: JwtService,
   ) {}
 
-  //======================================= Sign In ===========================================
+  //#region ------------- Sign In -------------------------
   async Login(loginModel: LoginModel, ctx: Record<string, any>) {
     let existUser = await this.prismaService.user.findUnique({
       where: { userName: loginModel.userName },
     });
     if (!existUser) {
-      throw new NotFoundException(new Error(), Consts.userNotExist);
+      throw new GraphQlNotFoundException(
+        Consts.userNotExist,
+        HttpStatus.NOT_FOUND,
+      );
     }
     if (existUser.wrongPasswordCounter >= 3) {
       if (DateTime.getDiffTime(new Date(), existUser.lockDownDate) > 3) {
@@ -43,7 +46,10 @@ export class PrismaAuthService {
           where: { id: existUser.id },
         });
       } else {
-        throw new BadRequestException(new Error(), Consts.LockDownUser);
+        throw new GraphQlBadRequestException(
+          Consts.LockDownUser,
+          HttpStatus.TOO_MANY_REQUESTS,
+        );
       }
     }
     if (!(await Tools.compareHash(loginModel.password, existUser.password))) {
@@ -65,10 +71,22 @@ export class PrismaAuthService {
           },
           where: { id: existUser.id },
         });
-        throw new BadRequestException(new Error(), Consts.LockDownUser);
+        throw new GraphQlBadRequestException(
+          Consts.LockDownUser,
+          HttpStatus.TOO_MANY_REQUESTS,
+        );
       }
-      throw new BadRequestException(new Error(), Consts.loginParamsIsNotValid);
+      throw new GraphQlBadRequestException(
+        Consts.loginParamsIsNotValid,
+        HttpStatus.BAD_REQUEST,
+      );
     }
+    return await this.ManageJWTToken(existUser, ctx);
+  }
+  //#endregion
+
+  //#region ------------- Manage Jwt Token ----------------
+  async ManageJWTToken(existUser: any, ctx: any, refreshToken: boolean = true) {
     let payLoad: JwtPayLoad = {
       userName: existUser.userName,
       sub: existUser.id,
@@ -80,12 +98,15 @@ export class PrismaAuthService {
       secret: this.configService.get('JWT_SECRET'),
       algorithm: 'HS512',
     });
-    let refresh_token = await this.jwtService.signAsync(payLoad, {
-      expiresIn: this.configService.get('EXPIRE_TIME_REFRESH_TOKEN'),
-      issuer: this.configService.get('ISSUER'),
-      secret: this.configService.get('JWT_REFRESHTOKEN_SECRET'),
-      algorithm: 'HS512',
-    });
+    let refresh_token = '';
+    if (refreshToken) {
+      refresh_token = await this.jwtService.signAsync(payLoad, {
+        expiresIn: this.configService.get('EXPIRE_TIME_REFRESH_TOKEN'),
+        issuer: this.configService.get('ISSUER'),
+        secret: this.configService.get('JWT_REFRESHTOKEN_SECRET'),
+        algorithm: 'HS512',
+      });
+    }
     const { res } = ctx;
     res.cookie('jwt', access_token, {
       httpOnly: process.env['HTTP_ONLY'],
@@ -117,7 +138,9 @@ export class PrismaAuthService {
           totalLoginCounter: userAuthInfo.totalLoginCounter + BigInt(1),
           loginTime: new Date().toISOString(),
           isLogin: true,
-          refreshToken: refresh_token,
+          refreshToken: refreshToken
+            ? refresh_token
+            : userAuthInfo.refreshToken,
         },
         where: { id: userAuthInfo.id },
       });
@@ -127,7 +150,9 @@ export class PrismaAuthService {
       refresh_token: refresh_token,
     };
   }
-  //====================================== Logout =============================================
+  //#endregion
+
+  //#region ------------- Logout --------------------------
   async Logout(ctx: any) {
     try {
       if (
@@ -153,87 +178,54 @@ export class PrismaAuthService {
         });
         ctx.res.clearCookie('jwt');
       }
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    } catch (error) {}
   }
-  //==================================== IS Authenticated =====================================
+  //#endregion
+
+  //#region ------------- IsAuthenticated ------------------
   async IsAuthenticated(ctx: Context) {
+    let existUserAuth = await Tools.GetUserInfoFromContext(
+      ctx,
+      this.jwtService,
+      this.prismaService,
+    );
     try {
-      if (ctx.req && ctx.req.cookies && ctx.req.cookies['jwt']) {
-        let userId = this.jwtService.decode(ctx.req.cookies['jwt']).sub;
-        let existUserAuth = await this.prismaService.auth.findFirst({
-          where: { userId: { equals: userId } },
-        });
+      if (existUserAuth) {
         let verify = await this.jwtService.verifyAsync(existUserAuth.token, {
           secret: this.configService.get('JWT_SECRET'),
         });
-        if (verify) return true;
+        if (!verify) return false;
       } else {
         return false;
       }
     } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
-  }
-
-  //====================================== Refresh Token ======================================
-  async RefreshToken(ctx: Record<string, any>) {
-    try {
-      let userId = this.jwtService.decode(ctx.res.cookies('jwt').trim()).sub;
-      let existItem = await this.prismaService.auth.findFirst({
-        where: { userId: { equals: userId } },
-      })[0];
-      let existUser = await this.prismaService.user.findFirst({
-        where: { id: { equals: userId } },
-      })[0];
-      if (existItem && existItem.refreshToken && existItem.isLogin) {
-        let verify = this.jwtService.verifyAsync(existItem.refreshToken);
-        if (verify) {
-          let access_token = await this.jwtService.signAsync({
-            userName: existUser.userName,
-            sub: userId,
-            roles: existUser.roles,
+      try {
+        let verifyRefreshToken = await this.jwtService.verifyAsync(
+          existUserAuth.refreshToken,
+          {
+            secret: this.configService.get('JWT_REFRESHTOKEN_SECRET'),
+          },
+        );
+        if (verifyRefreshToken) {
+          let existUser = await this.prismaService.user.findUnique({
+            where: { id: existUserAuth.userId },
           });
-          let refresh_token = await this.jwtService.signAsync(
-            {
-              userName: existUser.userName,
-              sub: userId,
-              roles: existUser.roles,
-            },
-            {
-              expiresIn: this.configService.get('EXPIRE_TIME_REFRESH_TOKEN'),
-            },
-          );
-          await this.prismaService.auth.update({
-            data: {
-              token: access_token,
-              dailyloginCounter: existItem.dailyloginCounter + 1,
-              loginTime: new Date().toISOString(),
-              refreshToken: refresh_token,
-            },
-            where: { id: existItem.id },
-          });
-          const { res } = ctx;
-          res.cookie('jwt', access_token, {
-            httpOnly: process.env['HTTP_ONLY'],
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env['SAME_SITE'],
-            maxAge: process.env['MAX_AGE'],
-          });
-          return { access_token: access_token, refresh_token: refresh_token };
+          await this.ManageJWTToken(existUser, ctx, false);
         } else {
-          return { access_token: '', refresh_token: '' };
+          return false;
         }
-      } else {
-        return { access_token: '', refresh_token: '' };
+      } catch (error) {
+        throw new GraphQlUnauthorizedException(
+          Consts.unAuthorized,
+          HttpStatus.UNAUTHORIZED,
+        );
       }
-    } catch (error) {
-      throw new InternalServerErrorException(error);
     }
+    return true;
   }
+  //#endregion
 
-  //===================================== ForgotPassword ======================================
+  //#region ------------- ForgotPassword ------------------
   async ForgotPassword(
     forgotPasswordModel: ForgotPasswordDto,
   ): Promise<ForgotPasswordModel> {
@@ -248,9 +240,9 @@ export class PrismaAuthService {
         },
       });
       if (!existUser) {
-        throw new BadRequestException(
-          new Error(),
+        throw new GraphQlBadRequestException(
           Consts.wrongIncomingParameters,
+          HttpStatus.BAD_REQUEST,
         );
       }
       let pass = await Tools.hash(forgotPasswordModel.password);
@@ -265,12 +257,11 @@ export class PrismaAuthService {
         where: { id: existUser.id },
       });
       return { userName: existUser.userName };
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    } catch (error) {}
   }
-  //======================================= MenuBar =======================================
-  //#region Get Menu
+  //#endregion
+
+  //#region-------------- Get Menu ------------------------
   async GetPages(context: any) {
     let result = await this.prismaService.page.findMany();
     const { req } = context;

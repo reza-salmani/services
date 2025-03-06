@@ -15,9 +15,8 @@ datasource db {
 
 model User {
   id                     String  @id @default(uuid()) @map("_id")
-  firstName              String  @db.String
-  lastName               String  @db.String
-  userName               String  @unique() @db.String
+  userName               String  @unique @db.String
+  nationalCode           String  @db.String
   email                  String  @unique() @db.String
   phone                  String  @unique() @db.String
   password               String  @db.String
@@ -30,7 +29,7 @@ model User {
   passwordChangeLastDate String? @db.String
   isDeleted              Boolean @default(false) @db.Bool
   isActive               Boolean @default(false) @db.Bool
-  roles                  Roles[] @default([Guest])
+  roles                  Roles[] @default([Demo_Viewer])
   avatarPath             String? @db.String
 }
 
@@ -59,19 +58,65 @@ model Auth {
 }
 
 enum Roles {
-  Guest
-  Base
-  BaseViewer
-  User
-  UserViewer
-  Viewer
   Admin
-  Accountant
-  AccountantViewer
-  Manager
-  ManagerViewer
+  User_Management
+  User_Global
+  Demo
+  Cartable_Junior
+  Cartable_Mid
+  Cartable_Sinior
+  Cartable_Viewer
+  Demo_Viewer
   Security
-  SecurityViewer
+  Security_Viewer
   Inspector
-  InspectorViewer
+  Inspector_Viewer
+  Hr_Management_Junior
+  Hr_Management_Mid
+  Hr_Management_Sinior
+  Hr_Management_Viewer
+  Hr_User_Junior
+  Hr_User_Mid
+  Hr_User_Sinior
+  Hr_User_Viewer
+  Logestic_Management_Junior
+  Logestic_Management_Mid
+  Logestic_Management_Sinior
+  Logestic_Management_Viewer
+  Logestic_User_Junior
+  Logestic_User_Mid
+  Logestic_User_Sinior
+  Logestic_User_Viewer
+  TimeAttandance_Management_Junior
+  TimeAttandance_Management_Mid
+  TimeAttandance_Management_Sinior
+  TimeAttandance_Management_Viewer
+  TimeAttandance_User_Junior
+  TimeAttandance_User_Mid
+  TimeAttandance_User_Sinior
+  TimeAttandance_User_Viewer
+  Accounting_Management_Junior
+  Accounting_Management_Mid
+  Accounting_Management_Sinior
+  Accounting_Management_Viewer
+  Accounting_User_Junior
+  Accounting_User_Mid
+  Accounting_User_Sinior
+  Accounting_User_Viewer
+  Wages_Management_Junior
+  Wages_Management_Mid
+  Wages_Management_Sinior
+  Wages_Management_Viewer
+  Wages_User_Junior
+  Wages_User_Mid
+  Wages_User_Sinior
+  Wages_User_Viewer
+  Messaging_Management_Junior
+  Messaging_Management_Mid
+  Messaging_Management_Sinior
+  Messaging_Management_Viewer
+  Messaging_User_Junior
+  Messaging_User_Mid
+  Messaging_User_Sinior
+  Messaging_User_Viewer
 }

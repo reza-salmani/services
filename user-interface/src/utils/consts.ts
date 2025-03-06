@@ -1,4 +1,13 @@
 export const consts = {
+  global: {
+    edit: "ویرایش",
+    delete: "حذف",
+    show: "مشاهده",
+    create: "ایجاد",
+    cancel: "انصراف",
+    toggleActivation: "تغییر وضعیت",
+    revert: "برگشت",
+  },
   theme: {
     dark: "تاریک",
     light: "روشن",
@@ -20,6 +29,30 @@ export const consts = {
     errors: {
       requiredUsername: "نام کاربری اجباریست",
       requiredPassword: " کلمه عبور اجباریست",
+      regexUserName: "فقط از حروف و اعداد انگلیسی استفاده نمایید",
+    },
+  },
+  submit: {
+    info: {
+      userName: "نام کاربری",
+      password: "کلمه عبور",
+      nationalCode: "کدملی",
+      email: "ایمیل",
+      phone: "همراه",
+    },
+    placeholder: {
+      enterUsername: "نام کاربری را وارد نمایید",
+      enterPassword: "کلمه عبور را وارد نمایید",
+      enterNationalCode: "کدملی خود را وارد نمایید",
+      enterEmail: "ایمیل را وارد نمایید",
+      enterPhone: "همراه را وارد نمایید",
+    },
+    errors: {
+      requiredUsername: "نام کاربری اجباریست",
+      requiredPassword: " کلمه عبور اجباریست",
+      requirednationalCode: " نام اجباریست",
+      requiredEmail: " ایمیل اجباریست",
+      requiredPhone: " همراه اجباریست",
       regexUserName: "فقط از حروف و اعداد انگلیسی استفاده نمایید",
     },
   },
@@ -45,5 +78,6 @@ export const consts = {
     brandTitle: "شرکت سوده ایمن آرام",
     logout: "خروج",
   },
-  serverNotRunning:"سرور سرویس دهنده در حال حاضر در دسترس نیست. لطفا با پشتیبان نرم افزاری خود تماس حاصل نمایید"
+  serverNotRunning:
+    "سرور سرویس دهنده در حال حاضر در دسترس نیست. لطفا با پشتیبان نرم افزاری خود تماس حاصل نمایید",
 };

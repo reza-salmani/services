@@ -1,4 +1,6 @@
 import { gql } from "@apollo/client";
+
+//#region --------------- LoginUser -----------------------
 export let LoginUser = gql`
   mutation ($userName: String, $password: String) {
     login(loginModel: { password: $password, userName: $userName }) {
@@ -6,11 +8,17 @@ export let LoginUser = gql`
     }
   }
 `;
+//#endregion
+
+//#region --------------- LogoutUser ----------------------
 export let LogoutUser = gql`
   mutation {
     logout
   }
 `;
+//#endregion
+
+//#region --------------- ForgotPasswordUser --------------
 export let ForgotPasswordUser = gql`
   mutation ($userName: String, $password: String) {
     forgotPassword(forgotModel: { userName: $userName, password: $password }) {
@@ -18,62 +26,37 @@ export let ForgotPasswordUser = gql`
     }
   }
 `;
-// export let DeleteUser = gql`
-//     mutation ($ids:String[]) {
-//       DeleteUsers(deleteUsersIds: { ids: $ids }) {
-//         count
-//       }
-//     }
-//   `;
-// export let RevertDeleteUser = gql`
-//     mutation ($ids:String[]){
-//       ReverUsers(deleteUsersIds: { ids: $ids}) {
-//         count
-//       }
-//     }
-//   `;
-// export let HardDeleteUser = gql`
-//     mutation ($ids:String[]) {
-//       DeleteUserPermanently(
-//         deleteUsersIds: { ids: $ids }
-//       ) {
-//         count
-//       }
-//     }
-//   `;
-// export let ChangeActivationUser = gql`
-//     mutation ($ids:String[],state:Boolean){
-//       ChangeActivation(ToggleActiveUser: { ids: $ids, state: $state }) {
-//         count
-//       }
-//     }
-//   `;
-// export let UpdateUserRoles = gql`
-//     mutation ($ids:String[],$Roles:String[]){
-//       UpdateUserRoles(UpdateRolesToUser: { ids: $ids, roles: $Roles }) {
-//         count
-//       }
-//     }
-//   `;
+//#endregion
+
+//#region --------------- GetAllUser ----------------------
 export let GetAllUser = gql`
   query ($queries: PrismaQuery) {
     GetAllUsersWithQuery(queries: $queries) {
-      userName
-      createDate
-      deleteDate
-      email
-      firstName
-      id
-      isActive
-      isDeleted
-      lastName
-      revertDate
-      phone
-      Roles
-      updateDate
+      items {
+        avatar
+        createDate
+        deleteDate
+        email
+        id
+        isActive
+        isDeleted
+        nationalCode
+        password
+        phone
+        revertDate
+        roles
+        updateDate
+        userName
+      }
+      pageNumber
+      pageSize
+      totalCount
     }
   }
 `;
+//#endregion
+
+//#region --------------- GetPages ------------------------
 export let GetPages = gql`
   query {
     menu {
@@ -89,68 +72,128 @@ export let GetPages = gql`
     }
   }
 `;
+//#endregion
+
+//#region --------------- GetOneUser ----------------------
 export let GetOneUser = gql`
   query ($query: PrismaQuery) {
     getUserByQuery(query: $query) {
-      Roles
+      roles
       createDate
       deleteDate
       email
-      firstName
       id
       isActive
       isDeleted
-      lastName
+      nationalCode
       password
       phone
       revertDate
       updateDate
       userName
+      avatar
     }
   }
 `;
-// export let CreateUser = gql`
-//   mutation (
-//     $email: String
-//     $firstName: String
-//     $lastName: String
-//     $password: String
-//     $phone: String
-//     $userName: String
-//   ) {
-//     CreateUser(
-//       userModel: {
-//         email: $email
-//         firstName: $firstName
-//         lastName: $lastname
-//         password: $password
-//         phone: $phone
-//         userName: $userName
+//#endregion
+
+//#region --------------- isAuth --------------------------
+export let IsAuth = gql`
+  mutation {
+    isAuth
+  }
+`;
+//#endregion
+
+//#region --------------- DeleteUser ----------------------
+export let DeleteUser = gql`
+  mutation ($ids: [String!]!) {
+    DeleteUsers(deleteUsersIds: { ids: $ids }) {
+      count
+    }
+  }
+`;
+//#endregion
+
+//#region --------------- ReverUsers ----------------------
+export let RevertDeleteUser = gql`
+  mutation ($ids: [String!]!) {
+    RevertUsers(deleteUsersIds: { ids: $ids }) {
+      count
+    }
+  }
+`;
+//#endregion
+
+//#region --------------- CreateUser ----------------------
+export let CreateUserItem = gql`
+  mutation (
+    $email: String!
+    $nationalCode: String!
+    $password: String!
+    $phone: String!
+    $userName: String!
+  ) {
+    CreateUser(
+      userModel: {
+        email: $email
+        nationalCode: $nationalCode
+        password: $password
+        phone: $phone
+        userName: $userName
+      }
+    ) {
+      roles
+      avatar
+      createDate
+      deleteDate
+      email
+      id
+      isActive
+      isDeleted
+      nationalCode
+      password
+      phone
+      revertDate
+      updateDate
+    }
+  }
+`;
+//#endregion
+
+//#region --------------- activationUsers -----------------
+export let ChangeActivationUser = gql`
+  mutation ($ids: [String!]!, $state: Boolean) {
+    ChangeActivation(ToggleActiveUser: { ids: $ids, state: $state }) {
+      count
+    }
+  }
+`;
+//#endregion
+
+// export let HardDeleteUser = gql`
+//     mutation ($ids:String[]) {
+//       DeleteUserPermanently(
+//         deleteUsersIds: { ids: $ids }
+//       ) {
+//         count
 //       }
-//     ) {
-//       Roles
-//       createDate
-//       deleteDate
-//       email
-//       firstName
-//       id
-//       isActive
-//       isDeleted
-//       lastName
-//       password
-//       phone
-//       revertDate
-//       updateDate
-//       userName
 //     }
-//   }
-// `;
+//   `;
+
+// export let UpdateUserRoles = gql`
+//     mutation ($ids:String[],$Roles:String[]){
+//       UpdateUserRoles(UpdateRolesToUser: { ids: $ids, roles: $Roles }) {
+//         count
+//       }
+//     }
+//   `;
+
 // export let UpdateUser = gql`
 //     mutation (
 //       $id: String
 //       $email: String
-//       $firstName: String
-//       $lastName: String
+//       $nationalCode: String
 //       $password: String
 //       $phone: String
 //       $userName: String
@@ -166,8 +209,7 @@ export let GetOneUser = gql`
 //         userModel: {
 //           id: $id
 //           email: $email
-//           firstName: $firstName
-//           lastName: $lastname
+//           nationalCode: $nationalCode
 //           password: $password
 //           phone: $phone
 //           userName: $userName
@@ -184,11 +226,10 @@ export let GetOneUser = gql`
 //         createDate
 //         deleteDate
 //         email
-//         firstName
 //         id
 //         isActive
 //         isDeleted
-//         lastName
+//         nationalCode
 //         password
 //         phone
 //         revertDate
@@ -198,11 +239,6 @@ export let GetOneUser = gql`
 //     }
 //   `;
 
-export let IsAuth = gql`
-  mutation {
-    isAuth
-  }
-`;
 // export let RefreshTokenAuth = gql`
 //   mutation {
 //     refreshToken {

@@ -26,3 +26,14 @@ export interface IUser {
   isActive: boolean;
   roles: string[];
 }
+export interface ISubmitUser {
+  nationalCode: string;
+  userName: string;
+  email: string;
+  phone: string;
+  password: string;
+}
+export interface IToggleActivation {
+  ids: string[];
+  state: boolean;
+}

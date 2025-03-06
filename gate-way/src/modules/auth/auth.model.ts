@@ -1,6 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Roles } from '@prisma/client';
-import { EnumRoles } from '@src/bases/base';
 import { Consts } from '@src/Utils/consts';
 
 //#region Login
@@ -81,7 +80,7 @@ export class MenuStructureModel {
   })
   isReadOnly?: boolean;
 
-  @Field(() => [EnumRoles], {
+  @Field(() => [Roles], {
     name: 'roles',
     description: Consts.menuRoles,
     nullable: true,

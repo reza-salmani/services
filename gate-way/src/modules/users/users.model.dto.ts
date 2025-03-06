@@ -1,12 +1,6 @@
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsPhoneNumber,
-  IsStrongPassword,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
 import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
 import { Roles } from '@prisma/client';
-import { EnumRoles } from '@src/bases/base';
 import { Consts } from '@src/Utils/consts';
 
 //#region  ------------------  Create User -------------------------------
@@ -14,19 +8,11 @@ import { Consts } from '@src/Utils/consts';
 export class CreateUserDto {
   @Field((type) => String, {
     nullable: false,
-    name: 'firstName',
-    description: Consts.yourRealName,
+    name: 'nationalCode',
+    description: Consts.yourNationalCode,
   })
   @IsNotEmpty()
-  firstName: string;
-
-  @Field((type) => String, {
-    nullable: false,
-    name: 'lastName',
-    description: Consts.yourRealFamily,
-  })
-  @IsNotEmpty({ message: Consts.lastNameRequiredMessage })
-  lastName: string;
+  nationalCode: string;
 
   @Field((type) => String, {
     nullable: false,
@@ -58,7 +44,6 @@ export class CreateUserDto {
     name: 'password',
     description: Consts.yourPassword,
   })
-  @IsStrongPassword({ minLength: 2 }, { message: Consts.minLengthOfPassword })
   @IsNotEmpty({ message: Consts.passwordRequiredMessage })
   password: string;
 }
@@ -119,11 +104,11 @@ export class UpdateUserDto extends PartialType(
   })
   isDeleted: boolean;
 
-  @Field(() => [EnumRoles], {
+  @Field(() => [Roles], {
     nullable: true,
     name: 'Roles',
     description: Consts.Roles,
-    defaultValue: [Roles.Guest],
+    defaultValue: [Roles.Demo_Viewer],
   })
   Roles: Roles[];
 }
@@ -165,11 +150,11 @@ export class UpdateRolesToUserDto {
   })
   ids: string[];
 
-  @Field(() => [EnumRoles], {
+  @Field(() => [Roles], {
     nullable: false,
     name: 'Roles',
     description: Consts.Roles,
-    defaultValue: [Roles.Guest],
+    defaultValue: [Roles.Demo_Viewer],
   })
   Roles: Roles[];
 }

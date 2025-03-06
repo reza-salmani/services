@@ -8,15 +8,12 @@ import {
 } from './users.model.dto';
 import { PrismaUsersService } from './users.prisma.service';
 import { UseGuards } from '@nestjs/common';
-import {
-  GqlAuthGuard,
-  HasNotRoles,
-  HasRoles,
-} from 'src/modules/auth/jwt.strategy';
-import { EnumRoles, Counter } from '@src/bases/base';
+import { GqlAuthGuard, HasRoles } from 'src/modules/auth/jwt.strategy';
+import { Counter } from '@src/bases/base';
 import { PrismaQuery, PrismaSingleQuery } from '@src/bases/PrismaQuery';
-import { Users } from './users.model';
+import { UserOutput, Users } from './users.model';
 import { FileUpload } from 'graphql-upload-ts';
+import { Roles } from '@prisma/client';
 
 //================================ Resulver ===================================
 @UseGuards(GqlAuthGuard)
@@ -25,18 +22,38 @@ export class UsersResolver {
   constructor(private prismaRequestService: PrismaUsersService) {}
 
   //#region ------------- GetAllUsersByQuery --------------
-  @HasNotRoles([EnumRoles.Guest, EnumRoles.Accountant])
-  @Query(() => [Users], { name: 'GetAllUsersWithQuery' })
+  @HasRoles([
+    Roles.Demo,
+    Roles.Demo_Viewer,
+    Roles.Admin,
+    Roles.User_Global,
+    Roles.User_Management,
+    Roles.Inspector,
+    Roles.Inspector_Viewer,
+    Roles.Security,
+    Roles.Security_Viewer,
+  ])
+  @Query(() => UserOutput, { name: 'GetAllUsersWithQuery' })
   async GetUsersByQuery(
     @Args('queries', { nullable: true, type: () => PrismaQuery })
     query: PrismaQuery,
-  ): Promise<Users[]> {
+  ): Promise<UserOutput> {
     return await this.prismaRequestService.GetAllUsersByQuery(query);
   }
   //#endregion
 
   //#region ------------- GetUserByQuery ------------------
-  @HasNotRoles([EnumRoles.Guest, EnumRoles.Accountant])
+  @HasRoles([
+    Roles.Demo,
+    Roles.Demo_Viewer,
+    Roles.Admin,
+    Roles.User_Global,
+    Roles.User_Management,
+    Roles.Inspector,
+    Roles.Inspector_Viewer,
+    Roles.Security,
+    Roles.Security_Viewer,
+  ])
   @Query(() => Users, { name: 'getUserByQuery' })
   async GetUserByQuery(
     @Args('query', { nullable: true, type: () => PrismaSingleQuery })
@@ -47,7 +64,14 @@ export class UsersResolver {
   //#endregion
 
   //#region ------------- CreateUser ----------------------
-  @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
+  @HasRoles([
+    Roles.Demo,
+    Roles.Admin,
+    Roles.User_Global,
+    Roles.User_Management,
+    Roles.Inspector,
+    Roles.Security,
+  ])
   @Mutation(() => Users, { name: 'CreateUser' })
   async CreateUser(
     @Args({ nullable: false, name: 'userModel', type: () => CreateUserDto })
@@ -58,7 +82,14 @@ export class UsersResolver {
   //#endregion
 
   //#region ------------- UpdateUser ----------------------
-  @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
+  @HasRoles([
+    Roles.Demo,
+    Roles.Admin,
+    Roles.User_Global,
+    Roles.User_Management,
+    Roles.Inspector,
+    Roles.Security,
+  ])
   @Mutation(() => Users, { name: 'UpdateUser' })
   async UpdateUser(
     @Args({ nullable: false, name: 'userModel', type: () => UpdateUserDto })
@@ -69,7 +100,14 @@ export class UsersResolver {
   //#endregion
 
   //#region ------------- SoftDeleteUsers -----------------
-  @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
+  @HasRoles([
+    Roles.Demo,
+    Roles.Admin,
+    Roles.User_Global,
+    Roles.User_Management,
+    Roles.Inspector,
+    Roles.Security,
+  ])
   @Mutation(() => Counter, { name: 'DeleteUsers' })
   async SoftDeleteUsers(
     @Args({
@@ -84,7 +122,7 @@ export class UsersResolver {
   //#endregion
 
   //#region ------------- RevertDeletedUsers --------------
-  @HasRoles([EnumRoles.Admin, EnumRoles.Manager])
+  @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
   @Mutation(() => Counter, { name: 'RevertUsers' })
   async RevertDeletedUsers(
     @Args({
@@ -99,7 +137,7 @@ export class UsersResolver {
   //#endregion
 
   //#region ------------- HardDeleteUsers -----------------
-  @HasRoles([EnumRoles.Admin, EnumRoles.Manager])
+  @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
   @Mutation(() => Counter, { name: 'DeleteUserPermanently' })
   async HardDeleteUsers(
     @Args({
@@ -114,7 +152,7 @@ export class UsersResolver {
   //#endregion
 
   //#region ------------- ChangeActivation ----------------
-  @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
+  @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
   @Mutation(() => Counter, { name: 'ChangeActivation' })
   async ChangeActivation(
     @Args({
@@ -131,7 +169,7 @@ export class UsersResolver {
   //#endregion
 
   //#region ------------- UpdateUserRoles -----------------
-  @HasRoles([EnumRoles.Admin, EnumRoles.Manager])
+  @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
   @Mutation(() => Counter, { name: 'UpdateUserRoles' })
   async UpdateUserRoles(
     @Args({
@@ -146,7 +184,7 @@ export class UsersResolver {
   //#endregion
 
   //#region ------------- ManageUserAvatar ----------------
-  @HasRoles([EnumRoles.Admin, EnumRoles.Manager, EnumRoles.User])
+  @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
   @Mutation(() => String, { name: 'manageUserAvatar' })
   async ManageUserAvatar(
     @Context() context: any,

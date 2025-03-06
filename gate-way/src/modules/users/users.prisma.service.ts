@@ -1,8 +1,3 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaQuery, PrismaSingleQuery } from '@src/bases/PrismaQuery';
 import { PrismaService } from '@src/bases/services/prisma-client';
@@ -19,6 +14,9 @@ import { JwtService } from '@nestjs/jwt';
 import path, { join } from 'path';
 import { createWriteStream, mkdirSync } from 'fs';
 import { FileUpload } from 'graphql-upload-ts';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { GraphQlBadRequestException } from '@src/bases/services/error-handler';
+import { UserOutput } from './users.model';
 
 @Injectable()
 export class PrismaUsersService {
@@ -28,8 +26,13 @@ export class PrismaUsersService {
   ) {}
 
   //========================= GetAllUsersByQuery ============================
-  async GetAllUsersByQuery(queries: PrismaQuery): Promise<User[]> {
-    return this.prismaService.user.findMany(queries);
+  async GetAllUsersByQuery(queries: PrismaQuery): Promise<UserOutput> {
+    return {
+      items: await this.prismaService.user.findMany(queries),
+      pageNumber: queries.skip,
+      pageSize: queries.take,
+      totalCount: await this.prismaService.user.count(),
+    };
   }
 
   //========================= GetUserByQuery ================================
@@ -39,11 +42,21 @@ export class PrismaUsersService {
 
   //======================== CreateUser =====================================
   async CreateUser(user: CreateUserDto): Promise<User> {
-    let existUser = await this.prismaService.user.findUnique({
-      where: { userName: user.userName },
+    let existUser = await this.prismaService.user.findFirst({
+      where: {
+        OR: [
+          { userName: user.userName },
+          { email: user.email },
+          { phone: user.phone },
+          { nationalCode: user.nationalCode },
+        ],
+      },
     });
     if (existUser) {
-      new BadRequestException(Consts.Duplicated);
+      throw new GraphQlBadRequestException(
+        Consts.Duplicated,
+        HttpStatus.CONFLICT,
+      );
     } else {
       user.password = await Tools.hash(user.password);
       return this.prismaService.user.create({
@@ -65,6 +78,15 @@ export class PrismaUsersService {
 
   //======================== SoftDeleteUsers ================================
   async SoftDeleteUsers(deleteUsers: DeleteUserDto) {
+    let FindAdminFromIds = await this.prismaService.user.findMany({
+      where: { AND: { id: { in: deleteUsers.ids }, roles: { has: 'Admin' } } },
+    });
+    if (FindAdminFromIds.length) {
+      throw new GraphQlBadRequestException(
+        Consts.youCanNotRemoveAdminUsers,
+        HttpStatus.FORBIDDEN,
+      );
+    }
     return this.prismaService.user.updateMany({
       data: { isDeleted: true, deleteDate: new Date().toISOString() },
       where: { id: { in: deleteUsers.ids } },
@@ -131,8 +153,6 @@ export class PrismaUsersService {
           where: { id: userId },
         });
       }
-    } catch (error) {
-      throw new BadRequestException(error, Consts.badRequestMessage);
-    }
+    } catch (error) {}
   }
 }

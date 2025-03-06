@@ -11,11 +11,8 @@ input CreateUserDto {
   """ایمیل واقعی"""
   email: String!
 
-  """نام واقعی"""
-  firstName: String!
-
-  """فامیلی واقعی"""
-  lastName: String!
+  """کدملی اجباریست"""
+  nationalCode: String!
 
   """رمزعبور"""
   password: String!
@@ -33,15 +30,67 @@ input DeleteUserDto {
 }
 
 enum EnumRoles {
-  Accountant
+  Accounting_Management_Junior
+  Accounting_Management_Mid
+  Accounting_Management_Sinior
+  Accounting_Management_Viewer
+  Accounting_User_Junior
+  Accounting_User_Mid
+  Accounting_User_Sinior
+  Accounting_User_Viewer
   Admin
-  Base
-  Guest
+  Cartable_Junior
+  Cartable_Mid
+  Cartable_Sinior
+  Cartable_Viewer
+  Demo
+  Demo_Viewer
+  Hr_Management_Junior
+  Hr_Management_Mid
+  Hr_Management_Sinior
+  Hr_Management_Viewer
+  Hr_User_Junior
+  Hr_User_Mid
+  Hr_User_Sinior
+  Hr_User_Viewer
   Inspector
-  Manager
+  Inspector_Viewer
+  Logestic_Management_Junior
+  Logestic_Management_Mid
+  Logestic_Management_Sinior
+  Logestic_Management_Viewer
+  Logestic_User_Junior
+  Logestic_User_Mid
+  Logestic_User_Sinior
+  Logestic_User_Viewer
+  Messaging_Management_Junior
+  Messaging_Management_Mid
+  Messaging_Management_Sinior
+  Messaging_Management_Viewer
+  Messaging_User_Junior
+  Messaging_User_Mid
+  Messaging_User_Sinior
+  Messaging_User_Viewer
   Security
-  User
-  Viewer
+  Security_Viewer
+  TimeAttandance_Management_Junior
+  TimeAttandance_Management_Mid
+  TimeAttandance_Management_Sinior
+  TimeAttandance_Management_Viewer
+  TimeAttandance_User_Junior
+  TimeAttandance_User_Mid
+  TimeAttandance_User_Sinior
+  TimeAttandance_User_Viewer
+  User_Global
+  User_Management
+  Wages_Management_Junior
+  Wages_Management_Mid
+  Wages_Management_Sinior
+  Wages_Management_Viewer
+  Wages_User_Junior
+  Wages_User_Mid
+  Wages_User_Sinior
+  Wages_User_Viewer
 }
 
 input ForgotPasswordDto {
@@ -111,7 +160,6 @@ type Mutation {
   login(loginModel: LoginDto!): LoginResponse!
   logout: String!
   manageUserAvatar(MangeUserAvatar: String!): String!
-  refreshToken: LoginResponse!
 }
 
 input PrismaQuery {
@@ -129,7 +177,7 @@ input PrismaSingleQuery {
 }
 
 type Query {
-  GetAllUsersWithQuery(queries: PrismaQuery): [Users!]!
+  GetAllUsersWithQuery(queries: PrismaQuery): UserOutput!
   getUserByQuery(query: PrismaSingleQuery): Users!
   menu: [MenuStructureModel!]!
 }
@@ -142,7 +190,7 @@ input ToggleActiveUserDto {
 
 input UpdateRolesToUserDto {
   """سطوح دسترسی"""
-  Roles: [EnumRoles!]! = [Guest]
+  Roles: [EnumRoles!]! = [Demo_Viewer]
 
   """شناسه ها"""
   ids: [String!]!
@@ -150,7 +198,7 @@ input UpdateRolesToUserDto {
 
 input UpdateUserDto {
   """سطوح دسترسی"""
-  Roles: [EnumRoles!] = [Guest]
+  Roles: [EnumRoles!] = [Demo_Viewer]
 
   """تاریخ ایجاد"""
   createDate: String
@@ -161,9 +209,6 @@ input UpdateUserDto {
   """ایمیل واقعی"""
   email: String
 
-  """نام واقعی"""
-  firstName: String
-
   """شناسه کاربر"""
   id: String!
 
@@ -173,8 +218,8 @@ input UpdateUserDto {
   """وضعیت حذف بودن کاربر"""
   isDeleted: Boolean
 
-  """فامیلی واقعی"""
-  lastName: String
+  """کدملی اجباریست"""
+  nationalCode: String
 
   """شماره همراه"""
   phone: String
@@ -186,10 +231,20 @@ input UpdateUserDto {
   updateDate: String
 }
 
-type Users {
-  """سطوح دسترسی"""
-  Roles: [EnumRoles!]!
+type UserOutput {
+  items: [Users!]
 
+  """شماره صفحه"""
+  pageNumber: Int!
+
+  """تعداد در هر نمایش"""
+  pageSize: Int!
+
+  """تعداد کل رکوردها"""
+  totalCount: Int!
+}
+
+type Users {
   """مسیر ذخیره عکس کاربر"""
   avatar: String
 
@@ -202,9 +257,6 @@ type Users {
   """ایمیل واقعی"""
   email: String!
 
-  """نام واقعی"""
-  firstName: String!
-
   """شناسه کاربر"""
   id: String!
 
@@ -214,8 +266,8 @@ type Users {
   """وضعیت حذف بودن کاربر"""
   isDeleted: Boolean
 
-  """فامیلی واقعی"""
-  lastName: String!
+  """کدملی اجباریست"""
+  nationalCode: String!
 
   """رمزعبور"""
   password: String!
@@ -225,6 +277,9 @@ type Users {
 
   """تاریخ برگشت از حذف موقت"""
   revertDate: String
+
+  """سطوح دسترسی"""
+  roles: [EnumRoles!]!
 
   """تاریخ بروزرسانی"""
   updateDate: String

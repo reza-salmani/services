@@ -31,13 +31,20 @@ export class CustomLogger extends ConsoleLogger {
     context: any,
     trace: string = '',
   ) => {
-    let result = `record date & time => ${new Date().toLocaleString('fa-IR-u-nu-latn', { dateStyle: 'short', timeStyle: 'medium' })} | message => ${message} | context => ${JSON.stringify(context)} | trace => ${trace} \n\n`;
+    let date = (option: any) =>
+      new Date().toLocaleString('fa-IR-u-nu-latn', option);
+    let result = `record date & time => ${date({ dateStyle: 'short', timeStyle: 'medium' })} | message => ${message} | context => ${JSON.stringify(context)} | trace => ${trace} \n\n`;
 
-    const pathName = join(__dirname, '/loges');
+    const pathName = join(
+      __dirname,
+      type === 'log'
+        ? `/loges/log/${date({ year: 'numeric' })}-${date({ month: '2-digit' })}`
+        : `/loges/error/${date({ year: 'numeric' })}-${date({ month: '2-digit' })}`,
+    );
     if (!existsSync(pathName)) {
       mkdirSync(pathName, { recursive: true });
     }
-    let fileName = join(pathName, type === 'log' ? '/log.txt' : '/error.txt');
+    let fileName = join(pathName, `${date({ day: 'numeric' })}.txt`);
     if (!existsSync(fileName)) {
       writeFileSync(fileName, result, { encoding: 'utf-8' });
     } else {

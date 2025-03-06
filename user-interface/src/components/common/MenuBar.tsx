@@ -34,23 +34,16 @@ export default function MenuBar() {
   //#region useEffect
   useEffect(() => {
     query(GetPages).then((res) => {
-      let mainPages: any = [];
-      res.data.menu.map((page: any) => {
+      let mainPages: IMenuItem[] = [];
+      res.data.menu.map((page: IMenuItemQuery) => {
         if (!page.parentId) {
-          mainPages = [...mainPages, ...[page]];
+          let x = { ...page, children: [] };
+          mainPages = [...mainPages, x];
         } else {
           let pageExist = mainPages.find(
             (x: any) => x.selfId === page.parentId
           );
-          if (pageExist)
-            if (!pageExist.children) {
-              mainPages.find((x: any) => x.selfId === page.parentId).children =
-                [page];
-            } else {
-              mainPages
-                .find((x: any) => x.selfId === page.parentId)
-                .children.push(page);
-            }
+          pageExist!.children.push({ ...page, children: [] });
         }
         return page;
       });
@@ -131,6 +124,9 @@ export default function MenuBar() {
                           : "text-cyan-800 dark:text-cyan-400"
                       }
                       key={cIndex}
+                      classNames={{
+                        description: "text-zinc-400",
+                      }}
                       description={child.description}
                       startContent={<Users></Users>}
                     >
@@ -239,7 +235,7 @@ export function NavbarMenuItems({ menuItems }: { menuItems: IMenuItem[] }) {
 }
 
 //===================================== interfaces ===========================================
-interface IMenuItem {
+interface IMenuItemQuery {
   name: string;
   persianName: string;
   id: string;
@@ -249,5 +245,7 @@ interface IMenuItem {
   link: string | null;
   isReadOnly: boolean;
   roles: string[];
+}
+interface IMenuItem extends IMenuItemQuery {
   children: IMenuItem[];
 }

@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -8,10 +13,11 @@ import { Reflector } from '@nestjs/core';
 import { Tools } from 'src/Utils/tools';
 import { JwtService } from '@nestjs/jwt';
 import { Context } from 'vm';
-import { EnumRoles } from '@src/bases/base';
 import { PrismaService } from '@src/bases/services/prisma-client';
+import { Roles } from '@prisma/client';
+import { PrismaAuthService } from './auth.prisma.service';
+import { GraphQlUnauthorizedException } from '@src/bases/services/error-handler';
 import { Consts } from '@src/Utils/consts';
-import { UnauthorizedException } from '@src/bases/services/error-handler';
 
 @Injectable()
 export class JWTStrategy extends PassportStrategy(Strategy) {
@@ -69,17 +75,29 @@ export class GqlAuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private configService: ConfigService,
+    private prismaService: PrismaService,
   ) {}
   async canActivate(context: ExecutionContext) {
     let ctx = GqlExecutionContext.create(context);
     const { req } = ctx.getContext();
     if (req && !req.cookies['jwt']) {
-      throw new UnauthorizedException(null, Consts.tokenExpired);
+      throw new GraphQlUnauthorizedException(
+        Consts.unAuthorized,
+        HttpStatus.UNAUTHORIZED,
+      );
     }
-    let verify = await this.jwtService.verifyAsync(req.cookies['jwt'], {
-      secret: this.configService.get('JWT_SECRET'),
-    });
-    if (!verify) throw new UnauthorizedException(null, Consts.unAuthorized);
+    try {
+      let isAuth = await this.jwtService.verifyAsync(req.cookies['jwt'], {
+        secret: this.configService.get('JWT_SECRET'),
+      });
+      if (isAuth) return true;
+    } catch (error) {
+      return new PrismaAuthService(
+        this.prismaService,
+        this.configService,
+        this.jwtService,
+      ).IsAuthenticated(ctx.getContext());
+    }
     return true;
   }
 }
@@ -101,18 +119,14 @@ export class RolesGuard implements CanActivate {
     }
     let ctx = GqlExecutionContext.create(context);
     const { req } = ctx.getContext();
-    if (req && !req.cookies['jwt']) {
-      throw new UnauthorizedException(null, Consts.tokenExpired);
-    }
     const headerInfo = this.jwtService.decode(req.cookies['jwt'].trim());
-
     let userRoles = await this.prismaService.user.findFirst({
       where: { id: headerInfo.sub },
     });
     return decoratorNotRoles
       ? Tools.matchs(
           userRoles.roles,
-          Object.values(EnumRoles).filter(
+          Object.values(Roles).filter(
             (x) => !decoratorNotRoles.some((y) => y === x),
           ),
         )

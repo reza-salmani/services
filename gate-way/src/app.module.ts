@@ -13,6 +13,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './modules/auth/jwt.strategy';
 import { JwtService } from '@nestjs/jwt';
 import { CustomLogger } from './Utils/logger';
+import { MailerService } from './Utils/mail-server';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { CustomLogger } from './Utils/logger';
       useClass: RolesGuard,
     },
     CustomLogger,
+    MailerService,
   ],
 })
 export class AppModule {}

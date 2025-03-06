@@ -13,7 +13,7 @@ import { GqlAuthGuard } from './jwt.strategy';
 export class AuthResolver {
   constructor(private authService: PrismaAuthService) {}
 
-  //======================================= login =========================================
+  //#region-------------- login ---------------------------
   @Mutation(() => LoginResponse, { name: 'login' })
   async Login(
     @Args({ nullable: false, name: 'loginModel', type: () => LoginDto })
@@ -22,27 +22,24 @@ export class AuthResolver {
   ) {
     return await this.authService.Login(loginModel, context);
   }
+  //#endregion
 
-  //======================================= IsAuthenticated =========================================
+  //#region-------------- IsAuthenticated -----------------
   @Mutation(() => Boolean, { name: 'isAuth' })
   async IsAuthenticated(@Context() ctx: any) {
     return await this.authService.IsAuthenticated(ctx);
   }
+  //#endregion
 
-  //======================================= Logout =========================================
+  //#region-------------- logout --------------------------
   @Mutation(() => String, { name: 'logout' })
   async Logout(@Context() ctx: any) {
     await this.authService.Logout(ctx);
     return Consts.successfullyLogOut;
   }
+  //#endregion
 
-  //======================================= RefreshToken =========================================
-  @Mutation(() => LoginResponse, { name: 'refreshToken' })
-  async RefreshToken(@Context() ctx: any) {
-    return await this.authService.RefreshToken(ctx);
-  }
-
-  //======================================= ForgotPassword =========================================
+  //#region-------------- forgotPassword ------------------
   @Mutation(() => ForgotPasswordModel, { name: 'forgotPassword' })
   async ForgotPassword(
     @Args({
@@ -54,11 +51,21 @@ export class AuthResolver {
   ) {
     return await this.authService.ForgotPassword(forgotPasswordModel);
   }
+  //#endregion
 
-  //======================================= get Menubar =========================================
+  //#region-------------- MenuBar -------------------------
   @UseGuards(GqlAuthGuard)
   @Query(() => [MenuStructureModel], { name: 'menu' })
   async MenuBar(@Context() context: any) {
     return await this.authService.GetPages(context);
   }
+  //#endregion
+
+  //#region-------------- roles ---------------------------
+  @UseGuards(GqlAuthGuard)
+  @Query(() => [MenuStructureModel], { name: 'menu' })
+  async GetRoles(@Context() context: any) {
+    return await this.authService.GetPages(context);
+  }
+  //#endregion
 }

@@ -3,6 +3,9 @@ import * as bcript from 'bcrypt';
 import * as os from 'os';
 import { promisify } from 'util';
 import { exec } from 'child_process';
+import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from '@src/bases/services/prisma-client';
+import { Context } from 'vm';
 
 export let Tools = {
   encript: async (text: string) => {
@@ -72,4 +75,25 @@ export let Tools = {
       });
     });
   },
+  //#region ------------- IsAuthenticated ------------------
+  async GetUserInfoFromContext(
+    ctx: Context,
+    jwtService: JwtService,
+    prismaService: PrismaService,
+  ) {
+    if (ctx.req && ctx.req.cookies && ctx.req.cookies['jwt']) {
+      let userId = jwtService.decode(ctx.req.cookies['jwt']).sub;
+      let existUserAuth = await prismaService.auth.findFirst({
+        where: { userId: { equals: userId } },
+      });
+      if (existUserAuth) {
+        return existUserAuth;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  },
+  //#endregion
 };

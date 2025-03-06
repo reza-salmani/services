@@ -1,4 +1,3 @@
-import { colors } from "@heroui/react";
 import type { Config } from "tailwindcss";
 const { heroui } = require("@heroui/react");
 export default {
@@ -22,18 +21,6 @@ export default {
     require("tailwindcss-animate"),
     heroui({
       addCommonColors: false,
-      themes: {
-        dark: {
-          colors: {
-            primary: colors.cyan,
-          },
-        },
-        light: {
-          colors: {
-            primary: colors.cyan,
-          },
-        },
-      },
     }),
   ],
 } satisfies Config;

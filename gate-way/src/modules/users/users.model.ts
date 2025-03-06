@@ -1,6 +1,6 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { Roles } from '@prisma/client';
-import { EnumRoles } from '@src/bases/base';
+import { BaseQuery } from '@src/bases/base';
 import { Consts } from '@src/Utils/consts';
 import {
   IsNotEmpty,
@@ -14,19 +14,11 @@ import {
 export class Users {
   @Field((type) => String, {
     nullable: false,
-    name: 'firstName',
-    description: Consts.yourRealName,
+    name: 'nationalCode',
+    description: Consts.yourNationalCode,
   })
   @IsNotEmpty()
-  firstName: string;
-
-  @Field((type) => String, {
-    nullable: false,
-    name: 'lastName',
-    description: Consts.yourRealFamily,
-  })
-  @IsNotEmpty({ message: Consts.lastNameRequiredMessage })
-  lastName: string;
+  nationalCode: string;
 
   @Field((type) => String, {
     nullable: false,
@@ -119,12 +111,21 @@ export class Users {
   })
   isDeleted: boolean;
 
-  @Field(() => [EnumRoles], {
+  @Field(() => [Roles], {
     nullable: false,
-    name: 'Roles',
+    name: 'roles',
     description: Consts.Roles,
-    defaultValue: [Roles.Guest],
+    defaultValue: [Roles.Demo_Viewer],
   })
   roles?: Roles[];
 }
 //#endregion
+
+@ObjectType()
+export class UserOutput extends BaseQuery {
+  @Field(() => [Users], {
+    name: 'items',
+    nullable: true,
+  })
+  items: Users[];
+}

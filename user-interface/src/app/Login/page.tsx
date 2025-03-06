@@ -32,7 +32,7 @@ export default function Login() {
           router.push("/");
         })
         .catch((error) => {
-          ErrorHandler(error).forEach((err) => {});
+          ErrorHandler(error);
         });
     }
   }

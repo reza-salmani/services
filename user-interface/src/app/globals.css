@@ -91,3 +91,6 @@ body {
 .is-active {
   @apply bg-sky-400 border-sky-400 dark:bg-sky-950 dark:border-sky-950 !text-white;
 }
+nextjs-portal {
+  display: none;
+}

@@ -1,6 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { Roles } from '@prisma/client';
-import { EnumRoles } from '@src/bases/base';
 import { Consts } from '@src/Utils/consts';
 
 //#region Login
@@ -29,7 +28,7 @@ export class ForgotPasswordDto {
 export class UpdatePageRolesDto {
   @Field(() => String, { name: 'id' })
   id: string = '';
-  @Field(() => [EnumRoles], { name: 'roles' })
+  @Field(() => [Roles], { name: 'roles' })
   roles: Roles[];
 }
 //#endregion

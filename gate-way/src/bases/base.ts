@@ -1,22 +1,11 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Roles } from '@prisma/client';
 import { Consts } from '@src/Utils/consts';
-
-export enum EnumRoles {
-  Guest = 'Guest',
-  Base = 'Base',
-  User = 'User',
-  Viewer = 'Viewer',
-  Admin = 'Admin',
-  Accountant = 'Accountant',
-  Manager = 'Manager',
-  Security = 'Security',
-  Inspector = 'Inspector',
-}
 
 /**
  * for using custom enum in graphql we should register it first
  */
-registerEnumType(EnumRoles, { name: 'EnumRoles' });
+registerEnumType(Roles, { name: 'EnumRoles' });
 
 @ObjectType()
 export class Counter {
@@ -26,4 +15,27 @@ export class Counter {
     description: Consts.Count,
   })
   count: number;
+}
+@ObjectType()
+export class BaseQuery {
+  @Field(() => Int, {
+    nullable: false,
+    name: 'totalCount',
+    description: Consts.totalCount,
+  })
+  totalCount: number;
+
+  @Field(() => Int, {
+    nullable: false,
+    name: 'pageSize',
+    description: Consts.pageSize,
+  })
+  pageSize: number;
+
+  @Field(() => Int, {
+    nullable: false,
+    name: 'pageNumber',
+    description: Consts.pageNumber,
+  })
+  pageNumber: number;
 }
