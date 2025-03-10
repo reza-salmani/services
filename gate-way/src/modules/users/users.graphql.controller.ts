@@ -197,4 +197,22 @@ export class UsersResolver {
     );
   }
   //#endregion
+
+  //#region-------------- get User Info ---------------------------
+  @UseGuards(GqlAuthGuard)
+  @Query(() => [String], { name: 'roles' })
+  async GetUserInfo(@Context() context: any) {
+    return await this.prismaRequestService.GetUserInfo(context);
+  }
+  //#endregion
+
+  //#region-------------- get User Info ---------------------------
+  @UseGuards(GqlAuthGuard)
+  @Query(() => Boolean, { name: 'hasPermission' })
+  async HasUserActionPermission(@Context() context: any) {
+    let reuslt =
+      await this.prismaRequestService.HasUserActionPermission(context);
+    return reuslt;
+  }
+  //#endregion
 }

@@ -13,6 +13,7 @@ import {
   GraphQlNotFoundException,
   GraphQlUnauthorizedException,
 } from '@src/bases/services/error-handler';
+import { Roles } from '@prisma/client';
 
 @Injectable()
 export class PrismaAuthService {
@@ -278,5 +279,11 @@ export class PrismaAuthService {
     );
     return result;
   }
+  //#endregion
+  //#region ------------- Get Roles -----------------------
+  async GetRoles() {
+    return new Enumerator(Roles).item;
+  }
+
   //#endregion
 }

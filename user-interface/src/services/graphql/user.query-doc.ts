@@ -171,6 +171,22 @@ export let ChangeActivationUser = gql`
 `;
 //#endregion
 
+//#region --------------- Roles  -------------------------
+export let GetRoles = gql`
+  query {
+    roles
+  }
+`;
+//#endregion
+
+//#region --------------- hasPermission -------------------
+export let HasPermission = gql`
+  query {
+    hasPermission
+  }
+`;
+//#endregion
+
 // export let HardDeleteUser = gql`
 //     mutation ($ids:String[]) {
 //       DeleteUserPermanently(

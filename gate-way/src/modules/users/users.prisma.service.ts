@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { Roles, User } from '@prisma/client';
 import { PrismaQuery, PrismaSingleQuery } from '@src/bases/PrismaQuery';
 import { PrismaService } from '@src/bases/services/prisma-client';
 import { Consts } from '@src/Utils/consts';
@@ -155,4 +155,31 @@ export class PrismaUsersService {
       }
     } catch (error) {}
   }
+
+  //#region ------------- User Info -----------------------
+  async GetUserInfo(context: any) {
+    return await Tools.GetUserInfoFromContext(
+      context,
+      this.jwtService,
+      this.prismaService,
+    );
+  }
+  //#endregion
+
+  //#region ------------- has Permission -----------------------
+  async HasUserActionPermission(context: any) {
+    const headerInfo = this.jwtService.decode(
+      context.req.cookies['jwt'].trim(),
+    );
+    let userRoles = await this.prismaService.user.findFirst({
+      where: { id: headerInfo.sub },
+    });
+    return Tools.matchs(userRoles.roles, [
+      Roles.Admin,
+      Roles.User_Management,
+      Roles.User_Global,
+      Roles.Demo,
+    ]);
+  }
+  //#endregion
 }

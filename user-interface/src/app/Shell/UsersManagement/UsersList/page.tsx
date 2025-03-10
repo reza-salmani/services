@@ -10,9 +10,11 @@ import {
   GetAllUser,
   RevertDeleteUser,
 } from "@/services/graphql/user.query-doc";
+import { createUserPermissionStore } from "@/StorageManagement/userStorage";
 import { consts } from "@/utils/consts";
 import { dateTools } from "@/utils/date";
 import {
+  Alert,
   Button,
   Chip,
   getKeyValue,
@@ -56,6 +58,11 @@ export default function UsersList() {
   const [userUpsertTitle, setUserUpsertTitle] = useState("ایجاد کاربر");
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
+  const { getState } = createUserPermissionStore();
+  const [showDeletedDialog, setShowDeletedDialog] = useState(false);
+  const [showRevertDialog, setShowRevertDialog] = useState(false);
+  const [showToggleDialog, setShowToggleDialog] = useState(false);
+  const [selectedRowItem, setSelectedRowItem] = useState(new Set([]));
   const { handleSubmit, register, reset } = useForm<ISubmitUser>({
     defaultValues: {
       nationalCode: "",
@@ -127,14 +134,30 @@ export default function UsersList() {
         ErrorHandler(error);
       });
   }
-  async function onSetToggleActivation(user: IUser) {
+  async function onSetToggleActivation(user: IUser, state: boolean) {
     setLoading(true);
     mutation<IToggleActivation>(ChangeActivationUser, {
       ids: [user.id],
-      state: !user.isActive,
+      state: state,
     })
       .then(() => {
         setLoading(false);
+        getAllDataFunction();
+      })
+      .catch((error) => {
+        ErrorHandler(error);
+      });
+  }
+  async function onSetToggleGroupActivation(ids: any, state: boolean) {
+    setLoading(true);
+    mutation<IToggleActivation>(ChangeActivationUser, {
+      ids: Array.from(ids),
+      state: state,
+    })
+      .then(() => {
+        setLoading(false);
+        setShowToggleDialog(false);
+        setCancel();
         getAllDataFunction();
       })
       .catch((error) => {
@@ -160,8 +183,31 @@ export default function UsersList() {
         setLoading(false);
       });
   }
+  async function manageGroupDeleteAndRevert(
+    ids: any,
+    type: "revert" | "delete"
+  ) {
+    setLoading(true);
+    mutation(type === "delete" ? DeleteUser : RevertDeleteUser, {
+      ids: Array.from(ids),
+    })
+      .then(() => {
+        setLoading(false);
+        setShowDeletedDialog(false);
+        setCancel();
+        setShowRevertDialog(false);
+        getAllDataFunction();
+      })
+      .catch((error) => {
+        ErrorHandler(error);
+        setLoading(false);
+      });
+  }
   async function onSelectRow(selection: any) {
-    console.log(selection);
+    setSelectedRowItem(selection);
+  }
+  function setCancel() {
+    setSelectedRowItem(new Set([]));
   }
   //#endregion
 
@@ -214,7 +260,7 @@ export default function UsersList() {
                   ["text-lg cursor-pointer active:opacity-50"],
                   !user.isActive ? ["text-zinc-500"] : ["text-sky-500"]
                 )}
-                onClick={() => onSetToggleActivation(user)}
+                onClick={() => onSetToggleActivation(user, !user.isActive)}
               >
                 {!user.isActive ? <ToggleLeftIcon /> : <ToggleRightIcon />}
               </span>
@@ -230,14 +276,18 @@ export default function UsersList() {
               </span>
             </Tooltip>
             {user.isDeleted ? (
-              <Tooltip color="default" content={consts.global.revert}>
-                <span
-                  className="text-lg text-zinc-500 cursor-pointer active:opacity-50"
-                  onClick={() => manageDeleteAndRevert(user, "revert")}
-                >
-                  <Undo2 />
-                </span>
-              </Tooltip>
+              getState().hasPermission ? (
+                <Tooltip color="default" content={consts.global.revert}>
+                  <span
+                    className="text-lg text-zinc-500 cursor-pointer active:opacity-50"
+                    onClick={() => manageDeleteAndRevert(user, "revert")}
+                  >
+                    <Undo2 />
+                  </span>
+                </Tooltip>
+              ) : (
+                ""
+              )
             ) : (
               <Tooltip color="danger" content={consts.global.delete}>
                 <span
@@ -270,7 +320,112 @@ export default function UsersList() {
       </div>
     );
   }, []);
-  const headerItems = (
+  const headerItems = selectedRowItem.size ? (
+    <>
+      <div className="w-auto flex gap-8">
+        <div className="w-auto my-auto">
+          {consts.global.totalSelectedItem} : {selectedRowItem.size}
+        </div>
+        <div className="w-auto flex gap-2">
+          <Button
+            onPress={() => setCancel()}
+            variant="flat"
+            color="default"
+            className="text-lg w-auto"
+          >
+            {consts.global.cancel}
+          </Button>
+          <Button
+            onPress={() => setShowDeletedDialog(true)}
+            variant="solid"
+            color="danger"
+            className="text-lg w-auto"
+          >
+            {consts.global.delete}
+          </Button>
+          <Button
+            onPress={() => setShowRevertDialog(true)}
+            variant="solid"
+            color="success"
+            className="text-lg w-auto"
+          >
+            {consts.global.revert}
+          </Button>
+          <Button
+            onPress={() => setShowToggleDialog(true)}
+            variant="solid"
+            color="warning"
+            className="text-lg w-auto"
+          >
+            {consts.global.toggleActivation}
+          </Button>
+        </div>
+      </div>
+      <Alert
+        isVisible={showDeletedDialog}
+        color="danger"
+        description={consts.global.deleteMessage}
+        endContent={
+          <Button
+            color="danger"
+            size="sm"
+            variant="flat"
+            onPress={() =>
+              manageGroupDeleteAndRevert(selectedRowItem, "delete")
+            }
+          >
+            {consts.global.delete}
+          </Button>
+        }
+        variant="faded"
+      />
+      <Alert
+        isVisible={showRevertDialog}
+        color="danger"
+        description={consts.global.revertMessage}
+        endContent={
+          <Button
+            color="warning"
+            size="sm"
+            variant="flat"
+            onPress={() =>
+              manageGroupDeleteAndRevert(selectedRowItem, "revert")
+            }
+          >
+            {consts.global.delete}
+          </Button>
+        }
+        variant="faded"
+      />
+      <Alert
+        isVisible={showToggleDialog}
+        color="danger"
+        onClose={() => setShowToggleDialog(false)}
+        description={consts.global.toggleMessage}
+        endContent={
+          <div className="flex gap-2 m-auto mx-4 justify-center">
+            <Button
+              color="secondary"
+              size="sm"
+              variant="flat"
+              onPress={() => onSetToggleGroupActivation(selectedRowItem, false)}
+            >
+              {consts.global.inActive}
+            </Button>
+            <Button
+              color="success"
+              size="sm"
+              variant="flat"
+              onPress={() => onSetToggleGroupActivation(selectedRowItem, true)}
+            >
+              {consts.global.active}
+            </Button>
+          </div>
+        }
+        variant="faded"
+      />
+    </>
+  ) : (
     <div className="w-auto">
       <Button
         onPress={showModalFn}
@@ -299,10 +454,11 @@ export default function UsersList() {
       )}
       <Table
         isStriped
-        selectionMode="multiple"
         color="secondary"
+        selectedKeys={selectedRowItem}
+        selectionMode="multiple"
+        onSelectionChange={(selection) => onSelectRow(selection)}
         topContent={headerItems}
-        onSelectionChange={(event) => onSelectRow(event)}
         bottomContent={pagination(
           paginationItems.totalCount,
           paginationItems.pageNumber

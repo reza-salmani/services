@@ -63,9 +63,9 @@ export class AuthResolver {
 
   //#region-------------- roles ---------------------------
   @UseGuards(GqlAuthGuard)
-  @Query(() => [MenuStructureModel], { name: 'menu' })
-  async GetRoles(@Context() context: any) {
-    return await this.authService.GetPages(context);
+  @Query(() => [String], { name: 'roles' })
+  async GetRoles() {
+    return await this.authService.GetRoles();
   }
   //#endregion
 }

@@ -1,6 +1,6 @@
 "use client";
-import { mutation } from "@/services/graphql/apollo";
-import { LoginUser } from "@/services/graphql/user.query-doc";
+import { mutation, query } from "@/services/graphql/apollo";
+import { HasPermission, LoginUser } from "@/services/graphql/user.query-doc";
 import { consts } from "@/utils/consts";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
@@ -9,17 +9,18 @@ import { ErrorHandler } from "@/services/graphql/graphql-error-handler";
 import { IInputLogin } from "@/interfaces/IUser";
 import { useForm } from "react-hook-form";
 import { Button, Input } from "@heroui/react";
+import { createUserPermissionStore } from "@/StorageManagement/userStorage";
 //============================================ extra Info =======================================
 let loading = false;
 
 //============================================ main function ==========================================
 export default function Login() {
   let router = useRouter();
+  const { setState } = createUserPermissionStore();
   const { handleSubmit, register } = useForm({
     defaultValues: { userName: "", password: "" },
     reValidateMode: "onBlur",
   });
-
   function onSubmit(values: IInputLogin) {
     loading = true;
     if (values.userName && values.password) {
@@ -29,12 +30,18 @@ export default function Login() {
       })
         .then((res) => {
           loading = false;
+          onGetSiniorPermission();
           router.push("/");
         })
         .catch((error) => {
           ErrorHandler(error);
         });
     }
+  }
+  function onGetSiniorPermission() {
+    query(HasPermission).then((res) => {
+      setState({ hasPermission: res.data.hasPermission });
+    });
   }
   return (
     <div className="m-auto">

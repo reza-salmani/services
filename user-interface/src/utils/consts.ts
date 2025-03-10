@@ -6,7 +6,14 @@ export const consts = {
     create: "ایجاد",
     cancel: "انصراف",
     toggleActivation: "تغییر وضعیت",
-    revert: "برگشت",
+    revert: "بازگردانی",
+    totalSelectedItem: "تعداد انتخاب شده ها",
+    deleteMessage: "آیا برای حذف موارد انتخابی موافق هستید؟",
+    revertMessage: "آیا برای بازگردانی موارد انتخابی موافق هستید؟",
+    toggleMessage:
+      "لطفا برای تغییر وضعیت موارد انتخابی یکی از گزینه ها را انتخاب نمایید",
+    inActive: "غیرفعال",
+    active: "فعال",
   },
   theme: {
     dark: "تاریک",
