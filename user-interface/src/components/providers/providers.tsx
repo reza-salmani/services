@@ -1,16 +1,14 @@
 "use client";
 
-import { ToastProvider } from "@heroui/react";
-import { HeroUIProvider } from "@heroui/system";
+import { preDefinedTheme } from "@/utils/predefined-theme";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-
+import { PrimeReactProvider } from "primereact/api";
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <HeroUIProvider>
-      <ToastProvider />
+    <PrimeReactProvider value={preDefinedTheme}>
       <NextThemesProvider attribute="class" defaultTheme="dark">
         {children}
       </NextThemesProvider>
-    </HeroUIProvider>
+    </PrimeReactProvider>
   );
 }

@@ -1,58 +1,87 @@
 "use client";
-import { consts } from "@/utils/consts";
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  Link,
-  Button,
-  DropdownItem,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  NavbarMenuToggle,
-  NavbarMenu,
-  NavbarMenuItem,
-  Tooltip,
-} from "@heroui/react";
-import { ChevronDown, Loader2, LogOut, Users } from "lucide-react";
 import { mutation, query } from "@/services/graphql/apollo";
 import { GetPages, LogoutUser } from "@/services/graphql/user.query-doc";
-import { usePathname, useRouter } from "next/navigation";
+import { ChevronDown, Loader2, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Button } from "primereact/button";
+import { Menubar } from "primereact/menubar";
+import { MenuItem } from "primereact/menuitem";
 import { useEffect, useState } from "react";
 import { ThemeSwitcher } from "../providers/theme";
+import { classNames } from "primereact/utils";
 
-//================================== main function =====================================
 export default function MenuBar() {
+  //#region ------------- variables -----------------------
   let router = useRouter();
-  let pathName = usePathname();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [menuItems, setMenuItems] = useState<IMenuItem[]>([]);
+  let [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   let loading = false;
-
-  //#region useEffect
-  useEffect(() => {
-    query(GetPages).then((res) => {
-      let mainPages: IMenuItem[] = [];
-      res.data.menu.map((page: IMenuItemQuery) => {
-        if (!page.parentId) {
-          let x = { ...page, children: [] };
-          mainPages = [...mainPages, x];
-        } else {
-          let pageExist = mainPages.find(
-            (x: any) => x.selfId === page.parentId
-          );
-          pageExist!.children.push({ ...page, children: [] });
-        }
-        return page;
-      });
-      setMenuItems(mainPages);
-    });
-  }, []);
   //#endregion
 
-  //#region logout
+  //#region ------------- functions -----------------------
+  useEffect(() => {
+    query(GetPages).then((res) => {
+      let result: IMenuItem[] = [];
+      res.data.menu.map((item: IMenuItemQuery) => {
+        if (!item.parentId) {
+          result.push({ ...item, children: [] });
+        } else {
+          result.flatMap((resultItem) => {
+            if (resultItem.selfId === item.parentId) {
+              resultItem.children.push({ ...item, children: [] });
+            }
+            return resultItem;
+          });
+        }
+      });
+      setMenuItems(RecursiveMenuCreator(result));
+    });
+  }, []);
+
+  function RecursiveMenuCreator(items: IMenuItem[]) {
+    let result: MenuItem[] = [];
+    items.map((item) => {
+      if (!item.children || !item.children.length) {
+        result.push({
+          command: () => {
+            router.push(item.link!);
+          },
+          template: (props, context) => (
+            <div
+              key={item.id}
+              className={classNames(
+                "p-menuitem cursor-pointer p-2 rounded-2xl max-w-[20rem]"
+              )}
+            >
+              <div>{item.persianName}</div>
+              {item.description ? (
+                <div>
+                  <span className="text-xs text-slate-400">
+                    {item.description}
+                  </span>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          ),
+        });
+      } else {
+        result.push({
+          items: RecursiveMenuCreator(item.children),
+          template: () => (
+            <div
+              key={item.id}
+              className={classNames("p-menuitem cursor-pointer flex p-2")}
+            >
+              {item.persianName}
+              <ChevronDown></ChevronDown>
+            </div>
+          ),
+        });
+      }
+    });
+    return result;
+  }
   function onLogout() {
     loading = true;
     mutation(LogoutUser, {}).then(() => {
@@ -61,180 +90,42 @@ export default function MenuBar() {
     });
   }
   //#endregion
-
-  //#region checkActivation
-  function checkActivation(links: string[]) {
-    return links.some((x) => x === pathName);
-  }
-  //#endregion
-
-  //#region return section
-  return (
-    <Navbar
-      onMenuOpenChange={setIsMenuOpen}
-      isBordered
-      maxWidth="full"
-      className="bg-slate-100 dark:bg-slate-950 opacity-95 rounded-2xl"
-    >
-      <NavbarContent justify="start">
-        <NavbarBrand>
-          <p className="font-bold text-cyan-800 dark:text-cyan-400 text-2xl">
-            {consts.menu.brandTitle}
-          </p>
-        </NavbarBrand>
-      </NavbarContent>
-      <NavbarContent className="w-full gap-4 hidden lg:flex" justify="center">
-        {menuItems.map((item, pIndex) => {
-          return item.children && item.children.length > 0 ? (
-            <Dropdown key={pIndex}>
-              <NavbarItem
-                isActive={
-                  checkActivation(item.children.map((x) => x.link!)) &&
-                  !item.isReadOnly
-                }
-                className="group"
-              >
-                <DropdownTrigger>
-                  <Button
-                    isDisabled={item.isReadOnly}
-                    color="primary"
-                    className="text-cyan-800 dark:text-cyan-400 text-lg group-data-[active]:bg-cyan-700 group-data-[active]:text-white dark:group-data-[active]:bg-cyan-200 dark:group-data-[active]:text-black"
-                    endContent={<ChevronDown></ChevronDown>}
-                    radius="lg"
-                    variant="flat"
-                  >
-                    {item.persianName}
-                  </Button>
-                </DropdownTrigger>
-              </NavbarItem>
-              <DropdownMenu
-                aria-label="UserManagement features"
-                itemClasses={{
-                  base: "gap-4",
-                }}
-              >
-                {item.children.map((child, cIndex) => {
-                  return (
-                    <DropdownItem
-                      isReadOnly={child.isReadOnly}
-                      href={child.link!}
-                      className={
-                        checkActivation([child.link!])
-                          ? "bg-cyan-100 dark:bg-cyan-950"
-                          : "text-cyan-800 dark:text-cyan-400"
-                      }
-                      key={cIndex}
-                      classNames={{
-                        description: "text-zinc-400",
-                      }}
-                      description={child.description}
-                      startContent={<Users></Users>}
-                    >
-                      {child.persianName}
-                    </DropdownItem>
-                  );
-                })}
-              </DropdownMenu>
-            </Dropdown>
-          ) : (
-            <NavbarItem
-              key={pIndex}
-              isActive={checkActivation([item.link!]) && !item.isReadOnly}
-              className="group"
-            >
-              <Link
-                isDisabled={item.isReadOnly}
-                aria-current="page"
-                href={item.link!}
-              >
-                <Button
-                  isDisabled={item.isReadOnly}
-                  color="primary"
-                  className="text-cyan-800 dark:text-cyan-400  text-lg group-data-[active]:bg-cyan-700 group-data-[active]:text-white dark:group-data-[active]:bg-cyan-200 dark:group-data-[active]:text-black"
-                  radius="lg"
-                  variant="flat"
-                >
-                  {item.persianName}
-                </Button>
-              </Link>
-            </NavbarItem>
-          );
-        })}
-      </NavbarContent>
-      <NavbarContent justify="end" className="w-full hidden sm:flex">
-        <NavbarItem className="w-full">
-          <Tooltip content={consts.menu.logout}>
-            <Button
-              variant="flat"
-              color="primary"
-              className="text-cyan-800 dark:text-cyan-400 group-data-[active]:bg-cyan-700 group-data-[active]:text-white dark:group-data-[active]:bg-cyan-200 dark:group-data-[active]:text-black"
-              onPress={onLogout}
-            >
-              {loading ? (
-                <Loader2></Loader2>
-              ) : (
-                <LogOut className="rotate-180"></LogOut>
-              )}
-            </Button>
-          </Tooltip>
-        </NavbarItem>
-        <NavbarItem>
-          <ThemeSwitcher></ThemeSwitcher>
-        </NavbarItem>
-      </NavbarContent>
-      <NavbarMenuToggle
-        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        className="lg:hidden w-auto bg-cyan-300 dark:bg-blue-950 h-[2.5rem] px-2"
-      />
-      <NavbarMenu className="mt-5">
-        <NavbarMenuItems menuItems={menuItems}></NavbarMenuItems>
-      </NavbarMenu>
-    </Navbar>
-  );
-  //#endregion
-}
-
-//===================================== recursive menu creator ===============================
-export function NavbarMenuItems({ menuItems }: { menuItems: IMenuItem[] }) {
-  return (
-    <div className="">
-      {menuItems.map((item, index) => (
-        <NavbarMenuItem className="text-center" key={`${item.name}-${index}`}>
-          {item.link ? (
-            <Link
-              className="w-[90%] my-2"
-              color={"primary"}
-              href={item.link}
-              size="lg"
-            >
-              <Button className="w-full" color="primary" variant="flat">
-                {item.persianName}
-              </Button>
-            </Link>
-          ) : (
-            <div className="w-full mt-3">
-              <Button
-                className="w-full"
-                isDisabled
-                color="default"
-                variant="flat"
-              >
-                {item.persianName}
-              </Button>
-            </div>
-          )}
-          {item.children.length > 0 && (
-            <ul className="list-none">
-              {NavbarMenuItems({ menuItems: item.children })}
-            </ul>
-          )}
-        </NavbarMenuItem>
-      ))}
+  //#region ------------- render function -----------------
+  const start = (
+    <div className="mr-2">
+      <img className="rounded-2xl" width={70} src="/images/Logo.png"></img>
     </div>
   );
+  const end = (
+    <div className="flex align-items-center gap-2">
+      <ThemeSwitcher></ThemeSwitcher>
+      <Button
+        text
+        color="primary"
+        className="text-cyan-800 dark:text-cyan-400 group-data-[active]:bg-cyan-700 group-data-[active]:text-white dark:group-data-[active]:bg-cyan-200 dark:group-data-[active]:text-black rounded-full"
+        onClick={onLogout}
+        icon={
+          loading ? (
+            <Loader2></Loader2>
+          ) : (
+            <LogOut className="rotate-180"></LogOut>
+          )
+        }
+      ></Button>
+    </div>
+  );
+  //#endregion
+
+  //#region ------------- return html ---------------------
+  return (
+    <div>
+      <Menubar model={menuItems} start={start} end={end}></Menubar>
+    </div>
+  );
+  //#endregion
 }
 
-//===================================== interfaces ===========================================
+//#region --------------- interfaces ----------------------
 interface IMenuItemQuery {
   name: string;
   persianName: string;
@@ -249,3 +140,4 @@ interface IMenuItemQuery {
 interface IMenuItem extends IMenuItemQuery {
   children: IMenuItem[];
 }
+//#endregion

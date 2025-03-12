@@ -3,23 +3,28 @@ import { IForgotPassword } from "@/interfaces/IUser";
 import { mutation } from "@/services/graphql/apollo";
 import { ForgotPasswordUser } from "@/services/graphql/user.query-doc";
 import { consts } from "@/utils/consts";
-import { Button, Input } from "@heroui/react";
-import { Loader2 } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import { Controller, useForm } from "react-hook-form";
+import { forgotPassword } from "./zod-schema";
 
-//=================================== extra info ==================================
-let loading = false;
-//=================================== main function ===============================
 export default function ForgotPassword() {
+  //#region ------------- variables -----------------------
+  let loading = false;
   let router = useRouter();
-  const { handleSubmit, register } = useForm<IForgotPassword>({
-    defaultValues: {
-      userName: "",
-      newPassword: "",
-    },
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<IForgotPassword>({
+    resolver: zodResolver(forgotPassword),
   });
+  //#endregion
+
+  //#region ------------- functions -----------------------
   function onReset(values: IForgotPassword) {
     loading = true;
     mutation(ForgotPasswordUser, {
@@ -30,6 +35,9 @@ export default function ForgotPassword() {
       router.push("/");
     });
   }
+  //#endregion
+
+  //#region ------------- return html ---------------------
   return (
     <div className="m-auto">
       <div
@@ -39,43 +47,58 @@ export default function ForgotPassword() {
         {consts.forgotPassword.info.title}
       </div>
       <form onSubmit={handleSubmit(onReset)}>
-        <div className="my-16">
-          <Input
-            required
-            labelPlacement="outside"
-            variant="bordered"
-            size="lg"
-            radius={"lg"}
-            {...register("userName", { required: true })}
-            label={consts.forgotPassword.info.userName}
-            placeholder={consts.forgotPassword.placeholder.enterUsername}
-          ></Input>
-        </div>
-        <div className="my-10">
-          <Input
-            type="password"
-            required
-            labelPlacement="outside"
-            variant="bordered"
-            size="lg"
-            radius={"lg"}
-            {...register("newPassword", { required: true })}
-            label={consts.forgotPassword.info.password}
-            placeholder={consts.forgotPassword.placeholder.enterPassword}
-          ></Input>
-        </div>
-        <Button
-          radius={"lg"}
-          variant="solid"
-          color="primary"
-          fullWidth
-          size="lg"
-          type="submit"
-        >
-          <div className="absolute left-2">
-            {loading ? <Loader2 className="animate-spin" /> : ""}
+        <div className="my-4">
+          <div>
+            <label htmlFor="userName">
+              {consts.forgotPassword.info.userName}
+            </label>
           </div>
-          {consts.forgotPassword.info.reset}
+          <Controller
+            name="userName"
+            control={control}
+            render={({ field }) => (
+              <InputText
+                className="w-full p-2"
+                id="userName"
+                {...field}
+                placeholder={consts.forgotPassword.placeholder.enterUsername}
+              ></InputText>
+            )}
+          />
+          {errors.userName && (
+            <span className="text-sm text-red-500">
+              {errors.userName.message}
+            </span>
+          )}
+        </div>
+        <div className="my-8">
+          <div>
+            <label htmlFor="newPassword">
+              {consts.forgotPassword.info.password}
+            </label>
+          </div>
+          <Controller
+            name="newPassword"
+            control={control}
+            render={({ field }) => (
+              <InputText
+                className="w-full p-2"
+                id="newPassword"
+                {...field}
+                placeholder={consts.forgotPassword.placeholder.enterPassword}
+              ></InputText>
+            )}
+          />
+          {errors.newPassword && (
+            <span className="text-sm text-red-500">
+              {errors.newPassword.message}
+            </span>
+          )}
+        </div>
+        <Button className="w-full" type="submit" loading={loading}>
+          <label className="text-lg flex justify-center m-auto cursor-pointer">
+            {consts.forgotPassword.info.reset}
+          </label>
         </Button>
       </form>
       <Link href={"/Login"}>
@@ -85,4 +108,5 @@ export default function ForgotPassword() {
       </Link>
     </div>
   );
+  //#endregion
 }

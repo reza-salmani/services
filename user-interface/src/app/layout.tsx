@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Providers } from "./providers";
+
+import "../../public/style/dark.css";
+import "../../public/style/light.css";
+import { Providers } from "@/components/providers/providers";
 export const metadata: Metadata = {
   title: "نرم افزار جامع اداری مالی سوده ایمن آرام",
   description: "ساخته شده توسط رضا سلمانی",
