@@ -24,8 +24,8 @@ export default function ForgotPassword() {
   });
   //#endregion
 
-  //#region ------------- functions -----------------------
-  function onReset(values: IForgotPassword) {
+  //#region ------------- main functions ------------------
+  const onReset = (values: IForgotPassword) => {
     loading = true;
     mutation(ForgotPasswordUser, {
       userName: values.userName,
@@ -34,24 +34,19 @@ export default function ForgotPassword() {
       loading = false;
       router.push("/");
     });
-  }
-  //#endregion
-
-  //#region ------------- return html ---------------------
+  };
   return (
     <div className="m-auto">
       <div
         className="w-full flex justify-center text-3xl text-zinc-950 dark:text-zinc-50
          h-[4rem] mt-2 mb-8 border-b-8 border-sky-400 dark:border-sky-500"
       >
-        {consts.forgotPassword.info.title}
+        {consts.titles.forgotPasswordTitle}
       </div>
       <form onSubmit={handleSubmit(onReset)}>
         <div className="my-4">
           <div>
-            <label htmlFor="userName">
-              {consts.forgotPassword.info.userName}
-            </label>
+            <label htmlFor="userName">{consts.titles.userName}</label>
           </div>
           <Controller
             name="userName"
@@ -61,7 +56,7 @@ export default function ForgotPassword() {
                 className="w-full p-2"
                 id="userName"
                 {...field}
-                placeholder={consts.forgotPassword.placeholder.enterUsername}
+                placeholder={consts.placeholders.enterUserName}
               ></InputText>
             )}
           />
@@ -73,9 +68,7 @@ export default function ForgotPassword() {
         </div>
         <div className="my-8">
           <div>
-            <label htmlFor="newPassword">
-              {consts.forgotPassword.info.password}
-            </label>
+            <label htmlFor="newPassword">{consts.titles.password}</label>
           </div>
           <Controller
             name="newPassword"
@@ -85,7 +78,7 @@ export default function ForgotPassword() {
                 className="w-full p-2"
                 id="newPassword"
                 {...field}
-                placeholder={consts.forgotPassword.placeholder.enterPassword}
+                placeholder={consts.placeholders.enterPassword}
               ></InputText>
             )}
           />
@@ -97,13 +90,13 @@ export default function ForgotPassword() {
         </div>
         <Button className="w-full" type="submit" loading={loading}>
           <label className="text-lg flex justify-center m-auto cursor-pointer">
-            {consts.forgotPassword.info.reset}
+            {consts.titles.reset}
           </label>
         </Button>
       </form>
       <Link href={"/Login"}>
         <div className="text-sm text-zinc-700 dark:text-zinc-200 my-2 hover:cursor-pointer hover:underline hover:text-sky-500 hover:dark:text-sky-500">
-          {consts.forgotPassword.info.returnToLogin}
+          {consts.titles.returnToLogin}
         </div>
       </Link>
     </div>

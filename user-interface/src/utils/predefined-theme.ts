@@ -16,6 +16,11 @@ export const preDefinedTheme: APIOptions = {
           "bg-transparent placeholder:text-sm placeholder:text-gray-500",
       },
     },
+    dialog: {
+      root: {
+        draggable: true,
+      },
+    },
     datatable: {
       column: {
         headerCell: { className: "text-start" },

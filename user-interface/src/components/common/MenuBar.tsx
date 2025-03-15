@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "primereact/button";
 import { Menubar } from "primereact/menubar";
 import { MenuItem } from "primereact/menuitem";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ThemeSwitcher } from "../providers/theme";
 import { classNames } from "primereact/utils";
 
@@ -17,7 +17,42 @@ export default function MenuBar() {
   let loading = false;
   //#endregion
 
-  //#region ------------- functions -----------------------
+  //#region ------------- render function -----------------
+  const start = (
+    <div className="mr-2">
+      <img className="rounded-2xl" width={70} src="/images/Logo.png"></img>
+    </div>
+  );
+  const end = useCallback(() => {
+    const onLogout = () => {
+      loading = true;
+      mutation(LogoutUser, {}).then(() => {
+        loading = false;
+        router.push("/");
+      });
+    };
+    return (
+      <div className="flex align-items-center gap-2">
+        <ThemeSwitcher></ThemeSwitcher>
+        <Button
+          text
+          color="primary"
+          className="text-cyan-800 dark:text-cyan-400 group-data-[active]:bg-cyan-700 group-data-[active]:text-white dark:group-data-[active]:bg-cyan-200 dark:group-data-[active]:text-black rounded-full"
+          onClick={onLogout}
+          icon={
+            loading ? (
+              <Loader2></Loader2>
+            ) : (
+              <LogOut className="rotate-180"></LogOut>
+            )
+          }
+        ></Button>
+      </div>
+    );
+  }, []);
+  //#endregion
+
+  //#region ------------- main functions ------------------
   useEffect(() => {
     query(GetPages).then((res) => {
       let result: IMenuItem[] = [];
@@ -37,7 +72,7 @@ export default function MenuBar() {
     });
   }, []);
 
-  function RecursiveMenuCreator(items: IMenuItem[]) {
+  const RecursiveMenuCreator = (items: IMenuItem[]) => {
     let result: MenuItem[] = [];
     items.map((item) => {
       if (!item.children || !item.children.length) {
@@ -81,42 +116,8 @@ export default function MenuBar() {
       }
     });
     return result;
-  }
-  function onLogout() {
-    loading = true;
-    mutation(LogoutUser, {}).then(() => {
-      loading = false;
-      router.push("/");
-    });
-  }
-  //#endregion
-  //#region ------------- render function -----------------
-  const start = (
-    <div className="mr-2">
-      <img className="rounded-2xl" width={70} src="/images/Logo.png"></img>
-    </div>
-  );
-  const end = (
-    <div className="flex align-items-center gap-2">
-      <ThemeSwitcher></ThemeSwitcher>
-      <Button
-        text
-        color="primary"
-        className="text-cyan-800 dark:text-cyan-400 group-data-[active]:bg-cyan-700 group-data-[active]:text-white dark:group-data-[active]:bg-cyan-200 dark:group-data-[active]:text-black rounded-full"
-        onClick={onLogout}
-        icon={
-          loading ? (
-            <Loader2></Loader2>
-          ) : (
-            <LogOut className="rotate-180"></LogOut>
-          )
-        }
-      ></Button>
-    </div>
-  );
-  //#endregion
+  };
 
-  //#region ------------- return html ---------------------
   return (
     <div>
       <Menubar model={menuItems} start={start} end={end}></Menubar>

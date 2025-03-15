@@ -4,10 +4,10 @@ import { z } from "zod";
 export const forgotPassword = z.object({
   userName: z
     .string()
-    .nonempty({ message: consts.forgotPassword.errors.requiredUsername })
+    .nonempty({ message: consts.errors.requiredUserName })
     .default(""),
   newPassword: z
     .string()
-    .nonempty({ message: consts.forgotPassword.errors.requiredPassword })
+    .nonempty({ message: consts.errors.requiredPassword })
     .default(""),
 });

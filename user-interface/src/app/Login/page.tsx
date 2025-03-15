@@ -30,8 +30,8 @@ export default function Login() {
   });
   //#endregion
 
-  //#region ------------- functions -----------------------
-  function onSubmit(values: IInputLogin) {
+  //#region ------------- main functions ------------------
+  const onSubmit = (values: IInputLogin) => {
     loading = true;
     if (values.userName && values.password) {
       mutation(LoginUser, {
@@ -47,15 +47,12 @@ export default function Login() {
           ErrorHandler(error);
         });
     }
-  }
-  function onGetSiniorPermission() {
+  };
+  const onGetSiniorPermission = () => {
     query(HasPermission).then((res) => {
       setState({ hasPermission: res.data.hasPermission });
     });
-  }
-  //#endregion
-
-  //#region -------------- return html ---------------------
+  };
   return (
     <div className="m-auto">
       <ThemeSwitcher></ThemeSwitcher>
@@ -63,12 +60,12 @@ export default function Login() {
         className="w-full flex justify-center text-3xl text-zinc-950 dark:text-zinc-50
        h-[4rem] mt-2 mb-8 border-b-8 border-sky-400 dark:border-sky-500"
       >
-        {consts.login.info.title}
+        {consts.titles.loginTitle}
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="my-4">
           <div>
-            <label htmlFor="userName">{consts.login.info.userName}</label>
+            <label htmlFor="userName">{consts.titles.userName}</label>
           </div>
           <Controller
             name="userName"
@@ -82,7 +79,7 @@ export default function Login() {
                 variant="filled"
                 {...field}
                 id="userName"
-                placeholder={consts.login.placeholder.enterUsername}
+                placeholder={consts.placeholders.enterUserName}
               ></InputText>
             )}
           />
@@ -94,7 +91,7 @@ export default function Login() {
         </div>
         <div className="my-8">
           <div>
-            <label htmlFor="password">{consts.login.info.password}</label>
+            <label htmlFor="password">{consts.titles.password}</label>
           </div>
           <Controller
             name="password"
@@ -106,7 +103,7 @@ export default function Login() {
                 id="password"
                 variant="filled"
                 {...field}
-                placeholder={consts.login.placeholder.enterPassword}
+                placeholder={consts.placeholders.enterPassword}
               ></Password>
             )}
           />
@@ -118,18 +115,18 @@ export default function Login() {
         </div>
         <Button className="w-full" type="submit" loading={loading}>
           <label className="flex justify-center m-auto text-lg cursor-pointer">
-            {consts.login.info.signIn}
+            {consts.titles.signIn}
           </label>
         </Button>
       </form>
       <Link href={"/ForgotPassword"}>
         <div className="text-sm text-zinc-700 dark:text-zinc-200 my-2 hover:cursor-pointer hover:underline hover:text-sky-500 hover:dark:text-sky-500">
-          {consts.login.info.forgotPassword}
+          {consts.titles.forgotPassword}
         </div>
       </Link>
       <Link href={"/SignUp"}>
         <div className="text-sm text-zinc-700 dark:text-zinc-200 hover:cursor-pointer hover:underline hover:text-sky-500 hover:dark:text-sky-500">
-          {consts.login.info.signUp}
+          {consts.titles.signUp}
         </div>
       </Link>
     </div>

@@ -94,9 +94,12 @@ body {
   .text-destructive {
     @apply text-red-400 !important;
   }
-}
-.is-active {
-  @apply bg-sky-400 !text-white;
+  .is-active {
+    @apply bg-sky-400 !text-white;
+  }
+  .error-message-style {
+    @apply text-sm text-red-500;
+  }
 }
 nextjs-portal {
   display: none;

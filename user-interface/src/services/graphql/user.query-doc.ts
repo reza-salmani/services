@@ -143,6 +143,7 @@ export let CreateUserItem = gql`
         userName: $userName
       }
     ) {
+      userName
       roles
       avatar
       createDate
@@ -159,6 +160,46 @@ export let CreateUserItem = gql`
     }
   }
 `;
+//#endregion
+
+//#region --------------- UpdateUser ----------------------
+export let UpdateUserItem = gql`
+  mutation (
+    $id: String
+    $email: String
+    $nationalCode: String
+    $password: String
+    $phone: String
+    $userName: String
+  ) {
+    UpdateUser(
+      userModel: {
+        id: $id
+        email: $email
+        nationalCode: $nationalCode
+        password: $password
+        phone: $phone
+        userName: $userName
+      }
+    ) {
+      userName
+      roles
+      avatar
+      createDate
+      deleteDate
+      email
+      id
+      isActive
+      isDeleted
+      nationalCode
+      password
+      phone
+      revertDate
+      updateDate
+    }
+  }
+`;
+
 //#endregion
 
 //#region --------------- activationUsers -----------------
@@ -201,56 +242,6 @@ export let HasPermission = gql`
 //     mutation ($ids:String[],$Roles:String[]){
 //       UpdateUserRoles(UpdateRolesToUser: { ids: $ids, roles: $Roles }) {
 //         count
-//       }
-//     }
-//   `;
-
-// export let UpdateUser = gql`
-//     mutation (
-//       $id: String
-//       $email: String
-//       $nationalCode: String
-//       $password: String
-//       $phone: String
-//       $userName: String
-//       $createDate?: String
-//       $updateDate?: String
-//       $deleteDate?: String
-//       $revertDate?: String
-//       $isActive?:String
-//       $isDelete?:String
-//       $Roles?:String
-//     ) {
-//       CreateUser(
-//         userModel: {
-//           id: $id
-//           email: $email
-//           nationalCode: $nationalCode
-//           password: $password
-//           phone: $phone
-//           userName: $userName
-//           createDate?: $createDate
-//           updateDate?: $updateDate
-//           deleteDate?: $deleteDate
-//           revertDate?: $revertDate
-//           isActive?: $isActive
-//           isDeleted?: $isDelete
-//           Roles?: $Roles
-//         }
-//       ) {
-//         Roles
-//         createDate
-//         deleteDate
-//         email
-//         id
-//         isActive
-//         isDeleted
-//         nationalCode
-//         password
-//         phone
-//         revertDate
-//         updateDate
-//         userName
 //       }
 //     }
 //   `;
