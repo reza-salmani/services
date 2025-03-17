@@ -64,53 +64,10 @@ export class UpdateUserDto extends PartialType(
 
   @Field(() => String, {
     nullable: true,
-    name: 'createDate',
-    description: Consts.createDate,
-  })
-  createDate: string;
-
-  @Field(() => String, {
-    nullable: true,
     name: 'updateDate',
     description: Consts.updateDate,
   })
   updateDate: string;
-
-  @Field(() => String, {
-    nullable: true,
-    name: 'deleteDate',
-    description: Consts.deleteDate,
-  })
-  deleteDate: string;
-
-  @Field(() => String, {
-    nullable: true,
-    name: 'revertDate',
-    description: Consts.revertDate,
-  })
-  revertDate: string;
-
-  @Field(() => Boolean, {
-    nullable: true,
-    name: 'isActive',
-    description: Consts.isActive,
-  })
-  isActive: boolean;
-
-  @Field(() => Boolean, {
-    nullable: true,
-    name: 'isDeleted',
-    description: Consts.isDeleted,
-  })
-  isDeleted: boolean;
-
-  @Field(() => [Roles], {
-    nullable: true,
-    name: 'Roles',
-    description: Consts.Roles,
-    defaultValue: [Roles.Demo_Viewer],
-  })
-  Roles: Roles[];
 }
 //#endregion
 

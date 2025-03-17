@@ -15,7 +15,6 @@ import { UserOutput, Users } from './users.model';
 import { FileUpload } from 'graphql-upload-ts';
 import { Roles } from '@prisma/client';
 
-//================================ Resulver ===================================
 @UseGuards(GqlAuthGuard)
 @Resolver(() => [Users])
 export class UsersResolver {
@@ -198,16 +197,14 @@ export class UsersResolver {
   }
   //#endregion
 
-  //#region-------------- get User Info ---------------------------
-  @UseGuards(GqlAuthGuard)
-  @Query(() => [String], { name: 'roles' })
+  //#region-------------- get User Info -------------------
+  @Query(() => Users, { name: 'getUserInfo' })
   async GetUserInfo(@Context() context: any) {
     return await this.prismaRequestService.GetUserInfo(context);
   }
   //#endregion
 
-  //#region-------------- get User Info ---------------------------
-  @UseGuards(GqlAuthGuard)
+  //#region-------------- hasPermission -------------------
   @Query(() => Boolean, { name: 'hasPermission' })
   async HasUserActionPermission(@Context() context: any) {
     let reuslt =

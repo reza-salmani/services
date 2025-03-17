@@ -28,7 +28,10 @@ export function ThemeSwitcher() {
   return (
     <Button
       tooltip={theme === "dark" ? consts.titles.light : consts.titles.dark}
-      tooltipOptions={{ position: "left", appendTo: "self" }}
+      tooltipOptions={{
+        position: "left",
+        appendTo: document.querySelector("body"),
+      }}
       text
       className="text-cyan-800 dark:text-cyan-400 rounded-full"
       onClick={() => {

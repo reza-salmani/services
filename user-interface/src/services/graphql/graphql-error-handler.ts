@@ -1,27 +1,24 @@
-export const ErrorHandler = (error: any): Array<string> => {
-  let result: string[] = [];
+import { ToastMessage } from "primereact/toast";
+
+export const ErrorHandler = (error: any): ToastMessage[] => {
+  let result: ToastMessage[] = [];
   error.graphQLErrors.forEach(
     (err: {
       message: string;
       extensions: { statusCode: number; code: string; originalError: any };
     }) => {
       console.log(err);
-      // addToast({
-      //   title: err.extensions.originalError
-      //     ? err.extensions.originalError.statusCode
-      //     : err.extensions.statusCode,
-      //   description: err.extensions.originalError
-      //     ? err.extensions.originalError.message
-      //     : err.message,
-      //   color: "danger",
-      //   shouldShowTimeoutProgess: true,
-      //   timeout: 3000,
-      //   severity: "danger",
-      //   variant: "flat",
-      // });
-      result.push(
-        `[ ${err.extensions.statusCode.toString()} ] :`.concat(" ", err.message)
-      );
+
+      result.push({
+        severity: "error",
+        summary: err.extensions.originalError
+          ? err.extensions.originalError.statusCode.toString()
+          : err.extensions.statusCode.toString(),
+        detail: err.extensions.originalError
+          ? err.extensions.originalError.message
+          : err.message,
+        life: 3000,
+      });
     }
   );
   return result;

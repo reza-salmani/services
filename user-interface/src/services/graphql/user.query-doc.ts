@@ -165,21 +165,17 @@ export let CreateUserItem = gql`
 //#region --------------- UpdateUser ----------------------
 export let UpdateUserItem = gql`
   mutation (
-    $id: String
+    $id: String!
     $email: String
     $nationalCode: String
-    $password: String
     $phone: String
-    $userName: String
   ) {
     UpdateUser(
       userModel: {
         id: $id
         email: $email
         nationalCode: $nationalCode
-        password: $password
         phone: $phone
-        userName: $userName
       }
     ) {
       userName
@@ -228,19 +224,44 @@ export let HasPermission = gql`
 `;
 //#endregion
 
+//#region --------------- getUserInfo ---------------------
+export let GetUserInfo = gql`
+  query {
+    getUserInfo {
+      roles
+      createDate
+      deleteDate
+      email
+      id
+      isActive
+      isDeleted
+      nationalCode
+      password
+      phone
+      revertDate
+      updateDate
+      userName
+      avatar
+    }
+  }
+`;
+//#endregion
+
+//#region ---------------  UpdateUserRoles ----------------
+export let UpdateRoles = gql`
+  mutation ($ids: [String], $Roles: [String]) {
+    UpdateUserRoles(UpdateRolesToUser: { ids: $ids, roles: $Roles }) {
+      count
+    }
+  }
+`;
+//#endregion
+
 // export let HardDeleteUser = gql`
 //     mutation ($ids:String[]) {
 //       DeleteUserPermanently(
 //         deleteUsersIds: { ids: $ids }
 //       ) {
-//         count
-//       }
-//     }
-//   `;
-
-// export let UpdateUserRoles = gql`
-//     mutation ($ids:String[],$Roles:String[]){
-//       UpdateUserRoles(UpdateRolesToUser: { ids: $ids, roles: $Roles }) {
 //         count
 //       }
 //     }

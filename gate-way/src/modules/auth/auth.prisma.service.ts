@@ -280,6 +280,7 @@ export class PrismaAuthService {
     return result;
   }
   //#endregion
+
   //#region ------------- Get Roles -----------------------
   async GetRoles() {
     return new Enumerator(Roles).item;

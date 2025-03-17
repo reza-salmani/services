@@ -25,6 +25,7 @@ export interface IUser {
   isDeleted: boolean;
   isActive: boolean;
   roles: string[];
+  avatar: string;
 }
 export interface IUpsertUser {
   id?: string;
@@ -37,4 +38,8 @@ export interface IUpsertUser {
 export interface IToggleActivation {
   ids: string[];
   state: boolean;
+}
+export interface IUserRole {
+  id: string;
+  roles: string[];
 }

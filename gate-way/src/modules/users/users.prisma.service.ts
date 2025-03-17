@@ -25,7 +25,7 @@ export class PrismaUsersService {
     private readonly jwtService: JwtService,
   ) {}
 
-  //========================= GetAllUsersByQuery ============================
+  //#region ------------- GetAllUsersByQuery --------------
   async GetAllUsersByQuery(queries: PrismaQuery): Promise<UserOutput> {
     return {
       items: await this.prismaService.user.findMany(queries),
@@ -34,13 +34,15 @@ export class PrismaUsersService {
       totalCount: await this.prismaService.user.count(),
     };
   }
+  //#endregion
 
-  //========================= GetUserByQuery ================================
+  //#region ------------- GetUserByQuery ------------------
   async GetUserByQuery(query: PrismaSingleQuery): Promise<User> {
     return this.prismaService.user.findFirst(query);
   }
+  //#endregion
 
-  //======================== CreateUser =====================================
+  //#region ------------- CreateUser ----------------------
   async CreateUser(user: CreateUserDto): Promise<User> {
     let existUser = await this.prismaService.user.findFirst({
       where: {
@@ -64,19 +66,20 @@ export class PrismaUsersService {
       });
     }
   }
+  //#endregion
 
-  //======================== UpdateUser =====================================
+  //#region ------------- UpdateUser ----------------------
   async UpdateUser(user: UpdateUserDto): Promise<User> {
     user.updateDate = new Date().toISOString();
     let userResult: UpdateUserDto = JSON.parse(JSON.stringify(user));
-    delete userResult.id;
-    return this.prismaService.user.update({
+    return await this.prismaService.user.update({
       data: userResult,
       where: { id: user.id },
     });
   }
+  //#endregion
 
-  //======================== SoftDeleteUsers ================================
+  //#region ------------- SoftDeleteUsers -----------------
   async SoftDeleteUsers(deleteUsers: DeleteUserDto) {
     let FindAdminFromIds = await this.prismaService.user.findMany({
       where: { AND: { id: { in: deleteUsers.ids }, roles: { has: 'Admin' } } },
@@ -92,23 +95,26 @@ export class PrismaUsersService {
       where: { id: { in: deleteUsers.ids } },
     });
   }
+  //#endregion
 
-  //======================== RevertDeletedUsers =============================
+  //#region ------------- RevertDeletedUsers --------------
   async RevertDeletedUsers(deleteUsers: DeleteUserDto) {
     return this.prismaService.user.updateMany({
       data: { isDeleted: false, revertDate: new Date().toISOString() },
       where: { id: { in: deleteUsers.ids } },
     });
   }
+  //#endregion
 
-  //======================== HardDeleteUsers ================================
+  //#region ------------- HardDeleteUsers -----------------
   async HardDeleteUsers(deleteUsers: DeleteUserDto) {
     return this.prismaService.user.deleteMany({
       where: { id: { in: deleteUsers.ids } },
     });
   }
+  //#endregion
 
-  //======================== ChangeActivationUsers ==========================
+  //#region ------------- ChangeActivationUsers -----------
   async ChangeActivationUsers(activationUsers: ToggleActiveUserDto) {
     return this.prismaService.user.updateMany({
       data: {
@@ -118,8 +124,9 @@ export class PrismaUsersService {
       where: { id: { in: activationUsers.ids } },
     });
   }
+  //#endregion
 
-  //======================= UpdateUserRoles =================================
+  //#region ------------- UpdateUserRoles -----------------
   async UpdateUserRoles(updateModel: UpdateRolesToUserDto) {
     return this.prismaService.user.updateMany({
       data: {
@@ -129,6 +136,7 @@ export class PrismaUsersService {
       where: { id: { in: updateModel.ids } },
     });
   }
+  //#endregion
 
   //#region ------------- UserAvatarManager ---------------
   async ManageUserAvatar(fileUpload: FileUpload, context: any) {
@@ -155,14 +163,19 @@ export class PrismaUsersService {
       }
     } catch (error) {}
   }
+  //#endregion
 
   //#region ------------- User Info -----------------------
   async GetUserInfo(context: any) {
-    return await Tools.GetUserInfoFromContext(
+    let userAuth = await Tools.GetUserInfoFromContext(
       context,
       this.jwtService,
       this.prismaService,
     );
+
+    return await this.prismaService.user.findUnique({
+      where: { id: userAuth.userId },
+    });
   }
   //#endregion
 

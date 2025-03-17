@@ -76,7 +76,6 @@ export default function Login() {
                   "w-full p-2",
                   errors.userName ? "p-invalid" : ""
                 )}
-                variant="filled"
                 {...field}
                 id="userName"
                 placeholder={consts.placeholders.enterUserName}
@@ -101,7 +100,6 @@ export default function Login() {
                 className="w-full"
                 inputClassName="w-full p-2"
                 id="password"
-                variant="filled"
                 {...field}
                 placeholder={consts.placeholders.enterPassword}
               ></Password>

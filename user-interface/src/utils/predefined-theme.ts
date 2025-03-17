@@ -13,7 +13,22 @@ export const preDefinedTheme: APIOptions = {
     inputtext: {
       root: {
         className:
-          "bg-transparent placeholder:text-sm placeholder:text-gray-500",
+          "bg-transparent placeholder:text-sm placeholder:text-gray-500 p-inputtext-sm",
+      },
+    },
+    toast: {
+      icon: {
+        className: "ml-5",
+      },
+    },
+    overlaypanel: {
+      root: {
+        className: "rounded-2xl",
+      },
+    },
+    divider: {
+      root: {
+        className: "border border-gray-300 dark:border-gray-700",
       },
     },
     dialog: {

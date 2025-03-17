@@ -2,6 +2,7 @@ export const consts = {
   titles: {
     edit: "ویرایش",
     delete: "حذف",
+    exit: "خروج",
     show: "مشاهده",
     create: "ایجاد",
     cancel: "انصراف",
@@ -31,6 +32,10 @@ export const consts = {
     logout: "خروج",
     userCreate: "ایجاد کاربر",
     userEdit: "ویرایش کاربر",
+    theme: "پوسته",
+    updateRole: "بروزرسانی نقش",
+    roles: "نقش ها",
+    submit: "ثبت",
   },
   questions: {
     delete: "آیا برای حذف موارد انتخابی موافق هستید؟",
@@ -42,6 +47,7 @@ export const consts = {
     enterNationalCode: "کدملی خود را وارد نمایید",
     enterEmail: "ایمیل را وارد نمایید",
     enterPhone: "همراه را وارد نمایید",
+    chooseAnItem: "لطقا انتخاب نمایید...",
   },
   errors: {
     requiredUserName: "نام کاربری اجباریست",
@@ -56,5 +62,9 @@ export const consts = {
       "سرور سرویس دهنده در حال حاضر در دسترس نیست. لطفا با پشتیبان نرم افزاری خود تماس حاصل نمایید",
     toggleMessage:
       "لطفا برای تغییر وضعیت موارد انتخابی یکی از گزینه ها را انتخاب نمایید",
+    successCreate: "عملیات ایجاد با موفقیت انجام شد",
+    successEdit: "عملیات ویرایش با موفقیت انجام شد",
+    successDelete: "عملیات حذف با موفقیت انجام شد",
+    successUserRolesUpdate: "نقش کاربر با موفقیت بروزرسانی شد",
   },
 };

@@ -179,6 +179,7 @@ input PrismaSingleQuery {
 type Query {
   GetAllUsersWithQuery(queries: PrismaQuery): UserOutput!
   getUserByQuery(query: PrismaSingleQuery): Users!
+  getUserInfo: Users!
   hasPermission: Boolean!
   menu: [MenuStructureModel!]!
   roles: [String!]!
@@ -199,35 +200,17 @@ input UpdateRolesToUserDto {
 }
 
 input UpdateUserDto {
-  """سطوح دسترسی"""
-  Roles: [EnumRoles!] = [Demo_Viewer]
-
-  """تاریخ ایجاد"""
-  createDate: String
-
-  """تاریخ حذف"""
-  deleteDate: String
-
   """ایمیل واقعی"""
   email: String
 
   """شناسه کاربر"""
   id: String!
 
-  """وضعیت فعال بودن کاربر"""
-  isActive: Boolean
-
-  """وضعیت حذف بودن کاربر"""
-  isDeleted: Boolean
-
   """کدملی اجباریست"""
   nationalCode: String
 
   """شماره همراه"""
   phone: String
-
-  """تاریخ برگشت از حذف موقت"""
-  revertDate: String
 
   """تاریخ بروزرسانی"""
   updateDate: String

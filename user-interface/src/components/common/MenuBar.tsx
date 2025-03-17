@@ -1,19 +1,29 @@
 "use client";
 import { mutation, query } from "@/services/graphql/apollo";
-import { GetPages, LogoutUser } from "@/services/graphql/user.query-doc";
-import { ChevronDown, Loader2, LogOut } from "lucide-react";
+import {
+  GetPages,
+  GetUserInfo,
+  LogoutUser,
+} from "@/services/graphql/user.query-doc";
+import { ChevronDown, Loader2, LogOut, Menu } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "primereact/button";
 import { Menubar } from "primereact/menubar";
 import { MenuItem } from "primereact/menuitem";
-import { useCallback, useEffect, useState } from "react";
-import { ThemeSwitcher } from "../providers/theme";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { classNames } from "primereact/utils";
+import { OverlayPanel } from "primereact/overlaypanel";
+import { ThemeSwitcher } from "../providers/theme";
+import { IUser } from "@/interfaces/IUser";
+import { consts } from "@/utils/consts";
+import { Avatar } from "primereact/avatar";
 
 export default function MenuBar() {
   //#region ------------- variables -----------------------
   let router = useRouter();
   let [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  let [userInfo, setUserInfo] = useState<IUser | null>(null);
+  const profileRef = useRef<OverlayPanel>(null);
   let loading = false;
   //#endregion
 
@@ -32,46 +42,74 @@ export default function MenuBar() {
       });
     };
     return (
-      <div className="flex align-items-center gap-2">
-        <ThemeSwitcher></ThemeSwitcher>
+      <>
         <Button
+          type="button"
+          icon={<Menu></Menu>}
           text
-          color="primary"
-          className="text-cyan-800 dark:text-cyan-400 group-data-[active]:bg-cyan-700 group-data-[active]:text-white dark:group-data-[active]:bg-cyan-200 dark:group-data-[active]:text-black rounded-full"
-          onClick={onLogout}
-          icon={
-            loading ? (
-              <Loader2></Loader2>
-            ) : (
-              <LogOut className="rotate-180"></LogOut>
-            )
-          }
-        ></Button>
-      </div>
+          onClick={(e) => profileRef.current!.toggle(e)}
+        />
+        <OverlayPanel className="w-[15rem]" ref={profileRef}>
+          <div className="flex">
+            <div>
+              <Avatar
+                size="xlarge"
+                shape="circle"
+                image={userInfo?.avatar}
+              ></Avatar>
+            </div>
+            <div className="mr-4 my-auto">
+              <div>{consts.titles.userName}:</div>
+              <div className="text-sky-400 font-bold">{userInfo?.userName}</div>
+            </div>
+          </div>
+          <div className="flex justify-around">
+            <ThemeSwitcher></ThemeSwitcher>
+            <Button
+              text
+              color="primary"
+              className="text-cyan-800 dark:text-cyan-400 group-data-[active]:bg-cyan-700 group-data-[active]:text-white dark:group-data-[active]:bg-cyan-200 dark:group-data-[active]:text-black rounded-full"
+              onClick={onLogout}
+              icon={
+                loading ? (
+                  <Loader2></Loader2>
+                ) : (
+                  <LogOut className="rotate-180"></LogOut>
+                )
+              }
+            ></Button>
+          </div>
+        </OverlayPanel>
+      </>
     );
-  }, []);
+  }, [userInfo]);
   //#endregion
 
   //#region ------------- main functions ------------------
   useEffect(() => {
-    query(GetPages).then((res) => {
-      let result: IMenuItem[] = [];
-      res.data.menu.map((item: IMenuItemQuery) => {
-        if (!item.parentId) {
-          result.push({ ...item, children: [] });
-        } else {
-          result.flatMap((resultItem) => {
-            if (resultItem.selfId === item.parentId) {
-              resultItem.children.push({ ...item, children: [] });
-            }
-            return resultItem;
-          });
-        }
-      });
-      setMenuItems(RecursiveMenuCreator(result));
-    });
+    getPages();
+    getUserInfo();
   }, []);
-
+  const getPages = async () => {
+    const response = await query(GetPages);
+    let result: IMenuItem[] = [];
+    response.data.menu.map((item: IMenuItemQuery) => {
+      if (!item.parentId) {
+        result.push({ ...item, children: [] });
+      } else {
+        result.flatMap((resultItem) => {
+          if (resultItem.selfId === item.parentId) {
+            resultItem.children.push({ ...item, children: [] });
+          }
+          return resultItem;
+        });
+      }
+    });
+    setMenuItems(RecursiveMenuCreator(result));
+  };
+  const getUserInfo = async () => {
+    setUserInfo((await query(GetUserInfo)).data.getUserInfo);
+  };
   const RecursiveMenuCreator = (items: IMenuItem[]) => {
     let result: MenuItem[] = [];
     items.map((item) => {

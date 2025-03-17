@@ -31,6 +31,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { UpsertUser } from "./upsert";
 import { classNames } from "primereact/utils";
+import { UpdateUserRoles } from "./update-roles";
 
 export default function UsersList() {
   //#region ------------- variables -----------------------
@@ -42,7 +43,11 @@ export default function UsersList() {
   });
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [visibleUpdateRole, setVisibleUpdateRole] = useState(false);
   const [editInfo, setEditInfo] = useState<IUpsertUser | null>(null);
+  const [userInfoForUpdateRole, setUserInfoForUpdateRole] = useState<IUser[]>(
+    []
+  );
   const { getState } = createUserPermissionStore();
   const [selectedRowItem, setSelectedRowItem] = useState<IUser[]>([]);
   const { handleSubmit, register, reset } = useForm<IUpsertUser>({
@@ -72,10 +77,7 @@ export default function UsersList() {
   //#region ------------- rendered functions --------------
   const renderCell = useCallback((user: any, column: any) => {
     const cellValue = user["avatar"];
-    const showUpsertComponent = () => {
-      setEditInfo(user);
-      setVisible(true);
-    };
+
     switch (column.field) {
       case "userName":
         return (
@@ -119,6 +121,29 @@ export default function UsersList() {
           ""
         ) : (
           <div className="relative flex items-center gap-4">
+            {user.roles.some((x: string) => [
+              "Admin",
+              "Demo",
+              "User_Global",
+              "User_Management",
+            ]) ? (
+              <Button
+                tooltip={consts.titles.toggleActivation}
+                tooltipOptions={{
+                  className: "text-warning-400",
+                  position: "bottom",
+                }}
+                className={classNames(
+                  ["text-lg cursor-pointer active:opacity-50"],
+                  !user.isActive ? ["text-zinc-500"] : ["text-sky-500"]
+                )}
+                text
+                onClick={() => onShowUpdateUserRole([user])}
+                icon={!user.isActive ? <ToggleLeftIcon /> : <ToggleRightIcon />}
+              ></Button>
+            ) : (
+              ""
+            )}
             <Button
               tooltip={consts.titles.toggleActivation}
               tooltipOptions={{
@@ -139,7 +164,7 @@ export default function UsersList() {
                 className: "text-success-400",
                 position: "bottom",
               }}
-              onClick={() => showUpsertComponent()}
+              onClick={() => showUpsertComponent(user)}
               className="text-lg text-zinc-500 cursor-pointer active:opacity-50"
               text
               icon={<EditIcon />}
@@ -258,7 +283,7 @@ export default function UsersList() {
         ) : (
           <div className="w-auto">
             <Button
-              onClick={() => setVisible(true)}
+              onClick={() => showUpsertComponent(null)}
               size="small"
               className="text-lg w-auto"
             >
@@ -306,6 +331,14 @@ export default function UsersList() {
   const onHideUpsert = () => {
     setVisible(false);
     getAllDataFunction();
+  };
+  const onHideUpdateRole = () => {
+    setVisibleUpdateRole(false);
+    getAllDataFunction();
+  };
+  const onShowUpdateUserRole = (selectedItems: IUser[]) => {
+    setUserInfoForUpdateRole(selectedItems);
+    setVisibleUpdateRole(true);
   };
   function onSetToggleActivation(selectedItems: IUser[], state: boolean) {
     mutation(ChangeActivationUser, {
@@ -366,6 +399,10 @@ export default function UsersList() {
       },
     });
   }
+  const showUpsertComponent = (user: IUpsertUser | null) => {
+    setEditInfo(user);
+    setVisible(true);
+  };
   return (
     <div
       className="bg-slate-100 relative dark:bg-slate-950 p-4 rounded-2xl"
@@ -406,6 +443,11 @@ export default function UsersList() {
         setVisible={(event) => onHideUpsert()}
         editInfo={editInfo}
       ></UpsertUser>
+      <UpdateUserRoles
+        visible={visibleUpdateRole}
+        setVisible={() => onHideUpdateRole()}
+        userInfo={userInfoForUpdateRole}
+      ></UpdateUserRoles>
     </div>
   );
   //#endregion
