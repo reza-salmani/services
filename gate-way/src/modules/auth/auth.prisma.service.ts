@@ -2,18 +2,18 @@ import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ForgotPasswordDto } from './auth.model.dto';
-import { PrismaService } from '@src/bases/services/prisma-client';
-import { Consts } from '@src/Utils/consts';
-import { Tools } from '@src/Utils/tools';
 import { LoginModel, JwtPayLoad, ForgotPasswordModel } from './auth.model';
 import { Context } from 'vm';
-import { DateTime } from '@src/Utils/date-time';
+import { PrismaService } from '@base/services/prisma-client';
 import {
-  GraphQlBadRequestException,
   GraphQlNotFoundException,
+  GraphQlBadRequestException,
   GraphQlUnauthorizedException,
-} from '@src/bases/services/error-handler';
+} from '@base/services/error-handler';
 import { Roles } from '@prisma/client';
+import { Consts } from '@utils/consts';
+import { DateTime } from '@utils/date-time';
+import { Tools } from '@utils/tools';
 
 @Injectable()
 export class PrismaAuthService {
@@ -283,7 +283,7 @@ export class PrismaAuthService {
 
   //#region ------------- Get Roles -----------------------
   async GetRoles() {
-    return new Enumerator(Roles).item;
+    return Object.keys(Roles);
   }
 
   //#endregion

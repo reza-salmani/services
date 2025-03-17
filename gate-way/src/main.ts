@@ -6,7 +6,7 @@ import { join } from 'path';
 import { printSchema } from 'graphql/utilities';
 import { GraphQLSchemaHost } from '@nestjs/graphql';
 import * as cookieParser from 'cookie-parser';
-import { CustomLogger } from './Utils/logger';
+import { CustomLogger } from './utils/logger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     snapshot: true,

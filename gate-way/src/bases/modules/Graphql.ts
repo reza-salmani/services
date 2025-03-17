@@ -1,7 +1,7 @@
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { GraphQLModule, GraphQLSchemaBuilderModule } from '@nestjs/graphql';
-import { GraphQLLoggingMiddleware } from '@src/Utils/logger';
+import { GraphQLLoggingMiddleware } from '@utils/logger';
 import { join } from 'path';
 
 @Module({

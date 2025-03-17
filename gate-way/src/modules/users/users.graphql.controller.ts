@@ -8,12 +8,12 @@ import {
 } from './users.model.dto';
 import { PrismaUsersService } from './users.prisma.service';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard, HasRoles } from 'src/modules/auth/jwt.strategy';
-import { Counter } from '@src/bases/base';
-import { PrismaQuery, PrismaSingleQuery } from '@src/bases/PrismaQuery';
 import { UserOutput, Users } from './users.model';
 import { FileUpload } from 'graphql-upload-ts';
 import { Roles } from '@prisma/client';
+import { Counter } from '@base/base';
+import { PrismaQuery, PrismaSingleQuery } from '@base/PrismaQuery';
+import { GqlAuthGuard, HasRoles } from '@auth/jwt.strategy';
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => [Users])

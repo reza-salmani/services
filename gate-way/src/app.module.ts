@@ -3,7 +3,7 @@ import { KafkaModule } from './bases/modules/kafka';
 import { PrismaClient } from '@prisma/client';
 import { GraphqlModule } from './bases/modules/Graphql';
 import { ScheduleModule } from '@nestjs/schedule';
-import { TasksService } from './Utils/tasks';
+import { TasksService } from './utils/tasks';
 import { ConfigModule } from '@nestjs/config';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { UserModule } from './modules/users/users.module';
@@ -12,8 +12,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './modules/auth/jwt.strategy';
 import { JwtService } from '@nestjs/jwt';
-import { CustomLogger } from './Utils/logger';
-import { MailerService } from './Utils/mail-server';
+import { CustomLogger } from './utils/logger';
+import { MailerService } from './utils/mail-server';
 
 @Module({
   imports: [

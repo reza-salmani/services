@@ -1,15 +1,15 @@
 import Loader from "@/components/common/Loader";
 import { IUser } from "@/interfaces/IUser";
-import { mutation } from "@/services/graphql/apollo";
+import { mutation, query } from "@/services/graphql/apollo";
 import { ErrorHandler } from "@/services/graphql/graphql-error-handler";
-import { UpdateRoles } from "@/services/graphql/user.query-doc";
+import { GetRoles, UpdateRoles } from "@/services/graphql/user.query-doc";
 import { consts } from "@/utils/consts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { MultiSelect } from "primereact/multiselect";
 import { Toast } from "primereact/toast";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -29,6 +29,18 @@ export const UpdateUserRoles = (props: IProps) => {
   //#endregion
 
   //#region ------------- functions -----------------------
+  useEffect(() => {
+    onGetRoles();
+  }, []);
+  const onGetRoles = async () => {
+    const { data, loading, errors } = await query(GetRoles);
+    if (!loading) {
+      if (errors) {
+        toast.current!.show(ErrorHandler(errors));
+      }
+      setRoles(data.roles);
+    }
+  };
   const onCancel = () => {
     props.setVisible(false);
   };
@@ -69,7 +81,7 @@ export const UpdateUserRoles = (props: IProps) => {
         ref={toast}
       ></Toast>
       <Loader loading={loading}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
           <div>
             <div>
               <label>{consts.titles.roles}</label>
@@ -79,6 +91,7 @@ export const UpdateUserRoles = (props: IProps) => {
               name="roles"
               render={({ field }) => (
                 <MultiSelect
+                  className="w-full"
                   options={roles}
                   {...field}
                   id="roles"

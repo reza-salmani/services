@@ -4,8 +4,8 @@ import * as os from 'os';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '@src/bases/services/prisma-client';
 import { Context } from 'vm';
+import { PrismaService } from '@base/services/prisma-client';
 
 export let Tools = {
   encript: async (text: string) => {

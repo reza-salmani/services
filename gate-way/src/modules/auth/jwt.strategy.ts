@@ -10,14 +10,14 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { JwtPayLoad } from './auth.model';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Reflector } from '@nestjs/core';
-import { Tools } from 'src/Utils/tools';
 import { JwtService } from '@nestjs/jwt';
 import { Context } from 'vm';
-import { PrismaService } from '@src/bases/services/prisma-client';
 import { Roles } from '@prisma/client';
 import { PrismaAuthService } from './auth.prisma.service';
-import { GraphQlUnauthorizedException } from '@src/bases/services/error-handler';
-import { Consts } from '@src/Utils/consts';
+import { GraphQlUnauthorizedException } from '@base/services/error-handler';
+import { PrismaService } from '@base/services/prisma-client';
+import { Consts } from '@utils/consts';
+import { Tools } from '@utils/tools';
 
 @Injectable()
 export class JWTStrategy extends PassportStrategy(Strategy) {

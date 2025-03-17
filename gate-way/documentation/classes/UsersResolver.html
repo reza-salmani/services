@@ -1,0 +1,1537 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>gate-way documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/&#x27;Vagrant&#x27;.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">gate-way documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >UsersResolver</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/modules/users/users.graphql.controller.ts</code>
+        </p>
+
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#ChangeActivation" >ChangeActivation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#CreateUser" >CreateUser</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#GetUserByQuery" >GetUserByQuery</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#GetUserInfo" >GetUserInfo</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#GetUsersByQuery" >GetUsersByQuery</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#HardDeleteUsers" >HardDeleteUsers</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#HasUserActionPermission" >HasUserActionPermission</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#ManageUserAvatar" >ManageUserAvatar</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#RevertDeletedUsers" >RevertDeletedUsers</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#SoftDeleteUsers" >SoftDeleteUsers</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#UpdateUser" >UpdateUser</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#UpdateUserRoles" >UpdateUserRoles</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(prismaRequestService: <a href="../injectables/PrismaUsersService.html" target="_self">PrismaUsersService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/modules/users/users.graphql.controller.ts:23</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>prismaRequestService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/PrismaUsersService.html" target="_self" >PrismaUsersService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ChangeActivation"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>ChangeActivation</b></span>
+                        <a href="#ChangeActivation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ChangeActivation(activationUsersIds: <a href="../classes/ToggleActiveUserDto.html" target="_self">ToggleActiveUserDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HasRoles([&#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Mutation(undefined, {name: &#x27;ChangeActivation&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="159"
+                                    class="link-to-prism">src/modules/users/users.graphql.controller.ts:159</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>activationUsersIds</td>
+                                            <td>
+                                                            <code><a href="../classes/ToggleActiveUserDto.html" target="_self" >ToggleActiveUserDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CreateUser"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>CreateUser</b></span>
+                        <a href="#CreateUser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>CreateUser(userModel: <a href="../classes/CreateUserDto.html" target="_self">CreateUserDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HasRoles([&#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Mutation(undefined, {name: &#x27;CreateUser&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="78"
+                                    class="link-to-prism">src/modules/users/users.graphql.controller.ts:78</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>userModel</td>
+                                            <td>
+                                                            <code><a href="../classes/CreateUserDto.html" target="_self" >CreateUserDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Users.html" target="_self" >Promise&lt;Users&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetUserByQuery"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>GetUserByQuery</b></span>
+                        <a href="#GetUserByQuery"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>GetUserByQuery(query: <a href="../classes/PrismaSingleQuery.html" target="_self">PrismaSingleQuery</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HasRoles([&#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Query(undefined, {name: &#x27;getUserByQuery&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="60"
+                                    class="link-to-prism">src/modules/users/users.graphql.controller.ts:60</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/PrismaSingleQuery.html" target="_self" >PrismaSingleQuery</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Users.html" target="_self" >Promise&lt;Users&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetUserInfo"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>GetUserInfo</b></span>
+                        <a href="#GetUserInfo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>GetUserInfo(context: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Query(undefined, {name: &#x27;getUserInfo&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="205"
+                                    class="link-to-prism">src/modules/users/users.graphql.controller.ts:205</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>context</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetUsersByQuery"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>GetUsersByQuery</b></span>
+                        <a href="#GetUsersByQuery"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>GetUsersByQuery(query: <a href="../classes/PrismaQuery.html" target="_self">PrismaQuery</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HasRoles([&#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Query(undefined, {name: &#x27;GetAllUsersWithQuery&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="39"
+                                    class="link-to-prism">src/modules/users/users.graphql.controller.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/PrismaQuery.html" target="_self" >PrismaQuery</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/UserOutput.html" target="_self" >Promise&lt;UserOutput&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HardDeleteUsers"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>HardDeleteUsers</b></span>
+                        <a href="#HardDeleteUsers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>HardDeleteUsers(deletedUsers: <a href="../classes/DeleteUserDto.html" target="_self">DeleteUserDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HasRoles([&#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Mutation(undefined, {name: &#x27;DeleteUserPermanently&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="144"
+                                    class="link-to-prism">src/modules/users/users.graphql.controller.ts:144</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>deletedUsers</td>
+                                            <td>
+                                                            <code><a href="../classes/DeleteUserDto.html" target="_self" >DeleteUserDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HasUserActionPermission"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>HasUserActionPermission</b></span>
+                        <a href="#HasUserActionPermission"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>HasUserActionPermission(context: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Query(undefined, {name: &#x27;hasPermission&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="212"
+                                    class="link-to-prism">src/modules/users/users.graphql.controller.ts:212</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>context</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ManageUserAvatar"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>ManageUserAvatar</b></span>
+                        <a href="#ManageUserAvatar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ManageUserAvatar(context: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, fileUpload: FileUpload)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HasRoles([&#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Mutation(undefined, {name: &#x27;manageUserAvatar&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="191"
+                                    class="link-to-prism">src/modules/users/users.graphql.controller.ts:191</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>context</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>fileUpload</td>
+                                            <td>
+                                                        <code>FileUpload</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RevertDeletedUsers"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>RevertDeletedUsers</b></span>
+                        <a href="#RevertDeletedUsers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>RevertDeletedUsers(deletedUsers: <a href="../classes/DeleteUserDto.html" target="_self">DeleteUserDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HasRoles([&#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Mutation(undefined, {name: &#x27;RevertUsers&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="129"
+                                    class="link-to-prism">src/modules/users/users.graphql.controller.ts:129</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>deletedUsers</td>
+                                            <td>
+                                                            <code><a href="../classes/DeleteUserDto.html" target="_self" >DeleteUserDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SoftDeleteUsers"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>SoftDeleteUsers</b></span>
+                        <a href="#SoftDeleteUsers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>SoftDeleteUsers(deletedUsers: <a href="../classes/DeleteUserDto.html" target="_self">DeleteUserDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HasRoles([&#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Mutation(undefined, {name: &#x27;DeleteUsers&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="114"
+                                    class="link-to-prism">src/modules/users/users.graphql.controller.ts:114</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>deletedUsers</td>
+                                            <td>
+                                                            <code><a href="../classes/DeleteUserDto.html" target="_self" >DeleteUserDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UpdateUser"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>UpdateUser</b></span>
+                        <a href="#UpdateUser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>UpdateUser(userModel: <a href="../classes/UpdateUserDto.html" target="_self">UpdateUserDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HasRoles([&#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Mutation(undefined, {name: &#x27;UpdateUser&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="96"
+                                    class="link-to-prism">src/modules/users/users.graphql.controller.ts:96</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>userModel</td>
+                                            <td>
+                                                            <code><a href="../classes/UpdateUserDto.html" target="_self" >UpdateUserDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Users.html" target="_self" >Promise&lt;Users&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UpdateUserRoles"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>UpdateUserRoles</b></span>
+                        <a href="#UpdateUserRoles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>UpdateUserRoles(activationUsers: <a href="../classes/UpdateRolesToUserDto.html" target="_self">UpdateRolesToUserDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HasRoles([&#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Mutation(undefined, {name: &#x27;UpdateUserRoles&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="176"
+                                    class="link-to-prism">src/modules/users/users.graphql.controller.ts:176</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>activationUsers</td>
+                                            <td>
+                                                            <code><a href="../classes/UpdateRolesToUserDto.html" target="_self" >UpdateRolesToUserDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Args, Context, Mutation, Query, Resolver } from &#x27;@nestjs/graphql&#x27;;
+import {
+  CreateUserDto,
+  DeleteUserDto,
+  ToggleActiveUserDto,
+  UpdateRolesToUserDto,
+  UpdateUserDto,
+} from &#x27;./users.model.dto&#x27;;
+import { PrismaUsersService } from &#x27;./users.prisma.service&#x27;;
+import { UseGuards } from &#x27;@nestjs/common&#x27;;
+import { UserOutput, Users } from &#x27;./users.model&#x27;;
+import { FileUpload } from &#x27;graphql-upload-ts&#x27;;
+import { Roles } from &#x27;@prisma/client&#x27;;
+import { Counter } from &#x27;@base/base&#x27;;
+import { PrismaQuery, PrismaSingleQuery } from &#x27;@base/PrismaQuery&#x27;;
+import { GqlAuthGuard, HasRoles } from &#x27;@auth/jwt.strategy&#x27;;
+
+@UseGuards(GqlAuthGuard)
+@Resolver(() &#x3D;&gt; [Users])
+/**
+ * this is graphql resolver. it has some function for work with authentication and authorization
+ */
+export class UsersResolver {
+  constructor(private prismaRequestService: PrismaUsersService) {}
+
+  //#region ------------- GetAllUsersByQuery --------------
+  @HasRoles([
+    Roles.Demo,
+    Roles.Demo_Viewer,
+    Roles.Admin,
+    Roles.User_Global,
+    Roles.User_Management,
+    Roles.Inspector,
+    Roles.Inspector_Viewer,
+    Roles.Security,
+    Roles.Security_Viewer,
+  ])
+  @Query(() &#x3D;&gt; UserOutput, { name: &#x27;GetAllUsersWithQuery&#x27; })
+  async GetUsersByQuery(
+    @Args(&#x27;queries&#x27;, { nullable: true, type: () &#x3D;&gt; PrismaQuery })
+    query: PrismaQuery,
+  ): Promise&lt;UserOutput&gt; {
+    return await this.prismaRequestService.GetAllUsersByQuery(query);
+  }
+  //#endregion
+
+  //#region ------------- GetUserByQuery ------------------
+  @HasRoles([
+    Roles.Demo,
+    Roles.Demo_Viewer,
+    Roles.Admin,
+    Roles.User_Global,
+    Roles.User_Management,
+    Roles.Inspector,
+    Roles.Inspector_Viewer,
+    Roles.Security,
+    Roles.Security_Viewer,
+  ])
+  @Query(() &#x3D;&gt; Users, { name: &#x27;getUserByQuery&#x27; })
+  async GetUserByQuery(
+    @Args(&#x27;query&#x27;, { nullable: true, type: () &#x3D;&gt; PrismaSingleQuery })
+    query: PrismaSingleQuery,
+  ): Promise&lt;Users&gt; {
+    return await this.prismaRequestService.GetUserByQuery(query);
+  }
+  //#endregion
+
+  //#region ------------- CreateUser ----------------------
+  @HasRoles([
+    Roles.Demo,
+    Roles.Admin,
+    Roles.User_Global,
+    Roles.User_Management,
+    Roles.Inspector,
+    Roles.Security,
+  ])
+  @Mutation(() &#x3D;&gt; Users, { name: &#x27;CreateUser&#x27; })
+  async CreateUser(
+    @Args({ nullable: false, name: &#x27;userModel&#x27;, type: () &#x3D;&gt; CreateUserDto })
+    userModel: CreateUserDto,
+  ): Promise&lt;Users&gt; {
+    return await this.prismaRequestService.CreateUser(userModel);
+  }
+  //#endregion
+
+  //#region ------------- UpdateUser ----------------------
+  @HasRoles([
+    Roles.Demo,
+    Roles.Admin,
+    Roles.User_Global,
+    Roles.User_Management,
+    Roles.Inspector,
+    Roles.Security,
+  ])
+  @Mutation(() &#x3D;&gt; Users, { name: &#x27;UpdateUser&#x27; })
+  async UpdateUser(
+    @Args({ nullable: false, name: &#x27;userModel&#x27;, type: () &#x3D;&gt; UpdateUserDto })
+    userModel: UpdateUserDto,
+  ): Promise&lt;Users&gt; {
+    return await this.prismaRequestService.UpdateUser(userModel);
+  }
+  //#endregion
+
+  //#region ------------- SoftDeleteUsers -----------------
+  @HasRoles([
+    Roles.Demo,
+    Roles.Admin,
+    Roles.User_Global,
+    Roles.User_Management,
+    Roles.Inspector,
+    Roles.Security,
+  ])
+  @Mutation(() &#x3D;&gt; Counter, { name: &#x27;DeleteUsers&#x27; })
+  async SoftDeleteUsers(
+    @Args({
+      nullable: false,
+      name: &#x27;deleteUsersIds&#x27;,
+      type: () &#x3D;&gt; DeleteUserDto,
+    })
+    deletedUsers: DeleteUserDto,
+  ) {
+    return await this.prismaRequestService.SoftDeleteUsers(deletedUsers);
+  }
+  //#endregion
+
+  //#region ------------- RevertDeletedUsers --------------
+  @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
+  @Mutation(() &#x3D;&gt; Counter, { name: &#x27;RevertUsers&#x27; })
+  async RevertDeletedUsers(
+    @Args({
+      nullable: false,
+      name: &#x27;deleteUsersIds&#x27;,
+      type: () &#x3D;&gt; DeleteUserDto,
+    })
+    deletedUsers: DeleteUserDto,
+  ) {
+    return await this.prismaRequestService.RevertDeletedUsers(deletedUsers);
+  }
+  //#endregion
+
+  //#region ------------- HardDeleteUsers -----------------
+  @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
+  @Mutation(() &#x3D;&gt; Counter, { name: &#x27;DeleteUserPermanently&#x27; })
+  async HardDeleteUsers(
+    @Args({
+      nullable: false,
+      name: &#x27;deleteUsersIds&#x27;,
+      type: () &#x3D;&gt; DeleteUserDto,
+    })
+    deletedUsers: DeleteUserDto,
+  ) {
+    return await this.prismaRequestService.HardDeleteUsers(deletedUsers);
+  }
+  //#endregion
+
+  //#region ------------- ChangeActivation ----------------
+  @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
+  @Mutation(() &#x3D;&gt; Counter, { name: &#x27;ChangeActivation&#x27; })
+  async ChangeActivation(
+    @Args({
+      nullable: false,
+      name: &#x27;ToggleActiveUser&#x27;,
+      type: () &#x3D;&gt; ToggleActiveUserDto,
+    })
+    activationUsersIds: ToggleActiveUserDto,
+  ) {
+    return await this.prismaRequestService.ChangeActivationUsers(
+      activationUsersIds,
+    );
+  }
+  //#endregion
+
+  //#region ------------- UpdateUserRoles -----------------
+  @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
+  @Mutation(() &#x3D;&gt; Counter, { name: &#x27;UpdateUserRoles&#x27; })
+  async UpdateUserRoles(
+    @Args({
+      nullable: false,
+      name: &#x27;UpdateRolesToUser&#x27;,
+      type: () &#x3D;&gt; UpdateRolesToUserDto,
+    })
+    activationUsers: UpdateRolesToUserDto,
+  ) {
+    return await this.prismaRequestService.UpdateUserRoles(activationUsers);
+  }
+  //#endregion
+
+  //#region ------------- ManageUserAvatar ----------------
+  @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
+  @Mutation(() &#x3D;&gt; String, { name: &#x27;manageUserAvatar&#x27; })
+  async ManageUserAvatar(
+    @Context() context: any,
+    @Args({ nullable: false, name: &#x27;MangeUserAvatar&#x27;, type: () &#x3D;&gt; String })
+    fileUpload: FileUpload,
+  ) {
+    return await this.prismaRequestService.ManageUserAvatar(
+      fileUpload,
+      context,
+    );
+  }
+  //#endregion
+
+  //#region-------------- get User Info -------------------
+  @Query(() &#x3D;&gt; Users, { name: &#x27;getUserInfo&#x27; })
+  async GetUserInfo(@Context() context: any) {
+    return await this.prismaRequestService.GetUserInfo(context);
+  }
+  //#endregion
+
+  //#region-------------- hasPermission -------------------
+  @Query(() &#x3D;&gt; Boolean, { name: &#x27;hasPermission&#x27; })
+  async HasUserActionPermission(@Context() context: any) {
+    let reuslt &#x3D;
+      await this.prismaRequestService.HasUserActionPermission(context);
+    return reuslt;
+  }
+  //#endregion
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'UsersResolver.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

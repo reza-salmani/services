@@ -1,10 +1,10 @@
+import { PrismaService } from '@base/services/prisma-client';
 import { Injectable } from '@nestjs/common';
-import { Tools } from './tools';
-import { PrismaService } from '@src/bases/services/prisma-client';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { MailerService } from './mail-server';
-import { Consts } from './consts';
 import { Roles } from '@prisma/client';
+import { Consts } from './consts';
+import { MailerService } from './mail-server';
+import { Tools } from './tools';
 
 @Injectable()
 export class TasksService {

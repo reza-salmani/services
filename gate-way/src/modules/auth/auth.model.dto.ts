@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { Roles } from '@prisma/client';
-import { Consts } from '@src/Utils/consts';
+import { Consts } from '@utils/consts';
 
 //#region Login
 @InputType()

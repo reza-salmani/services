@@ -20,6 +20,7 @@ import {
   ToggleRightIcon,
   Trash2,
   Undo2,
+  UserCog,
 } from "lucide-react";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
@@ -126,20 +127,19 @@ export default function UsersList() {
               "Demo",
               "User_Global",
               "User_Management",
-            ]) ? (
+            ]) && user.isActive ? (
               <Button
                 tooltip={consts.titles.toggleActivation}
                 tooltipOptions={{
                   className: "text-warning-400",
                   position: "bottom",
                 }}
-                className={classNames(
-                  ["text-lg cursor-pointer active:opacity-50"],
-                  !user.isActive ? ["text-zinc-500"] : ["text-sky-500"]
-                )}
+                className={classNames([
+                  "text-lg cursor-pointer active:opacity-50",
+                ])}
                 text
                 onClick={() => onShowUpdateUserRole([user])}
-                icon={!user.isActive ? <ToggleLeftIcon /> : <ToggleRightIcon />}
+                icon={<UserCog></UserCog>}
               ></Button>
             ) : (
               ""

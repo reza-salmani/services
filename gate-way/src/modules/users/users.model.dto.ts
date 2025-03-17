@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
 import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
 import { Roles } from '@prisma/client';
-import { Consts } from '@src/Utils/consts';
+import { Consts } from '@utils/consts';
 
 //#region  ------------------  Create User -------------------------------
 @InputType()

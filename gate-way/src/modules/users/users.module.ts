@@ -3,7 +3,7 @@ import { PrismaUsersService } from './users.prisma.service';
 import { UsersResolver } from './users.graphql.controller';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '@src/bases/services/prisma-client';
+import { PrismaService } from '@base/services/prisma-client';
 
 @Module({
   imports: [],
@@ -12,7 +12,6 @@ import { PrismaService } from '@src/bases/services/prisma-client';
     JwtService,
     PrismaService,
     ConfigService,
-    PrismaService,
     PrismaUsersService,
     UsersResolver,
   ],

@@ -1,8 +1,4 @@
 import { Roles, User } from '@prisma/client';
-import { PrismaQuery, PrismaSingleQuery } from '@src/bases/PrismaQuery';
-import { PrismaService } from '@src/bases/services/prisma-client';
-import { Consts } from '@src/Utils/consts';
-import { Tools } from '@src/Utils/tools';
 import {
   CreateUserDto,
   UpdateUserDto,
@@ -15,8 +11,12 @@ import path, { join } from 'path';
 import { createWriteStream, mkdirSync } from 'fs';
 import { FileUpload } from 'graphql-upload-ts';
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { GraphQlBadRequestException } from '@src/bases/services/error-handler';
 import { UserOutput } from './users.model';
+import { PrismaQuery, PrismaSingleQuery } from '@base/PrismaQuery';
+import { GraphQlBadRequestException } from '@base/services/error-handler';
+import { PrismaService } from '@base/services/prisma-client';
+import { Consts } from '@utils/consts';
+import { Tools } from '@utils/tools';
 
 @Injectable()
 export class PrismaUsersService {

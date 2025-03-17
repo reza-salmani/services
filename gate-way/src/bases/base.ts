@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Roles } from '@prisma/client';
-import { Consts } from '@src/Utils/consts';
+import { Consts } from '@utils/consts';
 
 /**
  * for using custom enum in graphql we should register it first

@@ -36,6 +36,13 @@ export const preDefinedTheme: APIOptions = {
         draggable: true,
       },
     },
+    multiselect: {
+      checkbox: {
+        root: {
+          className: "space-x-2",
+        },
+      },
+    },
     datatable: {
       column: {
         headerCell: { className: "text-start" },

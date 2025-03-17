@@ -15,10 +15,11 @@ import { ThemeSwitcher } from "@/components/providers/theme";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { classNames } from "primereact/utils";
 import { loginSchema } from "./zod-schema";
+import { useState } from "react";
 
 export default function Login() {
   //#region -------------- variables -----------------------
-  let loading = false;
+  const [loading, setLoading] = useState(false);
   let router = useRouter();
   const { setState } = createUserPermissionStore();
   const {
@@ -32,14 +33,14 @@ export default function Login() {
 
   //#region ------------- main functions ------------------
   const onSubmit = (values: IInputLogin) => {
-    loading = true;
+    setLoading(true);
     if (values.userName && values.password) {
       mutation(LoginUser, {
         userName: values.userName,
         password: values.password,
       })
         .then((res) => {
-          loading = false;
+          setLoading(false);
           onGetSiniorPermission();
           router.push("/");
         })

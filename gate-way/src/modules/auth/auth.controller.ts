@@ -1,14 +1,14 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { PrismaAuthService } from './auth.prisma.service';
+import { ForgotPasswordDto, LoginDto } from './auth.model.dto';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from './jwt.strategy';
 import {
   ForgotPasswordModel,
   LoginResponse,
   MenuStructureModel,
-} from 'src/modules/auth/auth.model';
-import { PrismaAuthService } from './auth.prisma.service';
-import { Consts } from 'src/Utils/consts';
-import { ForgotPasswordDto, LoginDto } from './auth.model.dto';
-import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from './jwt.strategy';
+} from './auth.model';
+import { Consts } from '@utils/consts';
 @Resolver()
 export class AuthResolver {
   constructor(private authService: PrismaAuthService) {}

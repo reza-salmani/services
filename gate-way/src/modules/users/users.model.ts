@@ -1,7 +1,7 @@
+import { BaseQuery } from '@base/base';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { Roles } from '@prisma/client';
-import { BaseQuery } from '@src/bases/base';
-import { Consts } from '@src/Utils/consts';
+import { Consts } from '@utils/consts';
 import {
   IsNotEmpty,
   IsEmail,
