@@ -10,6 +10,12 @@ export const preDefinedTheme: APIOptions = {
           "[&:not(.p-button-text):not(.p-button-outlined):not(.p-button-warning):not(.p-button-Secondary):not(.p-button-info):not(.p-button-success):not(.p-button-help):not(.p-button-danger)]:bg-blue-400 hover:[&:not(.p-button-text):not(.p-button-outlined):not(.p-button-warning):not(.p-button-Secondary):not(.p-button-info):not(.p-button-success):not(.p-button-help):not(.p-button-danger)]:bg-blue-500",
       },
     },
+    card: {
+      root: { className: "rounded-2xl" },
+      title: {
+        className: "text-lg bg-gray-200 dark:bg-gray-800 rounded-2xl p-2",
+      },
+    },
     inputtext: {
       root: {
         className:
@@ -37,9 +43,32 @@ export const preDefinedTheme: APIOptions = {
       },
     },
     multiselect: {
+      root: {
+        className: "rounded-2xl",
+      },
+      header: {
+        className: "rounded-t-2xl",
+      },
+      panel: {
+        className: "rounded-2xl p-4",
+      },
       checkbox: {
+        box: {
+          className: "rounded-sm",
+        },
         root: {
-          className: "space-x-2",
+          className: "m-auto",
+        },
+      },
+      checkboxContainer: {
+        className: "flex",
+      },
+      item: {
+        className: "flex gap-2 my-2 rounded-2xl",
+      },
+      headerCheckbox: {
+        box: {
+          className: "rounded-sm",
         },
       },
     },

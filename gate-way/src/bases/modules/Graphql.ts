@@ -15,6 +15,13 @@ import { join } from 'path';
       csrfPrevention: true,
       hideSchemaDetailsFromClientErrors: true,
       includeStacktraceInErrorResponses: true,
+      formatError: (error) => {
+        return {
+          extensions: error.extensions,
+          message: error.message,
+          path: error.path,
+        };
+      },
       introspection: true, // when use production mode it should be true otherwise false
       context: ({ req, res }) => ({ req, res }),
     }),

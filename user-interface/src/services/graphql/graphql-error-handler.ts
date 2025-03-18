@@ -7,8 +7,6 @@ export const ErrorHandler = (error: any): ToastMessage[] => {
       message: string;
       extensions: { statusCode: number; code: string; originalError: any };
     }) => {
-      console.log(err);
-
       result.push({
         severity: "error",
         summary: err.extensions.originalError

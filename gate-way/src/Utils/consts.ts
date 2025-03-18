@@ -35,7 +35,7 @@ export const Consts = {
   wrongIncomingParameters: 'پارامترهای ورودی قابل شناسایی نیست',
   LockDownUser:
     'کاربری شما به دلیل تکرار اشتباه در ورود اطلاعات برای مدت 3 دقیقه قفل شده است',
-  ForbiddenMessage: 'مجوز دسترسی به این داده را ندارید',
+  ForbiddenMessage: 'مجوز دسترسی به این عملیات/داده را ندارید',
   badRequestMessage: 'پارامترهای ورودی دارای مشکل هستند.',
   notAcceptableMessage: 'فرمت داده های ورودی قابل قبول نیست',
   requestTimeoutMessage: 'درخواست منقضی شده است',

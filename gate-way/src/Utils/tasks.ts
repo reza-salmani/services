@@ -124,12 +124,12 @@ export class TasksService {
             },
             {
               name: 'UserClassification',
-              persianName: 'مجوز دسترسی کاربران',
+              persianName: 'مجوز دسترسی صفحات',
               selfId: 3,
               parentId: 1,
               isReadOnly: false,
               description:
-                'مجوز دسترسی هر فرد به صفحات موجود در نرم افزار را میتوانید در این قسمت مدیریت نمایید',
+                'مجوز دسترسی به صفحات موجود در نرم افزار را میتوانید در این قسمت مدیریت نمایید',
               link: '/Shell/UsersManagement/UserClassification',
               roles: [
                 Roles.Admin,

@@ -61,7 +61,7 @@ export default function ForgotPassword() {
             )}
           />
           {errors.userName && (
-            <span className="text-sm text-red-500">
+            <span className="error-message-style">
               {errors.userName.message}
             </span>
           )}
@@ -83,7 +83,7 @@ export default function ForgotPassword() {
             )}
           />
           {errors.newPassword && (
-            <span className="text-sm text-red-500">
+            <span className="error-message-style">
               {errors.newPassword.message}
             </span>
           )}

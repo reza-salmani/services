@@ -84,7 +84,7 @@ export default function Login() {
             )}
           />
           {errors.userName && (
-            <span className="text-sm text-red-500">
+            <span className="error-message-style">
               {errors.userName.message}
             </span>
           )}
@@ -107,7 +107,7 @@ export default function Login() {
             )}
           />
           {errors.password && (
-            <span className="text-sm text-red-500">
+            <span className="error-message-style">
               {errors.password.message}
             </span>
           )}

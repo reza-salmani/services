@@ -36,6 +36,7 @@ export const consts = {
     updateRole: "بروزرسانی نقش",
     roles: "نقش ها",
     submit: "ثبت",
+    description: "توضیحات",
   },
   questions: {
     delete: "آیا برای حذف موارد انتخابی موافق هستید؟",
@@ -56,6 +57,7 @@ export const consts = {
     requiredEmail: " ایمیل اجباریست",
     requiredPhone: " همراه اجباریست",
     regexUserName: "فقط از حروف و اعداد انگلیسی استفاده نمایید",
+    requiredRoles: "حداقل یک نقش باید انتخاب شده باشد",
   },
   messages: {
     serverNotRunning:
@@ -66,5 +68,7 @@ export const consts = {
     successEdit: "عملیات ویرایش با موفقیت انجام شد",
     successDelete: "عملیات حذف با موفقیت انجام شد",
     successUserRolesUpdate: "نقش کاربر با موفقیت بروزرسانی شد",
+    emptyMessage: "داده ای برای نمایش وجود ندارد",
+    successPageRolesUpdate: "سطح دسترسی صفحه مورد نظر با موفقیت تغییر یافت",
   },
 };

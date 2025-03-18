@@ -1,14 +1,19 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PrismaAuthService } from './auth.prisma.service';
-import { ForgotPasswordDto, LoginDto } from './auth.model.dto';
+import {
+  ForgotPasswordDto,
+  LoginDto,
+  UpdatePageRolesDto,
+} from './auth.model.dto';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from './jwt.strategy';
+import { GqlAuthGuard, HasRoles } from './jwt.strategy';
 import {
   ForgotPasswordModel,
   LoginResponse,
   MenuStructureModel,
 } from './auth.model';
 import { Consts } from '@utils/consts';
+import { Roles } from '@prisma/client';
 @Resolver()
 export class AuthResolver {
   constructor(private authService: PrismaAuthService) {}
@@ -58,6 +63,22 @@ export class AuthResolver {
   @Query(() => [MenuStructureModel], { name: 'menu' })
   async MenuBar(@Context() context: any) {
     return await this.authService.GetPages(context);
+  }
+  //#endregion
+
+  //#region-------------- updatePageRoles -----------------
+  @UseGuards(GqlAuthGuard)
+  @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
+  @Query(() => Number, { name: 'updatePageRoles' })
+  async UpdatePageRoles(
+    @Args({
+      nullable: false,
+      name: 'updatePageRolesModel',
+      type: () => UpdatePageRolesDto,
+    })
+    updatePageRolesModel: UpdatePageRolesDto,
+  ) {
+    return await this.authService.UpdatePageRoles(updatePageRolesModel);
   }
   //#endregion
 

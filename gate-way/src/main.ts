@@ -6,12 +6,16 @@ import { join } from 'path';
 import { printSchema } from 'graphql/utilities';
 import { GraphQLSchemaHost } from '@nestjs/graphql';
 import * as cookieParser from 'cookie-parser';
-import { CustomLogger } from './utils/logger';
+import {
+  AllExceptionsToGraphQLErrorFilter,
+  CustomLogger,
+} from './utils/logger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     snapshot: true,
     // abortOnError: false,
   });
+  app.useGlobalFilters(new AllExceptionsToGraphQLErrorFilter());
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
     credentials: true,

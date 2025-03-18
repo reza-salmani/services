@@ -249,8 +249,18 @@ export let GetUserInfo = gql`
 
 //#region ---------------  UpdateUserRoles ----------------
 export let UpdateRoles = gql`
-  mutation ($ids: [String], $Roles: [String]) {
-    UpdateUserRoles(UpdateRolesToUser: { ids: $ids, roles: $Roles }) {
+  mutation ($ids: [String!]!, $roles: [EnumRoles!]!) {
+    UpdateUserRoles(UpdateRolesToUser: { ids: $ids, Roles: $roles }) {
+      count
+    }
+  }
+`;
+//#endregion
+
+//#region ---------------  UpdatePageRoles ----------------
+export let UpdatePageRoles = gql`
+  mutation ($id: String!, $roles: [EnumRoles!]!) {
+    updatePageRoles(updatePageRolesModel: { id: $id, roles: $roles }) {
       count
     }
   }
@@ -266,12 +276,3 @@ export let UpdateRoles = gql`
 //       }
 //     }
 //   `;
-
-// export let RefreshTokenAuth = gql`
-//   mutation {
-//     refreshToken {
-//       access_token
-//       refresh_token
-//     }
-//   }
-// `;

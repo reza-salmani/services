@@ -25,6 +25,7 @@ export class ForgotPasswordDto {
 //#endregion
 
 //#region manage pages in menu
+@InputType()
 export class UpdatePageRolesDto {
   @Field(() => String, { name: 'id' })
   id: string = '';

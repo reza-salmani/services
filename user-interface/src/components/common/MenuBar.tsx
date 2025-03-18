@@ -17,6 +17,7 @@ import { ThemeSwitcher } from "../providers/theme";
 import { IUser } from "@/interfaces/IUser";
 import { consts } from "@/utils/consts";
 import { Avatar } from "primereact/avatar";
+import { IMenuItem, IMenuItemQuery } from "@/interfaces/IBase";
 
 export default function MenuBar() {
   //#region ------------- variables -----------------------
@@ -163,20 +164,3 @@ export default function MenuBar() {
   );
   //#endregion
 }
-
-//#region --------------- interfaces ----------------------
-interface IMenuItemQuery {
-  name: string;
-  persianName: string;
-  id: string;
-  description: string;
-  selfId: number;
-  parentId: number | null;
-  link: string | null;
-  isReadOnly: boolean;
-  roles: string[];
-}
-interface IMenuItem extends IMenuItemQuery {
-  children: IMenuItem[];
-}
-//#endregion

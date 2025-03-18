@@ -14,7 +14,10 @@ import { JwtService } from '@nestjs/jwt';
 import { Context } from 'vm';
 import { Roles } from '@prisma/client';
 import { PrismaAuthService } from './auth.prisma.service';
-import { GraphQlUnauthorizedException } from '@base/services/error-handler';
+import {
+  GraphQlForbiddenException,
+  GraphQlUnauthorizedException,
+} from '@base/services/error-handler';
 import { PrismaService } from '@base/services/prisma-client';
 import { Consts } from '@utils/consts';
 import { Tools } from '@utils/tools';
@@ -123,6 +126,21 @@ export class RolesGuard implements CanActivate {
     let userRoles = await this.prismaService.user.findFirst({
       where: { id: headerInfo.sub },
     });
+    if (
+      decoratorNotRoles
+        ? !Tools.matchs(
+            userRoles.roles,
+            Object.values(Roles).filter(
+              (x) => !decoratorNotRoles.some((y) => y === x),
+            ),
+          )
+        : !Tools.matchs(userRoles.roles, decoratorRoles)
+    ) {
+      throw new GraphQlForbiddenException(
+        Consts.ForbiddenMessage,
+        HttpStatus.FORBIDDEN,
+      );
+    }
     return decoratorNotRoles
       ? Tools.matchs(
           userRoles.roles,

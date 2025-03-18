@@ -18,11 +18,19 @@ export const UpdateUserRoles = (props: IProps) => {
   const toast = useRef<Toast>(null);
   const {
     control,
+    setValue,
     formState: { errors },
     handleSubmit,
     reset,
   } = useForm({
-    resolver: zodResolver(z.object({ roles: z.string().array() })),
+    resolver: zodResolver(
+      z.object({
+        roles: z
+          .string()
+          .array()
+          .nonempty({ message: consts.errors.requiredRoles }),
+      })
+    ),
   });
   const [roles, setRoles] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -38,27 +46,39 @@ export const UpdateUserRoles = (props: IProps) => {
       if (errors) {
         toast.current!.show(ErrorHandler(errors));
       }
+      if (props.userInfo.length === 1) {
+        setValue(
+          "roles",
+          data.roles.filter((role: string) =>
+            props.userInfo[0].roles.some((rl: string) => rl === role)
+          )
+        );
+      }
       setRoles(data.roles);
     }
   };
   const onCancel = () => {
+    reset({
+      roles: [],
+    });
     props.setVisible(false);
   };
   const onSubmit = async ({ roles }: { roles: string[] }) => {
     setLoading(true);
-    let { data, errors } = await mutation(UpdateRoles, {
-      ids: props.userInfo.map((user) => user.id),
-      roles: roles,
-    });
-    if (data.UpdateUserRoles) {
-      setLoading(false);
-      toast.current?.show({
-        severity: "success",
-        summary: "200",
-        detail: consts.messages.successUserRolesUpdate,
+    try {
+      let { data } = await mutation(UpdateRoles, {
+        ids: props.userInfo.map((user) => user.id),
+        roles: roles,
       });
-    }
-    if (errors) {
+      if (data.UpdateUserRoles) {
+        setLoading(false);
+        toast.current?.show({
+          severity: "success",
+          summary: "200",
+          detail: consts.messages.successUserRolesUpdate,
+        });
+      }
+    } catch (errors) {
       toast.current?.show(ErrorHandler(errors));
     }
   };
@@ -67,7 +87,7 @@ export const UpdateUserRoles = (props: IProps) => {
   return (
     <Dialog
       visible={props.visible}
-      className="w-[30rem]"
+      className="w-[30rem] h-[20rem]"
       closable={false}
       header={consts.titles.updateRole}
       onHide={() => {
@@ -81,7 +101,7 @@ export const UpdateUserRoles = (props: IProps) => {
         ref={toast}
       ></Toast>
       <Loader loading={loading}>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-[5.5rem]">
           <div>
             <div>
               <label>{consts.titles.roles}</label>
@@ -91,14 +111,22 @@ export const UpdateUserRoles = (props: IProps) => {
               name="roles"
               render={({ field }) => (
                 <MultiSelect
+                  maxSelectedLabels={3}
                   className="w-full"
                   options={roles}
                   {...field}
                   id="roles"
+                  selectedItemsLabel={`تعداد {items} مورد انتخاب شده`}
+                  emptyMessage={consts.messages.emptyMessage}
                   placeholder={consts.placeholders.chooseAnItem}
                 />
               )}
             />
+            {errors.roles && (
+              <span className="error-message-style">
+                {errors.roles.message}
+              </span>
+            )}
           </div>
           <div className="flex justify-start gap-2">
             <Button type="submit">{consts.titles.submit}</Button>

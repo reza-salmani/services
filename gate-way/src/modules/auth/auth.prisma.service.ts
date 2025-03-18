@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { ForgotPasswordDto } from './auth.model.dto';
+import { ForgotPasswordDto, UpdatePageRolesDto } from './auth.model.dto';
 import { LoginModel, JwtPayLoad, ForgotPasswordModel } from './auth.model';
 import { Context } from 'vm';
 import { PrismaService } from '@base/services/prisma-client';
@@ -281,9 +281,26 @@ export class PrismaAuthService {
   }
   //#endregion
 
+  //#region-------------- UpdatePageRoles -----------------
+  async UpdatePageRoles(updatePageRolesModel: UpdatePageRolesDto) {
+    try {
+      return await this.prismaService.page.update({
+        data: { roles: [Roles.Admin, ...updatePageRolesModel.roles] },
+        where: { id: updatePageRolesModel.id },
+      });
+    } catch (error) {
+      throw new GraphQlBadRequestException(
+        Consts.badGatewayMessage,
+        HttpStatus.BAD_REQUEST,
+        error,
+      );
+    }
+  }
+  //#endregion
+
   //#region ------------- Get Roles -----------------------
   async GetRoles() {
-    return Object.keys(Roles);
+    return Object.keys(Roles).filter((role) => role !== Roles.Admin);
   }
 
   //#endregion

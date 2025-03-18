@@ -1,7 +1,15 @@
-import { ConsoleLogger, Injectable, NestMiddleware } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  Catch,
+  ConsoleLogger,
+  ExceptionFilter,
+  Injectable,
+  NestMiddleware,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { NextFunction } from 'express';
 import { appendFileSync, existsSync, mkdirSync, writeFileSync } from 'fs';
+import { GraphQLError } from 'graphql';
 import { join } from 'path';
 
 @Injectable()
@@ -73,4 +81,23 @@ export class GraphQLLoggingMiddleware implements NestMiddleware {
     });
     next();
   };
+}
+
+@Catch()
+export class AllExceptionsToGraphQLErrorFilter implements ExceptionFilter {
+  catch(exception: any, host: ArgumentsHost) {
+    // Transform all exceptions into GraphQL errors
+    return new GraphQLError(
+      exception.message || 'An unexpected error occurred',
+      {
+        extensions: {
+          code: exception.extensions.code
+            ? exception.extensions.code
+            : 'INTERNAL_SERVER_ERROR',
+          statusCode: exception.extensions.statusCode,
+          details: exception.stack,
+        },
+      },
+    );
+  }
 }

@@ -183,12 +183,18 @@ type Query {
   hasPermission: Boolean!
   menu: [MenuStructureModel!]!
   roles: [String!]!
+  updatePageRoles(updatePageRolesModel: UpdatePageRolesDto!): Float!
 }
 
 input ToggleActiveUserDto {
   """شناسه ها"""
   ids: [String!]!
   state: Boolean! = false
+}
+
+input UpdatePageRolesDto {
+  id: String! = ""
+  roles: [EnumRoles!]!
 }
 
 input UpdateRolesToUserDto {

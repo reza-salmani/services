@@ -90,6 +90,8 @@ export default function UsersList() {
             </div>
           </div>
         );
+      case "roles":
+        return <div>{user[column.field].join(", ")}</div>;
       case "isActive":
         return (
           <Tag
@@ -438,16 +440,24 @@ export default function UsersList() {
           ))}
         </DataTable>
       </Loader>
-      <UpsertUser
-        visible={visible}
-        setVisible={(event) => onHideUpsert()}
-        editInfo={editInfo}
-      ></UpsertUser>
-      <UpdateUserRoles
-        visible={visibleUpdateRole}
-        setVisible={() => onHideUpdateRole()}
-        userInfo={userInfoForUpdateRole}
-      ></UpdateUserRoles>
+      {visible ? (
+        <UpsertUser
+          visible={visible}
+          setVisible={(event) => onHideUpsert()}
+          editInfo={editInfo}
+        ></UpsertUser>
+      ) : (
+        ""
+      )}
+      {visibleUpdateRole ? (
+        <UpdateUserRoles
+          visible={visibleUpdateRole}
+          setVisible={() => onHideUpdateRole()}
+          userInfo={userInfoForUpdateRole}
+        ></UpdateUserRoles>
+      ) : (
+        ""
+      )}
     </div>
   );
   //#endregion
