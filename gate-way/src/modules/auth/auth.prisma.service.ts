@@ -1,7 +1,7 @@
-import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { ForgotPasswordDto, UpdatePageRolesDto } from './auth.model.dto';
+import { ForgotPasswordDto } from './auth.model.dto';
 import { LoginModel, JwtPayLoad, ForgotPasswordModel } from './auth.model';
 import { Context } from 'vm';
 import { PrismaService } from '@base/services/prisma-client';
@@ -264,37 +264,32 @@ export class PrismaAuthService {
 
   //#region-------------- Get Menu ------------------------
   async GetPages(context: any) {
-    let result = await this.prismaService.page.findMany();
-    const { req } = context;
-    if (req && !req.cookies['jwt']) {
-      throw new UnauthorizedException(Consts.unAuthorized);
-    }
-    const headerInfo = this.jwtService.decode(req.cookies['jwt'].trim());
-
-    let userRoles = await this.prismaService.user.findFirst({
-      where: { id: headerInfo.sub },
+    let user = await this.prismaService.user.findFirst({
+      where: {
+        id: (
+          await Tools.GetUserInfoFromContext(
+            context,
+            this.jwtService,
+            this.prismaService,
+          )
+        ).userId,
+      },
     });
-    result = result.filter((page) =>
-      userRoles.roles.some((b) => page.roles.some((v) => v === b)),
-    );
+    let result = await this.prismaService.page.findMany({
+      include: {
+        children: {
+          include: {
+            children: {
+              include: { children: true },
+              where: { id: { in: user.permittedPage } },
+            },
+          },
+          where: { id: { in: user.permittedPage } },
+        },
+      },
+      where: { parentId: null },
+    });
     return result;
-  }
-  //#endregion
-
-  //#region-------------- UpdatePageRoles -----------------
-  async UpdatePageRoles(updatePageRolesModel: UpdatePageRolesDto) {
-    try {
-      return await this.prismaService.page.update({
-        data: { roles: [Roles.Admin, ...updatePageRolesModel.roles] },
-        where: { id: updatePageRolesModel.id },
-      });
-    } catch (error) {
-      throw new GraphQlBadRequestException(
-        Consts.badGatewayMessage,
-        HttpStatus.BAD_REQUEST,
-        error,
-      );
-    }
   }
   //#endregion
 
@@ -303,5 +298,41 @@ export class PrismaAuthService {
     return Object.keys(Roles).filter((role) => role !== Roles.Admin);
   }
 
+  //#endregion
+
+  //#region ------------- checkWritable -------------------
+  async CheckWritable(inputModel: string, context: any) {
+    try {
+      let user = await this.prismaService.user.findUnique({
+        where: {
+          id: (
+            await Tools.GetUserInfoFromContext(
+              context,
+              this.jwtService,
+              this.prismaService,
+            )
+          ).userId,
+        },
+      });
+      if (user) {
+        let pages = await this.prismaService.page.findMany({
+          include: { children: false },
+          where: { name: { equals: inputModel } },
+        });
+        if (pages.length) {
+          let findPermission = pages.find((page) =>
+            user.permittedPage.some(
+              (permittedPage) => page.id === permittedPage,
+            ),
+          );
+          if (findPermission) return !findPermission.isReadOnly;
+        }
+      }
+      return false;
+    } catch (error) {
+      new GraphQlBadRequestException(error, HttpStatus.BAD_REQUEST);
+      return false;
+    }
+  }
   //#endregion
 }

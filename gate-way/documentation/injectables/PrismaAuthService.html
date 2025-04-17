@@ -164,6 +164,10 @@
                                     <span class="modifier">Async</span>
                                 <a href="#ManageJWTToken" >ManageJWTToken</a>
                             </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#UpdatePageRoles" >UpdatePageRoles</a>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -414,8 +418,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="285"
-                                    class="link-to-prism">src/modules/auth/auth.prisma.service.ts:285</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="302"
+                                    class="link-to-prism">src/modules/auth/auth.prisma.service.ts:302</a></div>
                         </td>
                     </tr>
 
@@ -751,6 +755,75 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UpdatePageRoles"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>UpdatePageRoles</b></span>
+                        <a href="#UpdatePageRoles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>UpdatePageRoles(updatePageRolesModel: <a href="../classes/UpdatePageRolesDto.html" target="_self">UpdatePageRolesDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="285"
+                                    class="link-to-prism">src/modules/auth/auth.prisma.service.ts:285</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>updatePageRolesModel</td>
+                                            <td>
+                                                            <code><a href="../classes/UpdatePageRolesDto.html" target="_self" >UpdatePageRolesDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
 
     </div>
@@ -760,7 +833,7 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpStatus, Injectable, UnauthorizedException } from &#x27;@nestjs/common&#x27;;
 import { JwtService } from &#x27;@nestjs/jwt&#x27;;
 import { ConfigService } from &#x27;@nestjs/config&#x27;;
-import { ForgotPasswordDto } from &#x27;./auth.model.dto&#x27;;
+import { ForgotPasswordDto, UpdatePageRolesDto } from &#x27;./auth.model.dto&#x27;;
 import { LoginModel, JwtPayLoad, ForgotPasswordModel } from &#x27;./auth.model&#x27;;
 import { Context } from &#x27;vm&#x27;;
 import { PrismaService } from &#x27;@base/services/prisma-client&#x27;;
@@ -1040,9 +1113,26 @@ export class PrismaAuthService {
   }
   //#endregion
 
+  //#region-------------- UpdatePageRoles -----------------
+  async UpdatePageRoles(updatePageRolesModel: UpdatePageRolesDto) {
+    try {
+      return await this.prismaService.page.update({
+        data: { roles: updatePageRolesModel.roles },
+        where: { id: updatePageRolesModel.id },
+      });
+    } catch (error) {
+      throw new GraphQlBadRequestException(
+        Consts.badGatewayMessage,
+        HttpStatus.BAD_REQUEST,
+        error,
+      );
+    }
+  }
+  //#endregion
+
   //#region ------------- Get Roles -----------------------
   async GetRoles() {
-    return Object.keys(Roles);
+    return Object.keys(Roles).filter((role) &#x3D;&gt; role !&#x3D;&#x3D; Roles.Admin);
   }
 
   //#endregion

@@ -17,7 +17,7 @@ import { ThemeSwitcher } from "../providers/theme";
 import { IUser } from "@/interfaces/IUser";
 import { consts } from "@/utils/consts";
 import { Avatar } from "primereact/avatar";
-import { IMenuItem, IMenuItemQuery } from "@/interfaces/IBase";
+import { IMenuItemQuery } from "@/interfaces/IBase";
 
 export default function MenuBar() {
   //#region ------------- variables -----------------------
@@ -93,25 +93,12 @@ export default function MenuBar() {
   }, []);
   const getPages = async () => {
     const response = await query(GetPages);
-    let result: IMenuItem[] = [];
-    response.data.menu.map((item: IMenuItemQuery) => {
-      if (!item.parentId) {
-        result.push({ ...item, children: [] });
-      } else {
-        result.flatMap((resultItem) => {
-          if (resultItem.selfId === item.parentId) {
-            resultItem.children.push({ ...item, children: [] });
-          }
-          return resultItem;
-        });
-      }
-    });
-    setMenuItems(RecursiveMenuCreator(result));
+    setMenuItems(RecursiveMenuCreator(response.data.menu[0].children));
   };
   const getUserInfo = async () => {
     setUserInfo((await query(GetUserInfo)).data.getUserInfo);
   };
-  const RecursiveMenuCreator = (items: IMenuItem[]) => {
+  const RecursiveMenuCreator = (items: IMenuItemQuery[]) => {
     let result: MenuItem[] = [];
     items.map((item) => {
       if (!item.children || !item.children.length) {

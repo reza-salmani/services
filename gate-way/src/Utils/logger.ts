@@ -90,13 +90,15 @@ export class AllExceptionsToGraphQLErrorFilter implements ExceptionFilter {
     return new GraphQLError(
       exception.message || 'An unexpected error occurred',
       {
-        extensions: {
-          code: exception.extensions.code
-            ? exception.extensions.code
-            : 'INTERNAL_SERVER_ERROR',
-          statusCode: exception.extensions.statusCode,
-          details: exception.stack,
-        },
+        extensions: exception.extensions
+          ? {
+              code: exception.extensions.code
+                ? exception.extensions.code
+                : 'INTERNAL_SERVER_ERROR',
+              statusCode: exception.extensions.statusCode,
+              details: exception.stack,
+            }
+          : null,
       },
     );
   }

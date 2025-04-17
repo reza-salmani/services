@@ -1,10 +1,10 @@
 import { PrismaService } from '@base/services/prisma-client';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { Roles } from '@prisma/client';
 import { Consts } from './consts';
 import { MailerService } from './mail-server';
 import { Tools } from './tools';
+import { Page } from '@prisma/client';
 
 @Injectable()
 export class TasksService {
@@ -12,7 +12,6 @@ export class TasksService {
     private prismaService: PrismaService,
     private mailService: MailerService,
   ) {
-    this.SetAdminForInitialDeployment();
     this.CreatePagesForInitialDeployment();
   }
 
@@ -22,131 +21,57 @@ export class TasksService {
     let existpages = await this.prismaService.page.count();
     if (existpages === 0) {
       this.prismaService.page
-        .createMany({
-          data: [
-            {
-              name: 'Home',
-              persianName: 'خانه',
-              selfId: 0,
-              parentId: null,
-              isReadOnly: false,
-              link: '/Shell',
-              roles: [
-                Roles.Admin,
-                Roles.Demo,
-                Roles.Demo_Viewer,
-                Roles.User_Global,
-                Roles.User_Management,
-                Roles.Accounting_Management_Junior,
-                Roles.Accounting_Management_Mid,
-                Roles.Accounting_Management_Sinior,
-                Roles.Accounting_Management_Viewer,
-                Roles.Accounting_User_Junior,
-                Roles.Accounting_User_Mid,
-                Roles.Accounting_User_Sinior,
-                Roles.Accounting_User_Viewer,
-                Roles.Hr_Management_Junior,
-                Roles.Hr_Management_Mid,
-                Roles.Hr_Management_Sinior,
-                Roles.Hr_Management_Viewer,
-                Roles.Hr_User_Junior,
-                Roles.Hr_User_Mid,
-                Roles.Hr_User_Sinior,
-                Roles.Hr_User_Viewer,
-                Roles.Inspector,
-                Roles.Inspector_Viewer,
-                Roles.Security,
-                Roles.Security_Viewer,
-                Roles.Logestic_Management_Junior,
-                Roles.Logestic_Management_Mid,
-                Roles.Logestic_Management_Sinior,
-                Roles.Logestic_Management_Viewer,
-                Roles.Logestic_User_Junior,
-                Roles.Logestic_User_Mid,
-                Roles.Logestic_User_Sinior,
-                Roles.Logestic_User_Viewer,
-                Roles.TimeAttandance_Management_Junior,
-                Roles.TimeAttandance_Management_Mid,
-                Roles.TimeAttandance_Management_Sinior,
-                Roles.TimeAttandance_Management_Viewer,
-                Roles.TimeAttandance_User_Junior,
-                Roles.TimeAttandance_User_Mid,
-                Roles.TimeAttandance_User_Sinior,
-                Roles.TimeAttandance_User_Viewer,
-                Roles.Wages_Management_Junior,
-                Roles.Wages_Management_Mid,
-                Roles.Wages_Management_Sinior,
-                Roles.Wages_Management_Viewer,
-                Roles.Wages_User_Junior,
-                Roles.Wages_User_Mid,
-                Roles.Wages_User_Sinior,
-                Roles.Wages_User_Viewer,
+        .create({
+          data: {
+            isReadOnly: false,
+            name: 'menu',
+            persianName: 'منو',
+            description: null,
+            link: null,
+            parentId: null,
+            children: {
+              create: [
+                {
+                  name: 'Home',
+                  isReadOnly: false,
+                  persianName: 'خانه',
+                  description: null,
+                  link: '/Shell',
+                },
+                {
+                  name: 'UsersManagement',
+                  persianName: 'مدیریت کاربران',
+                  isReadOnly: false,
+                  link: '/Shell/UsersManagement',
+                  description: null,
+                  children: {
+                    create: [
+                      {
+                        name: 'UsersList',
+                        persianName: 'لیست کاربران',
+                        isReadOnly: false,
+                        description:
+                          'لیست کاملی از کاربران را در اختیار شما میگذارد',
+                        link: '/Shell/UsersManagement/UsersList',
+                      },
+                    ],
+                  },
+                },
               ],
             },
-            {
-              name: 'UsersManagement',
-              persianName: 'مدیریت کاربران',
-              selfId: 1,
-              parentId: null,
-              isReadOnly: false,
-              link: '/Shell/UsersManagement',
-              roles: [
-                Roles.Admin,
-                Roles.Demo,
-                Roles.Demo_Viewer,
-                Roles.Inspector,
-                Roles.Inspector_Viewer,
-                Roles.Security,
-                Roles.Security_Viewer,
-                Roles.User_Global,
-                Roles.User_Management,
-              ],
-            },
-            {
-              name: 'UsersList',
-              persianName: 'لیست کاربران',
-              selfId: 2,
-              parentId: 1,
-              isReadOnly: false,
-              description: 'لیست کاملی از کاربران را در اختیار شما میگذارد',
-              link: '/Shell/UsersManagement/UsersList',
-              roles: [
-                Roles.Admin,
-                Roles.Demo,
-                Roles.Demo_Viewer,
-                Roles.Inspector,
-                Roles.Inspector_Viewer,
-                Roles.Security,
-                Roles.Security_Viewer,
-                Roles.User_Global,
-                Roles.User_Management,
-              ],
-            },
-            {
-              name: 'UserClassification',
-              persianName: 'مجوز دسترسی صفحات',
-              selfId: 3,
-              parentId: 1,
-              isReadOnly: false,
-              description:
-                'مجوز دسترسی به صفحات موجود در نرم افزار را میتوانید در این قسمت مدیریت نمایید',
-              link: '/Shell/UsersManagement/UserClassification',
-              roles: [
-                Roles.Admin,
-                Roles.Demo,
-                Roles.Demo_Viewer,
-                Roles.User_Global,
-                Roles.User_Management,
-              ],
-            },
-          ],
+          },
         })
-        .then();
+        .then(() => {
+          this.SetAdminForInitialDeployment();
+        });
     }
   }
   async SetAdminForInitialDeployment() {
     let existData = await this.prismaService.user.count();
     if (existData === 0) {
+      let AllPages = await this.prismaService.page.findMany({
+        include: { children: false },
+      });
       this.prismaService.user
         .create({
           data: {
@@ -159,6 +84,7 @@ export class TasksService {
             roles: ['Admin'],
             isActive: true,
             isDeleted: false,
+            permittedPage: AllPages.map((page: Page) => page.id),
           },
         })
         .then();

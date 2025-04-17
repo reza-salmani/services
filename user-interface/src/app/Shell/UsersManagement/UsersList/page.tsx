@@ -2,13 +2,15 @@
 import Loader from "@/components/common/Loader";
 import { IResponseData } from "@/interfaces/IBase";
 import { IUpsertUser, IUser } from "@/interfaces/IUser";
-import { mutation, query } from "@/services/graphql/apollo";
+import { mutation, query, upload } from "@/services/graphql/apollo";
 import { ErrorHandler } from "@/services/graphql/graphql-error-handler";
 import {
   ChangeActivationUser,
+  CheckWritable,
   DeleteUser,
   GetAllUser,
   RevertDeleteUser,
+  UpsertUserAvatar,
 } from "@/services/graphql/user.query-doc";
 import { createUserPermissionStore } from "@/StorageManagement/userStorage";
 import { consts } from "@/utils/consts";
@@ -16,6 +18,7 @@ import { dateTools } from "@/utils/date";
 import {
   AlertTriangle,
   EditIcon,
+  Package,
   ToggleLeftIcon,
   ToggleRightIcon,
   Trash2,
@@ -28,11 +31,12 @@ import { Column } from "primereact/column";
 import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
 import { DataTable } from "primereact/datatable";
 import { Tag } from "primereact/tag";
-import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { UpsertUser } from "./upsert";
 import { classNames } from "primereact/utils";
 import { UpdateUserRoles } from "./update-roles";
+import { UpdateUserPagePermission } from "./update-page-permission";
+import { Toast } from "primereact/toast";
 
 export default function UsersList() {
   //#region ------------- variables -----------------------
@@ -42,24 +46,19 @@ export default function UsersList() {
     pageSize: 10,
     totalCount: 1,
   });
+  const { getState } = createUserPermissionStore({
+    hasPermission: false,
+  });
   const [loading, setLoading] = useState(false);
+  let writable = useRef(false);
   const [visible, setVisible] = useState(false);
+  const [showPagePermission, setShowPagePermission] = useState(false);
   const [visibleUpdateRole, setVisibleUpdateRole] = useState(false);
   const [editInfo, setEditInfo] = useState<IUpsertUser | null>(null);
   const [userInfoForUpdateRole, setUserInfoForUpdateRole] = useState<IUser[]>(
     []
   );
-  const { getState } = createUserPermissionStore();
   const [selectedRowItem, setSelectedRowItem] = useState<IUser[]>([]);
-  const { handleSubmit, register, reset } = useForm<IUpsertUser>({
-    defaultValues: {
-      nationalCode: "",
-      userName: "",
-      email: "",
-      password: "",
-      phone: "",
-    },
-  });
   const columns = [
     { label: "نام کاربری", key: "userName" },
     { label: "نقش", key: "roles" },
@@ -77,13 +76,53 @@ export default function UsersList() {
 
   //#region ------------- rendered functions --------------
   const renderCell = useCallback((user: any, column: any) => {
-    const cellValue = user["avatar"];
-
+    const onSetPages = (e: any) => {};
+    let toast = useRef<Toast>(null);
+    const cellValue = user["avatarPath"];
+    const fileInputRef = useRef<any>(null);
+    const onShowPagePermission = (user: any) => {
+      setUserInfoForUpdateRole([user]);
+      setShowPagePermission(true);
+    };
+    const handleImageClick = () => {
+      fileInputRef.current.click(); // trigger hidden file input
+    };
+    const onUpload = async (event: any) => {
+      let { data, errors } = await upload(UpsertUserAvatar, {
+        file: event.target.files[0],
+        userId: user.id,
+      });
+      if (data.UpsertUserAvatar) {
+        toast.current?.show({
+          severity: "success",
+          summary: "200",
+          detail: consts.messages.successImageUploaded,
+        });
+        getAllDataFunction();
+      }
+      if (errors) {
+        ErrorHandler(errors);
+      }
+    };
     switch (column.field) {
       case "userName":
         return (
           <div className="flex gap-2">
-            <Avatar image={cellValue} size="large" shape="circle" />
+            <Toast ref={toast}></Toast>
+            <Avatar
+              image={cellValue}
+              size="large"
+              shape="circle"
+              onClick={handleImageClick}
+              className="hover:cursor-pointer"
+            />
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={onUpload}
+              style={{ display: "none" }}
+            />
             <div className="">
               <div className="font-bold">{user.userName}</div>
               <div className="text-sm text-surface-400">{user.email}</div>
@@ -120,7 +159,8 @@ export default function UsersList() {
           </div>
         );
       case "actions":
-        return user.roles.some((x: string) => x === "Admin") ? (
+        return user.roles.some((x: string) => x === "Admin") ||
+          !writable.current ? (
           ""
         ) : (
           <div className="relative flex items-center gap-4">
@@ -130,19 +170,34 @@ export default function UsersList() {
               "User_Global",
               "User_Management",
             ]) && user.isActive ? (
-              <Button
-                tooltip={consts.titles.toggleActivation}
-                tooltipOptions={{
-                  className: "text-warning-400",
-                  position: "bottom",
-                }}
-                className={classNames([
-                  "text-lg cursor-pointer active:opacity-50",
-                ])}
-                text
-                onClick={() => onShowUpdateUserRole([user])}
-                icon={<UserCog></UserCog>}
-              ></Button>
+              <>
+                <Button
+                  tooltip={consts.titles.pagePermissions}
+                  tooltipOptions={{
+                    className: "text-warning-400",
+                    position: "bottom",
+                  }}
+                  className={classNames([
+                    "text-lg cursor-pointer active:opacity-50",
+                  ])}
+                  text
+                  onClick={() => onShowPagePermission(user)}
+                  icon={<Package></Package>}
+                ></Button>
+                <Button
+                  tooltip={consts.titles.manageRoles}
+                  tooltipOptions={{
+                    className: "text-warning-400",
+                    position: "bottom",
+                  }}
+                  className={classNames([
+                    "text-lg cursor-pointer active:opacity-50",
+                  ])}
+                  text
+                  onClick={() => onShowUpdateUserRole([user])}
+                  icon={<UserCog></UserCog>}
+                ></Button>
+              </>
             ) : (
               ""
             )}
@@ -320,8 +375,24 @@ export default function UsersList() {
   };
   useEffect(() => {
     getAllDataFunction();
+    onCheckWritable();
   }, []);
-
+  const onCheckWritable = async () => {
+    let result = await query(CheckWritable, { menuName: "UsersList" });
+    writable.current = result.data.checkWritable;
+  };
+  const recoursiveMenu = (result: any) => {
+    return result.map((menu: any) => {
+      menu.label = menu.persianName;
+      menu.key = menu.name;
+      menu.id = menu.id;
+      menu.selectable = !menu.isReadOnly;
+      if (menu.children) {
+        recoursiveMenu(menu.children);
+      }
+      return menu;
+    });
+  };
   const onChangePagination = async (skip: number) => {
     paginationItems.pageNumber = skip;
     setPaginationItems(paginationItems);
@@ -336,6 +407,10 @@ export default function UsersList() {
   };
   const onHideUpdateRole = () => {
     setVisibleUpdateRole(false);
+    getAllDataFunction();
+  };
+  const onHideUpdatePagePermission = () => {
+    setShowPagePermission(false);
     getAllDataFunction();
   };
   const onShowUpdateUserRole = (selectedItems: IUser[]) => {
@@ -455,6 +530,15 @@ export default function UsersList() {
           setVisible={() => onHideUpdateRole()}
           userInfo={userInfoForUpdateRole}
         ></UpdateUserRoles>
+      ) : (
+        ""
+      )}
+      {showPagePermission ? (
+        <UpdateUserPagePermission
+          visible={showPagePermission}
+          setVisible={() => onHideUpdatePagePermission()}
+          userInfo={userInfoForUpdateRole}
+        ></UpdateUserPagePermission>
       ) : (
         ""
       )}

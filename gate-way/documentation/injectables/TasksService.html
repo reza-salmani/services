@@ -177,7 +177,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/utils/tasks.ts:10</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/utils/tasks.ts:9</a></div>
                             </td>
                         </tr>
 
@@ -254,8 +254,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="21"
-                                    class="link-to-prism">src/utils/tasks.ts:21</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="20"
+                                    class="link-to-prism">src/utils/tasks.ts:20</a></div>
                         </td>
                     </tr>
 
@@ -301,8 +301,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="188"
-                                    class="link-to-prism">src/utils/tasks.ts:188</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="103"
+                                    class="link-to-prism">src/utils/tasks.ts:103</a></div>
                         </td>
                     </tr>
 
@@ -340,8 +340,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="147"
-                                    class="link-to-prism">src/utils/tasks.ts:147</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="62"
+                                    class="link-to-prism">src/utils/tasks.ts:62</a></div>
                         </td>
                     </tr>
 
@@ -387,8 +387,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="172"
-                                    class="link-to-prism">src/utils/tasks.ts:172</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="87"
+                                    class="link-to-prism">src/utils/tasks.ts:87</a></div>
                         </td>
                     </tr>
 
@@ -413,7 +413,6 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PrismaService } from &#x27;@base/services/prisma-client&#x27;;
 import { Injectable } from &#x27;@nestjs/common&#x27;;
 import { Cron, CronExpression } from &#x27;@nestjs/schedule&#x27;;
-import { Roles } from &#x27;@prisma/client&#x27;;
 import { Consts } from &#x27;./consts&#x27;;
 import { MailerService } from &#x27;./mail-server&#x27;;
 import { Tools } from &#x27;./tools&#x27;;
@@ -439,116 +438,32 @@ export class TasksService {
             {
               name: &#x27;Home&#x27;,
               persianName: &#x27;خانه&#x27;,
-              selfId: 0,
               parentId: null,
               isReadOnly: false,
               link: &#x27;/Shell&#x27;,
-              roles: [
-                Roles.Admin,
-                Roles.Demo,
-                Roles.Demo_Viewer,
-                Roles.User_Global,
-                Roles.User_Management,
-                Roles.Accounting_Management_Junior,
-                Roles.Accounting_Management_Mid,
-                Roles.Accounting_Management_Sinior,
-                Roles.Accounting_Management_Viewer,
-                Roles.Accounting_User_Junior,
-                Roles.Accounting_User_Mid,
-                Roles.Accounting_User_Sinior,
-                Roles.Accounting_User_Viewer,
-                Roles.Hr_Management_Junior,
-                Roles.Hr_Management_Mid,
-                Roles.Hr_Management_Sinior,
-                Roles.Hr_Management_Viewer,
-                Roles.Hr_User_Junior,
-                Roles.Hr_User_Mid,
-                Roles.Hr_User_Sinior,
-                Roles.Hr_User_Viewer,
-                Roles.Inspector,
-                Roles.Inspector_Viewer,
-                Roles.Security,
-                Roles.Security_Viewer,
-                Roles.Logestic_Management_Junior,
-                Roles.Logestic_Management_Mid,
-                Roles.Logestic_Management_Sinior,
-                Roles.Logestic_Management_Viewer,
-                Roles.Logestic_User_Junior,
-                Roles.Logestic_User_Mid,
-                Roles.Logestic_User_Sinior,
-                Roles.Logestic_User_Viewer,
-                Roles.TimeAttandance_Management_Junior,
-                Roles.TimeAttandance_Management_Mid,
-                Roles.TimeAttandance_Management_Sinior,
-                Roles.TimeAttandance_Management_Viewer,
-                Roles.TimeAttandance_User_Junior,
-                Roles.TimeAttandance_User_Mid,
-                Roles.TimeAttandance_User_Sinior,
-                Roles.TimeAttandance_User_Viewer,
-                Roles.Wages_Management_Junior,
-                Roles.Wages_Management_Mid,
-                Roles.Wages_Management_Sinior,
-                Roles.Wages_Management_Viewer,
-                Roles.Wages_User_Junior,
-                Roles.Wages_User_Mid,
-                Roles.Wages_User_Sinior,
-                Roles.Wages_User_Viewer,
-              ],
             },
             {
               name: &#x27;UsersManagement&#x27;,
               persianName: &#x27;مدیریت کاربران&#x27;,
-              selfId: 1,
               parentId: null,
               isReadOnly: false,
               link: &#x27;/Shell/UsersManagement&#x27;,
-              roles: [
-                Roles.Admin,
-                Roles.Demo,
-                Roles.Demo_Viewer,
-                Roles.Inspector,
-                Roles.Inspector_Viewer,
-                Roles.Security,
-                Roles.Security_Viewer,
-                Roles.User_Global,
-                Roles.User_Management,
-              ],
-            },
-            {
-              name: &#x27;UsersList&#x27;,
-              persianName: &#x27;لیست کاربران&#x27;,
-              selfId: 2,
-              parentId: 1,
-              isReadOnly: false,
-              description: &#x27;لیست کاملی از کاربران را در اختیار شما میگذارد&#x27;,
-              link: &#x27;/Shell/UsersManagement/UsersList&#x27;,
-              roles: [
-                Roles.Admin,
-                Roles.Demo,
-                Roles.Demo_Viewer,
-                Roles.Inspector,
-                Roles.Inspector_Viewer,
-                Roles.Security,
-                Roles.Security_Viewer,
-                Roles.User_Global,
-                Roles.User_Management,
-              ],
-            },
-            {
-              name: &#x27;UserClassification&#x27;,
-              persianName: &#x27;مجوز دسترسی کاربران&#x27;,
-              selfId: 3,
-              parentId: 1,
-              isReadOnly: false,
-              description:
-                &#x27;مجوز دسترسی هر فرد به صفحات موجود در نرم افزار را میتوانید در این قسمت مدیریت نمایید&#x27;,
-              link: &#x27;/Shell/UsersManagement/UserClassification&#x27;,
-              roles: [
-                Roles.Admin,
-                Roles.Demo,
-                Roles.Demo_Viewer,
-                Roles.User_Global,
-                Roles.User_Management,
+              children: [
+                {
+                  name: &#x27;UsersList&#x27;,
+                  persianName: &#x27;لیست کاربران&#x27;,
+                  isReadOnly: false,
+                  description: &#x27;لیست کاملی از کاربران را در اختیار شما میگذارد&#x27;,
+                  link: &#x27;/Shell/UsersManagement/UsersList&#x27;,
+                },
+                {
+                  name: &#x27;UserClassification&#x27;,
+                  persianName: &#x27;مجوز دسترسی صفحات&#x27;,
+                  isReadOnly: false,
+                  description:
+                    &#x27;مجوز دسترسی به صفحات موجود در نرم افزار را میتوانید در این قسمت مدیریت نمایید&#x27;,
+                  link: &#x27;/Shell/UsersManagement/UserClassification&#x27;,
+                },
               ],
             },
           ],

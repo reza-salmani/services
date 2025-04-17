@@ -186,7 +186,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/utils/logger.ts:59</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/utils/logger.ts:67</a></div>
                         </td>
                     </tr>
 
@@ -213,7 +213,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/utils/logger.ts:58</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/utils/logger.ts:66</a></div>
                         </td>
                     </tr>
 
@@ -238,7 +238,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/utils/logger.ts:60</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/utils/logger.ts:68</a></div>
                         </td>
                     </tr>
 
@@ -251,10 +251,18 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ConsoleLogger, Injectable, NestMiddleware } from &#x27;@nestjs/common&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  ArgumentsHost,
+  Catch,
+  ConsoleLogger,
+  ExceptionFilter,
+  Injectable,
+  NestMiddleware,
+} from &#x27;@nestjs/common&#x27;;
 import { JwtService } from &#x27;@nestjs/jwt&#x27;;
 import { NextFunction } from &#x27;express&#x27;;
 import { appendFileSync, existsSync, mkdirSync, writeFileSync } from &#x27;fs&#x27;;
+import { GraphQLError } from &#x27;graphql&#x27;;
 import { join } from &#x27;path&#x27;;
 
 @Injectable()
@@ -326,6 +334,25 @@ export class GraphQLLoggingMiddleware implements NestMiddleware {
     });
     next();
   };
+}
+
+@Catch()
+export class AllExceptionsToGraphQLErrorFilter implements ExceptionFilter {
+  catch(exception: any, host: ArgumentsHost) {
+    // Transform all exceptions into GraphQL errors
+    return new GraphQLError(
+      exception.message || &#x27;An unexpected error occurred&#x27;,
+      {
+        extensions: {
+          code: exception.extensions.code
+            ? exception.extensions.code
+            : &#x27;INTERNAL_SERVER_ERROR&#x27;,
+          statusCode: exception.extensions.statusCode,
+          details: exception.stack,
+        },
+      },
+    );
+  }
 }
 </code></pre>
     </div>

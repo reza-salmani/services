@@ -1,5 +1,4 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Roles } from '@prisma/client';
 import { Consts } from '@utils/consts';
 
 //#region Login
@@ -21,15 +20,5 @@ export class ForgotPasswordDto {
   userName: string = '';
   @Field(() => String, { name: 'password', description: Consts.yourPassword })
   password: string = '';
-}
-//#endregion
-
-//#region manage pages in menu
-@InputType()
-export class UpdatePageRolesDto {
-  @Field(() => String, { name: 'id' })
-  id: string = '';
-  @Field(() => [Roles], { name: 'roles' })
-  roles: Roles[];
 }
 //#endregion

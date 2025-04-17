@@ -33,7 +33,7 @@ export let GetAllUser = gql`
   query ($queries: PrismaQuery) {
     GetAllUsersWithQuery(queries: $queries) {
       items {
-        avatar
+        avatarPath
         createDate
         deleteDate
         email
@@ -42,6 +42,7 @@ export let GetAllUser = gql`
         isDeleted
         nationalCode
         password
+        permittedPage
         phone
         revertDate
         roles
@@ -60,15 +61,31 @@ export let GetAllUser = gql`
 export let GetPages = gql`
   query {
     menu {
+      description
       id
       isReadOnly
       link
       name
       parentId
       persianName
-      description
-      roles
-      selfId
+      children {
+        description
+        id
+        isReadOnly
+        link
+        name
+        parentId
+        persianName
+        children {
+          description
+          id
+          isReadOnly
+          link
+          name
+          parentId
+          persianName
+        }
+      }
     }
   }
 `;
@@ -76,9 +93,9 @@ export let GetPages = gql`
 
 //#region --------------- GetOneUser ----------------------
 export let GetOneUser = gql`
-  query ($query: PrismaQuery) {
+  query ($query: PrismaSingleQuery) {
     getUserByQuery(query: $query) {
-      roles
+      avatarPath
       createDate
       deleteDate
       email
@@ -87,11 +104,12 @@ export let GetOneUser = gql`
       isDeleted
       nationalCode
       password
+      permittedPage
       phone
       revertDate
+      roles
       updateDate
       userName
-      avatar
     }
   }
 `;
@@ -228,7 +246,7 @@ export let HasPermission = gql`
 export let GetUserInfo = gql`
   query {
     getUserInfo {
-      roles
+      avatarPath
       createDate
       deleteDate
       email
@@ -237,11 +255,12 @@ export let GetUserInfo = gql`
       isDeleted
       nationalCode
       password
+      permittedPage
       phone
       revertDate
+      roles
       updateDate
       userName
-      avatar
     }
   }
 `;
@@ -257,16 +276,33 @@ export let UpdateRoles = gql`
 `;
 //#endregion
 
-//#region ---------------  UpdatePageRoles ----------------
-export let UpdatePageRoles = gql`
-  mutation ($id: String!, $roles: [EnumRoles!]!) {
-    updatePageRoles(updatePageRolesModel: { id: $id, roles: $roles }) {
+//#region ---------------  CheckWritable ----------------
+export let CheckWritable = gql`
+  query ($menuName: String!) {
+    checkWritable(menuName: $menuName)
+  }
+`;
+//#endregion
+
+//#region ---------------  UpdateUserPagePermission ----------------
+export let UpdateUserPagePermissions = gql`
+  mutation ($pageIds: [String!], $userId: String!) {
+    UpdateUserPagePermission(
+      UpdatePagePermissionToUser: { pageIds: $pageIds, userId: $userId }
+    ) {
       count
     }
   }
 `;
 //#endregion
 
+//#region --------------- FileUpload ----------------------
+export let UpsertUserAvatar = gql`
+  mutation ($file: Upload, $userId: String!) {
+    UpsertUserAvatar(fileItem: { file: $file, userId: $userId })
+  }
+`;
+//#endregion
 // export let HardDeleteUser = gql`
 //     mutation ($ids:String[]) {
 //       DeleteUserPermanently(

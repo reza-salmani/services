@@ -37,6 +37,10 @@ export const consts = {
     roles: "نقش ها",
     submit: "ثبت",
     description: "توضیحات",
+    manageRoles: "مدیریت نقش",
+    pagePermissions: "مدیریت دسترسی به صفحات",
+    pages: "صفحات",
+    updateUserPagePermission: "مدیریت دسترسی صفحات",
   },
   questions: {
     delete: "آیا برای حذف موارد انتخابی موافق هستید؟",
@@ -69,6 +73,8 @@ export const consts = {
     successDelete: "عملیات حذف با موفقیت انجام شد",
     successUserRolesUpdate: "نقش کاربر با موفقیت بروزرسانی شد",
     emptyMessage: "داده ای برای نمایش وجود ندارد",
-    successPageRolesUpdate: "سطح دسترسی صفحه مورد نظر با موفقیت تغییر یافت",
+    successPagePermissionsUpdate:
+      "سطح دسترسی صفحه مورد نظر با موفقیت تغییر یافت",
+    successImageUploaded: "آپلود با موفقیت انجام شد",
   },
 };

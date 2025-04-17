@@ -120,10 +120,17 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/modules/users/users.model.ts</code>
+            <code>src/bases/base.ts</code>
         </p>
 
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>output model for some graphql controlers</p>
+
+            </p>
 
 
 
@@ -192,7 +199,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">src/modules/users/users.model.ts:130</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="96" class="link-to-prism">src/bases/base.ts:96</a></div>
                         </td>
                     </tr>
 
@@ -211,129 +218,95 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { BaseQuery } from &#x27;@base/base&#x27;;
-import { ObjectType, Field } from &#x27;@nestjs/graphql&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Field, Int, ObjectType, registerEnumType } from &#x27;@nestjs/graphql&#x27;;
 import { Roles } from &#x27;@prisma/client&#x27;;
+import { Users } from &#x27;@users/users.model&#x27;;
 import { Consts } from &#x27;@utils/consts&#x27;;
-import {
-  IsNotEmpty,
-  IsEmail,
-  IsPhoneNumber,
-  IsStrongPassword,
-} from &#x27;class-validator&#x27;;
 
-//#region --------------------- Users ---------------------
+/**
+ * for using custom enum in graphql we should register it first
+ * @param enum
+ */
+registerEnumType(Roles, { name: &#x27;EnumRoles&#x27; });
+
+/**
+ * output model for some graphql controler
+ * @param number
+ */
 @ObjectType()
-export class Users {
-  @Field((type) &#x3D;&gt; String, {
-    nullable: false,
-    name: &#x27;nationalCode&#x27;,
-    description: Consts.yourNationalCode,
-  })
-  @IsNotEmpty()
-  nationalCode: string;
-
-  @Field((type) &#x3D;&gt; String, {
-    nullable: false,
-    name: &#x27;email&#x27;,
-    description: Consts.yourRealEmail,
-  })
-  @IsEmail()
-  @IsNotEmpty({ message: Consts.emailRequiredMessage })
-  email: string;
-
-  @Field((type) &#x3D;&gt; String, {
-    nullable: false,
-    name: &#x27;phone&#x27;,
-    description: Consts.yourRealPhone,
-  })
-  @IsPhoneNumber(&#x27;IR&#x27;, { message: Consts.phoneRequiredMessage })
-  phone: string;
-
-  @Field((type) &#x3D;&gt; String, {
-    nullable: false,
-    name: &#x27;userName&#x27;,
-    description: Consts.yourUserName,
-  })
-  @IsNotEmpty({ message: Consts.usernameRequiredMessage })
-  userName: string;
-
-  @Field((type) &#x3D;&gt; String, {
-    nullable: false,
-    name: &#x27;password&#x27;,
-    description: Consts.yourPassword,
-  })
-  @IsStrongPassword({ minLength: 2 }, { message: Consts.minLengthOfPassword })
-  @IsNotEmpty({ message: Consts.passwordRequiredMessage })
-  password: string;
-
-  @Field(() &#x3D;&gt; String, {
-    nullable: false,
-    name: &#x27;id&#x27;,
-    description: Consts.yourUserIdentifier,
-  })
-  @IsNotEmpty({ message: Consts.UserIdIsRequired })
-  id: string;
-
-  @Field(() &#x3D;&gt; String, {
+export class Counter {
+  @Field(() &#x3D;&gt; Int, {
     nullable: true,
-    name: &#x27;createDate&#x27;,
-    description: Consts.createDate,
+    name: &#x27;count&#x27;,
+    description: Consts.Count,
   })
-  createDate: string;
-
-  @Field(() &#x3D;&gt; String, {
-    nullable: true,
-    name: &#x27;updateDate&#x27;,
-    description: Consts.updateDate,
-  })
-  updateDate?: string;
-
-  @Field(() &#x3D;&gt; String, {
-    nullable: true,
-    name: &#x27;deleteDate&#x27;,
-    description: Consts.deleteDate,
-  })
-  deleteDate?: string;
-
-  @Field(() &#x3D;&gt; String, {
-    nullable: true,
-    name: &#x27;revertDate&#x27;,
-    description: Consts.revertDate,
-  })
-  revertDate: string;
-
-  @Field(() &#x3D;&gt; String, {
-    nullable: true,
-    name: &#x27;avatar&#x27;,
-    description: Consts.avatarPath,
-  })
-  avatar?: string;
-
-  @Field(() &#x3D;&gt; Boolean, {
-    nullable: true,
-    name: &#x27;isActive&#x27;,
-    description: Consts.isActive,
-  })
-  isActive: boolean;
-
-  @Field(() &#x3D;&gt; Boolean, {
-    nullable: true,
-    name: &#x27;isDeleted&#x27;,
-    description: Consts.isDeleted,
-  })
-  isDeleted: boolean;
-
-  @Field(() &#x3D;&gt; [Roles], {
-    nullable: false,
-    name: &#x27;roles&#x27;,
-    description: Consts.Roles,
-    defaultValue: [Roles.Demo_Viewer],
-  })
-  roles?: Roles[];
+  count: number;
 }
-//#endregion
 
+/**
+ * output model for pagination in queries
+ * @param totalCount:number
+ * @param pageSize:number
+ * @param pageNumber:number
+ */
+@ObjectType()
+export class BaseQuery {
+  @Field(() &#x3D;&gt; Int, {
+    nullable: false,
+    name: &#x27;totalCount&#x27;,
+    description: Consts.totalCount,
+  })
+  totalCount: number;
+
+  @Field(() &#x3D;&gt; Int, {
+    nullable: false,
+    name: &#x27;pageSize&#x27;,
+    description: Consts.pageSize,
+  })
+  pageSize: number;
+
+  @Field(() &#x3D;&gt; Int, {
+    nullable: false,
+    name: &#x27;pageNumber&#x27;,
+    description: Consts.pageNumber,
+  })
+  pageNumber: number;
+}
+
+/**
+ * model whitch permitted pages for Users
+ * @param pageId:string
+ * @param user:Users
+ * @param userId:string
+ */
+@ObjectType({ description: Consts.permittedPage })
+export class PermittedPage {
+  @Field(() &#x3D;&gt; String, {
+    nullable: false,
+    name: &#x27;pageId&#x27;,
+    description: Consts.pageId,
+  })
+  pageId: string;
+
+  @Field(() &#x3D;&gt; Users, {
+    description: Consts.user,
+    name: &#x27;user&#x27;,
+    nullable: true,
+  })
+  user?: Users;
+
+  @Field(() &#x3D;&gt; String, {
+    nullable: false,
+    name: &#x27;userId&#x27;,
+    description: Consts.userId,
+  })
+  userId: string;
+}
+
+/**
+ * output model for some graphql controlers
+ * @return users[]
+ */
 @ObjectType()
 export class UserOutput extends BaseQuery {
   @Field(() &#x3D;&gt; [Users], {

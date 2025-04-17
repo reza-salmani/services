@@ -10,6 +10,7 @@ import {
   AllExceptionsToGraphQLErrorFilter,
   CustomLogger,
 } from './utils/logger';
+import { graphqlUploadExpress } from 'graphql-upload-ts';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     snapshot: true,
@@ -24,6 +25,7 @@ async function bootstrap() {
   app.useLogger(app.get(CustomLogger));
   // app.useGlobalInterceptors(app.get(TimingInterceptor));
   app.use(cookieParser());
+  app.use(graphqlUploadExpress());
   await app.listen(process.env.PORT ?? 3000);
   if (process.env.NODE_ENV === 'production') {
     const { schema } = app.get(GraphQLSchemaHost);

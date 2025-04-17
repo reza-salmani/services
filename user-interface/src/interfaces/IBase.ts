@@ -10,11 +10,10 @@ export interface IMenuItemQuery {
   id: string;
   description: string;
   selfId: number;
-  parentId: number | null;
   link: string | null;
   isReadOnly: boolean;
-  roles: string[];
-}
-export interface IMenuItem extends IMenuItemQuery {
-  children: IMenuItem[];
+  parent?: IMenuItemQuery;
+  parentId?: string;
+  permittedPage: string[];
+  children: IMenuItemQuery[];
 }

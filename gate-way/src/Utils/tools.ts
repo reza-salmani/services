@@ -96,4 +96,9 @@ export let Tools = {
     }
   },
   //#endregion
+  flattenArray: (arr: any) => {
+    return arr.reduce((flat: any, item: any) => {
+      return flat.concat(Array.isArray(item) ? Tools.flattenArray(item) : item);
+    }, []);
+  },
 };

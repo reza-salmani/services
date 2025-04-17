@@ -1,7 +1,9 @@
 import { APIOptions } from "primereact/api";
+import { DomHandler } from "primereact/utils";
 
 export const preDefinedTheme: APIOptions = {
   inputStyle: "filled",
+  appendTo: DomHandler.getTargetElement("body"),
   ripple: true,
   pt: {
     button: {
@@ -94,6 +96,15 @@ export const preDefinedTheme: APIOptions = {
         },
         RPPDropdown: {
           input: { className: "px-2 py-3" },
+        },
+      },
+    },
+    treeselect: {
+      tree: {
+        togglerIcon: { className: "rotate-180" },
+        content: { className: "rounded-2xl flex gap-2 my-2" },
+        node: {
+          className: "w-full",
         },
       },
     },

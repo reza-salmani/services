@@ -6,9 +6,22 @@
   "configurations": [
     {
       "command": "npm run gw",
-      "name": "Run npm start",
+      "name": "Server",
       "request": "launch",
       "type": "node-terminal"
+    },
+    {
+      "command": "npm run ui",
+      "name": "Client",
+      "request": "launch",
+      "type": "node-terminal"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Server/Client",
+      "configurations": ["Server", "Client"],
+      "stopAll": true
     }
   ]
 }

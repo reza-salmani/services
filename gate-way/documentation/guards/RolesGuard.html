@@ -166,7 +166,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="105" class="link-to-prism">src/modules/auth/jwt.strategy.ts:105</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="108" class="link-to-prism">src/modules/auth/jwt.strategy.ts:108</a></div>
                             </td>
                         </tr>
 
@@ -255,8 +255,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="111"
-                                    class="link-to-prism">src/modules/auth/jwt.strategy.ts:111</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="114"
+                                    class="link-to-prism">src/modules/auth/jwt.strategy.ts:114</a></div>
                         </td>
                     </tr>
 
@@ -323,7 +323,10 @@ import { JwtService } from &#x27;@nestjs/jwt&#x27;;
 import { Context } from &#x27;vm&#x27;;
 import { Roles } from &#x27;@prisma/client&#x27;;
 import { PrismaAuthService } from &#x27;./auth.prisma.service&#x27;;
-import { GraphQlUnauthorizedException } from &#x27;@base/services/error-handler&#x27;;
+import {
+  GraphQlForbiddenException,
+  GraphQlUnauthorizedException,
+} from &#x27;@base/services/error-handler&#x27;;
 import { PrismaService } from &#x27;@base/services/prisma-client&#x27;;
 import { Consts } from &#x27;@utils/consts&#x27;;
 import { Tools } from &#x27;@utils/tools&#x27;;
@@ -432,6 +435,21 @@ export class RolesGuard implements CanActivate {
     let userRoles &#x3D; await this.prismaService.user.findFirst({
       where: { id: headerInfo.sub },
     });
+    if (
+      decoratorNotRoles
+        ? !Tools.matchs(
+            userRoles.roles,
+            Object.values(Roles).filter(
+              (x) &#x3D;&gt; !decoratorNotRoles.some((y) &#x3D;&gt; y &#x3D;&#x3D;&#x3D; x),
+            ),
+          )
+        : !Tools.matchs(userRoles.roles, decoratorRoles)
+    ) {
+      throw new GraphQlForbiddenException(
+        Consts.ForbiddenMessage,
+        HttpStatus.FORBIDDEN,
+      );
+    }
     return decoratorNotRoles
       ? Tools.matchs(
           userRoles.roles,

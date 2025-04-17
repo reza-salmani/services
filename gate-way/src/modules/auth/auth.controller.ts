@@ -1,19 +1,14 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PrismaAuthService } from './auth.prisma.service';
-import {
-  ForgotPasswordDto,
-  LoginDto,
-  UpdatePageRolesDto,
-} from './auth.model.dto';
+import { ForgotPasswordDto, LoginDto } from './auth.model.dto';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard, HasRoles } from './jwt.strategy';
+import { GqlAuthGuard } from './jwt.strategy';
 import {
   ForgotPasswordModel,
   LoginResponse,
   MenuStructureModel,
 } from './auth.model';
 import { Consts } from '@utils/consts';
-import { Roles } from '@prisma/client';
 @Resolver()
 export class AuthResolver {
   constructor(private authService: PrismaAuthService) {}
@@ -66,27 +61,27 @@ export class AuthResolver {
   }
   //#endregion
 
-  //#region-------------- updatePageRoles -----------------
-  @UseGuards(GqlAuthGuard)
-  @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
-  @Query(() => Number, { name: 'updatePageRoles' })
-  async UpdatePageRoles(
-    @Args({
-      nullable: false,
-      name: 'updatePageRolesModel',
-      type: () => UpdatePageRolesDto,
-    })
-    updatePageRolesModel: UpdatePageRolesDto,
-  ) {
-    return await this.authService.UpdatePageRoles(updatePageRolesModel);
-  }
-  //#endregion
-
   //#region-------------- roles ---------------------------
   @UseGuards(GqlAuthGuard)
   @Query(() => [String], { name: 'roles' })
   async GetRoles() {
     return await this.authService.GetRoles();
+  }
+  //#endregion
+
+  //#region-------------- check writable ------------------
+  @UseGuards(GqlAuthGuard)
+  @Query(() => Boolean, {
+    name: 'checkWritable',
+    nullable: false,
+    description: Consts.checkWritable,
+  })
+  async CheckWritable(
+    @Args({ name: 'menuName', nullable: false, type: () => String })
+    inputModel: string,
+    @Context() context: any,
+  ) {
+    return await this.authService.CheckWritable(inputModel, context);
   }
   //#endregion
 }

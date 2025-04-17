@@ -124,6 +124,13 @@
         </p>
 
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>output model for some graphql controler</p>
+
+            </p>
 
 
 
@@ -192,7 +199,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/bases/base.ts:17</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/bases/base.ts:23</a></div>
                         </td>
                     </tr>
 
@@ -213,13 +220,19 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Field, Int, ObjectType, registerEnumType } from &#x27;@nestjs/graphql&#x27;;
 import { Roles } from &#x27;@prisma/client&#x27;;
+import { Users } from &#x27;@users/users.model&#x27;;
 import { Consts } from &#x27;@utils/consts&#x27;;
 
 /**
  * for using custom enum in graphql we should register it first
+ * @param enum
  */
 registerEnumType(Roles, { name: &#x27;EnumRoles&#x27; });
 
+/**
+ * output model for some graphql controler
+ * @param number
+ */
 @ObjectType()
 export class Counter {
   @Field(() &#x3D;&gt; Int, {
@@ -229,6 +242,13 @@ export class Counter {
   })
   count: number;
 }
+
+/**
+ * output model for pagination in queries
+ * @param totalCount:number
+ * @param pageSize:number
+ * @param pageNumber:number
+ */
 @ObjectType()
 export class BaseQuery {
   @Field(() &#x3D;&gt; Int, {
@@ -251,6 +271,49 @@ export class BaseQuery {
     description: Consts.pageNumber,
   })
   pageNumber: number;
+}
+
+/**
+ * model whitch permitted pages for Users
+ * @param pageId:string
+ * @param user:Users
+ * @param userId:string
+ */
+@ObjectType({ description: Consts.permittedPage })
+export class PermittedPage {
+  @Field(() &#x3D;&gt; String, {
+    nullable: false,
+    name: &#x27;pageId&#x27;,
+    description: Consts.pageId,
+  })
+  pageId: string;
+
+  @Field(() &#x3D;&gt; Users, {
+    description: Consts.user,
+    name: &#x27;user&#x27;,
+    nullable: true,
+  })
+  user?: Users;
+
+  @Field(() &#x3D;&gt; String, {
+    nullable: false,
+    name: &#x27;userId&#x27;,
+    description: Consts.userId,
+  })
+  userId: string;
+}
+
+/**
+ * output model for some graphql controlers
+ * @return users[]
+ */
+@ObjectType()
+export class UserOutput extends BaseQuery {
+  @Field(() &#x3D;&gt; [Users], {
+    name: &#x27;items&#x27;,
+    nullable: true,
+  })
+  items: Users[];
 }
 </code></pre>
     </div>

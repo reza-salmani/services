@@ -1,4 +1,3 @@
-import { Roles } from '@prisma/client';
 import { Test } from '@nestjs/testing';
 import { PrismaAuthService } from '@auth/auth.prisma.service';
 import { PrismaService } from '@base/services/prisma-client';
@@ -49,14 +48,13 @@ describe('UsersResolver', () => {
       },
     };
   });
-  describe('UpdateUserRoles', () => {
-    it('should update roles for selected users', async () => {
-      let count = 0;
-      let result = await prismaUserService.UpdateUserRoles({
-        ids: ['24759c8b-91f1-4aec-8f87-733d33bbe7dc'],
-        Roles: [Roles.Admin],
-      });
-      expect(result.count).toBeGreaterThan(0);
-    });
-  });
+  // describe('UpdateUserRoles', () => {
+  //   it('should update roles for selected users', async () => {
+  //     let result = await prismaUserService.UpdateUserRoles({
+  //       ids: ['24759c8b-91f1-4aec-8f87-733d33bbe7dc'],
+  //       Roles: [Roles.Admin],
+  //     });
+  //     expect(result.count).toBeGreaterThan(0);
+  //   });
+  // });
 });

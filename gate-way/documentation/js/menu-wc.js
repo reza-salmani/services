@@ -158,6 +158,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                         </div>
                         <ul class="links collapse " ${ isNormalMode ? 'id="classes-links"' : 'id="xs-classes-links"' }>
                             <li class="link">
+                                <a href="classes/AllExceptionsToGraphQLErrorFilter.html" data-type="entity-link" >AllExceptionsToGraphQLErrorFilter</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/AuthResolver.html" data-type="entity-link" >AuthResolver</a>
                             </li>
                             <li class="link">
@@ -234,6 +237,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/MenuStructureModel.html" data-type="entity-link" >MenuStructureModel</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/PermittedPage.html" data-type="entity-link" >PermittedPage</a>
                             </li>
                             <li class="link">
                                 <a href="classes/PrismaQuery.html" data-type="entity-link" >PrismaQuery</a>

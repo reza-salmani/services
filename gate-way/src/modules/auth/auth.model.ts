@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Roles } from '@prisma/client';
 import { Consts } from '@utils/consts';
 
@@ -60,19 +60,19 @@ export class MenuStructureModel {
   })
   persianName?: string;
 
-  @Field(() => Int, {
-    name: 'selfId',
-    nullable: false,
-    description: Consts.menuSelfId,
-  })
-  selfId?: number;
-
-  @Field(() => Int, {
+  @Field(() => String, {
     name: 'parentId',
     nullable: true,
     description: Consts.menuParentId,
   })
-  parentId?: number;
+  parentId?: string;
+
+  @Field(() => MenuStructureModel, {
+    name: 'parent',
+    nullable: true,
+    description: Consts.menuParent,
+  })
+  parent?: MenuStructureModel;
 
   @Field(() => Boolean, {
     name: 'isReadOnly',
@@ -80,12 +80,12 @@ export class MenuStructureModel {
   })
   isReadOnly?: boolean;
 
-  @Field(() => [Roles], {
-    name: 'roles',
-    description: Consts.menuRoles,
+  @Field(() => [MenuStructureModel], {
+    name: 'children',
+    description: Consts.menuChildren,
     nullable: true,
   })
-  roles?: Roles[];
+  children?: MenuStructureModel[];
 }
 //#endregion
 

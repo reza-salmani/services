@@ -1,4 +1,3 @@
-import { BaseQuery } from '@base/base';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { Roles } from '@prisma/client';
 import { Consts } from '@utils/consts';
@@ -92,10 +91,10 @@ export class Users {
 
   @Field(() => String, {
     nullable: true,
-    name: 'avatar',
+    name: 'avatarPath',
     description: Consts.avatarPath,
   })
-  avatar?: string;
+  avatarPath?: string;
 
   @Field(() => Boolean, {
     nullable: true,
@@ -118,14 +117,12 @@ export class Users {
     defaultValue: [Roles.Demo_Viewer],
   })
   roles?: Roles[];
+
+  @Field(() => [String], {
+    nullable: false,
+    name: 'permittedPage',
+    description: Consts.permittedPage,
+  })
+  permittedPage?: String[];
 }
 //#endregion
-
-@ObjectType()
-export class UserOutput extends BaseQuery {
-  @Field(() => [Users], {
-    name: 'items',
-    nullable: true,
-  })
-  items: Users[];
-}

@@ -2,6 +2,7 @@ import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
 import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
 import { Roles } from '@prisma/client';
 import { Consts } from '@utils/consts';
+import { FileUpload, GraphQLUpload } from 'graphql-upload-ts';
 
 //#region  ------------------  Create User -------------------------------
 @InputType()
@@ -46,6 +47,13 @@ export class CreateUserDto {
   })
   @IsNotEmpty({ message: Consts.passwordRequiredMessage })
   password: string;
+
+  @Field((type) => [String], {
+    nullable: true,
+    name: 'permittedPage',
+    description: Consts.permittedPage,
+  })
+  permittedPages?: string[];
 }
 //#endregion
 
@@ -117,7 +125,7 @@ export class UpdateRolesToUserDto {
 }
 //#endregion
 
-//#region ---------------------------- manage User Avatar ---------------------------
+//#region --------------- manage User Avatar --------------
 @InputType()
 export class ManageAvatarUserDto {
   @Field(() => String, {
@@ -130,6 +138,42 @@ export class ManageAvatarUserDto {
   @Field(() => String, {
     nullable: false,
     name: 'userId',
+    description: Consts.userId,
+  })
+  userId: string;
+}
+//#endregion
+
+//#region --------------- manage User permitted Pages -----
+@InputType()
+export class ManagePermittedPagesDto {
+  @Field((type) => [String], {
+    nullable: true,
+    name: 'pageIds',
+    description: Consts.pageId,
+  })
+  pageIds?: string[];
+  @Field((type) => String, {
+    nullable: false,
+    name: 'userId',
+    description: Consts.userId,
+  })
+  userId: string;
+}
+//#endregion
+
+//#region --------------- file upload ---------------------
+@InputType()
+export class FileUploadDto {
+  @Field(() => GraphQLUpload, {
+    name: 'file',
+    nullable: true,
+    description: Consts.fileUploding,
+  })
+  file?: Promise<FileUpload>;
+  @Field(() => String, {
+    name: 'userId',
+    nullable: false,
     description: Consts.userId,
   })
   userId: string;

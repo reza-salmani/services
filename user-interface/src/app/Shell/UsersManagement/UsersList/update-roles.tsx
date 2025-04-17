@@ -95,11 +95,7 @@ export const UpdateUserRoles = (props: IProps) => {
         props.setVisible(false);
       }}
     >
-      <Toast
-        onHide={onCancel}
-        appendTo={document.querySelector("body")}
-        ref={toast}
-      ></Toast>
+      <Toast onHide={onCancel} ref={toast}></Toast>
       <Loader loading={loading}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-[5.5rem]">
           <div>
@@ -111,7 +107,6 @@ export const UpdateUserRoles = (props: IProps) => {
               name="roles"
               render={({ field }) => (
                 <MultiSelect
-                  maxSelectedLabels={3}
                   className="w-full"
                   options={roles}
                   {...field}

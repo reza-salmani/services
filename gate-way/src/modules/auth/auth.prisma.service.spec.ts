@@ -49,4 +49,10 @@ describe('PrismaAuthService', () => {
       expect(await prismaAuthService.GetPages(context)).toHaveReturned;
     });
   });
+  describe('checkWritable', () => {
+    it('should checkWritable page for current user', async () => {
+      let result = await prismaAuthService.CheckWritable('UsersList', context);
+      expect(result).toBeTruthy();
+    });
+  });
 });

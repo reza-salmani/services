@@ -2,16 +2,17 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   CreateUserDto,
   DeleteUserDto,
+  FileUploadDto,
+  ManagePermittedPagesDto,
   ToggleActiveUserDto,
   UpdateRolesToUserDto,
   UpdateUserDto,
 } from './users.model.dto';
 import { PrismaUsersService } from './users.prisma.service';
 import { UseGuards } from '@nestjs/common';
-import { UserOutput, Users } from './users.model';
-import { FileUpload } from 'graphql-upload-ts';
+import { Users } from './users.model';
 import { Roles } from '@prisma/client';
-import { Counter } from '@base/base';
+import { Counter, UserOutput } from '@base/base';
 import { PrismaQuery, PrismaSingleQuery } from '@base/PrismaQuery';
 import { GqlAuthGuard, HasRoles } from '@auth/jwt.strategy';
 
@@ -182,17 +183,19 @@ export class UsersResolver {
   }
   //#endregion
 
-  //#region ------------- ManageUserAvatar ----------------
+  //#region ------------- updateUserPagePermission -----------------
   @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
-  @Mutation(() => String, { name: 'manageUserAvatar' })
-  async ManageUserAvatar(
-    @Context() context: any,
-    @Args({ nullable: false, name: 'MangeUserAvatar', type: () => String })
-    fileUpload: FileUpload,
+  @Mutation(() => Counter, { name: 'UpdateUserPagePermission' })
+  async UpdateUserPagePermission(
+    @Args({
+      nullable: false,
+      name: 'UpdatePagePermissionToUser',
+      type: () => ManagePermittedPagesDto,
+    })
+    permissionUsers: ManagePermittedPagesDto,
   ) {
-    return await this.prismaRequestService.ManageUserAvatar(
-      fileUpload,
-      context,
+    return await this.prismaRequestService.UpdateUserPagePermission(
+      permissionUsers,
     );
   }
   //#endregion
@@ -211,5 +214,16 @@ export class UsersResolver {
       await this.prismaRequestService.HasUserActionPermission(context);
     return reuslt;
   }
+  //#endregion
+
+  //#region-------------- upsertUserAvatar-----------------
+  @HasRoles([Roles.Demo, Roles.Admin, Roles.User_Global, Roles.User_Management])
+  @Mutation(() => Boolean, { name: 'UpsertUserAvatar' })
+  async UpsertUserAvatar(
+    @Args('fileItem', { type: () => FileUploadDto }) fileItem: FileUploadDto,
+  ) {
+    return await this.prismaRequestService.UpsertUserAvatar(fileItem);
+  }
+
   //#endregion
 }
