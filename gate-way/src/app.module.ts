@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { KafkaModule } from './bases/modules/kafka';
+import { HumanResourceKafkaModule } from './modules/hr/kafka.module';
 import { PrismaClient } from '@prisma/client';
 import { GraphqlModule } from './bases/modules/Graphql';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -17,7 +17,7 @@ import { MailerService } from './utils/mail-server';
 
 @Module({
   imports: [
-    KafkaModule,
+    HumanResourceKafkaModule,
     GraphqlModule,
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),

@@ -7,6 +7,23 @@ type Counter {
   count: Int
 }
 
+input CreatePersonnelModelDto {
+  """وضعیت"""
+  activation: Boolean! = false
+
+  """تاریخ تولد"""
+  birthDate: String!
+
+  """نام خانوادگی"""
+  family: String!
+
+  """نام"""
+  name: String!
+
+  """کد ملی"""
+  nationalCode: String!
+}
+
 input CreateUserDto {
   """ایمیل واقعی"""
   email: String!
@@ -172,14 +189,27 @@ type Mutation {
   DeleteUserPermanently(deleteUsersIds: DeleteUserDto!): Counter!
   DeleteUsers(deleteUsersIds: DeleteUserDto!): Counter!
   RevertUsers(deleteUsersIds: DeleteUserDto!): Counter!
+  TogglePersonnelActivation(toggkePersonnelModel: ToggleActivation!): Counter!
   UpdateUser(userModel: UpdateUserDto!): Users!
   UpdateUserPagePermission(UpdatePagePermissionToUser: ManagePermittedPagesDto!): Counter!
   UpdateUserRoles(UpdateRolesToUser: UpdateRolesToUserDto!): Counter!
   UpsertUserAvatar(fileItem: FileUploadDto!): Boolean!
+  createPersonnel(createPersonnelModel: CreatePersonnelModelDto!): PersonnelListOutput!
+  deletePersonnel(deletePersonnelModel: [String!]!): Counter!
   forgotPassword(forgotModel: ForgotPasswordDto!): ForgotPasswordModel!
   isAuth: Boolean!
   login(loginModel: LoginDto!): LoginResponse!
   logout: String!
+  updatePersonnel(updatePersonnelModel: UpdatePersonnelDto!): PersonnelListOutput!
+}
+
+type PersonnelListOutput {
+  activation: Boolean!
+  birthDate: String
+  family: String
+  id: String!
+  name: String!
+  nationalCode: String
 }
 
 input PrismaQuery {
@@ -201,6 +231,8 @@ type Query {
 
   """بررسی قابل نوشتن یا فقط خواندنی بودن صفحه"""
   checkWritable(menuName: String!): Boolean!
+  getAllPersonnel(getAllPersonnelModel: PrismaQuery!): [PersonnelListOutput!]!
+  getByPersonnel(getByPersonnelModel: PrismaQuery!): PersonnelListOutput!
   getUserByQuery(query: PrismaSingleQuery): Users!
   getUserInfo: Users!
   hasPermission: Boolean!
@@ -208,10 +240,33 @@ type Query {
   roles: [String!]!
 }
 
+input ToggleActivation {
+  ids: [String!]!
+  status: Boolean! = false
+}
+
 input ToggleActiveUserDto {
   """شناسه ها"""
   ids: [String!]!
   state: Boolean! = false
+}
+
+input UpdatePersonnelDto {
+  """وضعیت"""
+  activation: Boolean = false
+
+  """تاریخ تولد"""
+  birthDate: String
+
+  """نام خانوادگی"""
+  family: String
+  id: String!
+
+  """نام"""
+  name: String
+
+  """کد ملی"""
+  nationalCode: String
 }
 
 input UpdateRolesToUserDto {

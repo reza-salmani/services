@@ -69,4 +69,9 @@ export const Consts = {
   user: 'کاربر',
   checkWritable: 'بررسی قابل نوشتن یا فقط خواندنی بودن صفحه',
   fileUploding: 'آپلود عکس کاربر در سیستم',
+  name: 'نام',
+  family: 'نام خانوادگی',
+  nationalCode: 'کد ملی',
+  birthDate: 'تاریخ تولد',
+  status: 'وضعیت',
 };

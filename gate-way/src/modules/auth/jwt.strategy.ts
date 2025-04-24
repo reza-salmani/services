@@ -122,6 +122,12 @@ export class RolesGuard implements CanActivate {
     }
     let ctx = GqlExecutionContext.create(context);
     const { req } = ctx.getContext();
+    if (!req.cookies['jwt']) {
+      throw new GraphQlForbiddenException(
+        Consts.unAuthorized,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
     const headerInfo = this.jwtService.decode(req.cookies['jwt'].trim());
     let userRoles = await this.prismaService.user.findFirst({
       where: { id: headerInfo.sub },

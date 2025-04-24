@@ -7,10 +7,7 @@
     "gw": "cd gate-way && npm run start:dev",
     "ui": "cd user-interface && npm run dev",
     "hr": "cd human-resource && npm run start:debug",
-    "logestic": "cd logestic && npm run start:debug",
-    "messaging": "cd logestic && npm run start:debug",
-    "payroll": "cd logestic && npm run start:debug",
-    "tc": "cd logestic && npm run start:debug"
+    "messaging": "cd logestic && npm run start:debug"
   },
   "keywords": [
     "microservice",

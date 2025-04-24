@@ -57,6 +57,25 @@ export class TasksService {
                     ],
                   },
                 },
+                {
+                  name: 'PersonnelManagement',
+                  persianName: 'مدیریت پرسنل',
+                  isReadOnly: false,
+                  link: '/Shell/PersonnelManagement',
+                  description: null,
+                  children: {
+                    create: [
+                      {
+                        name: 'PersonnelList',
+                        persianName: 'لیست پرسنل',
+                        isReadOnly: false,
+                        description:
+                          'لیست کاملی از پرسنل را در اختیار شما میگذارد',
+                        link: '/Shell/PersonnelManagement/PersonnelList',
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },

@@ -9,14 +9,15 @@ async function bootstrap() {
       transport: Transport.KAFKA,
       options: {
         client: {
-          clientId: 'hr',
+          clientId: 'human_resource',
           brokers: ['localhost:9092'],
         },
         consumer: {
-          groupId: 'hr_consumer',
+          groupId: 'human-resource_consumer',
         },
       },
     },
   );
+  await app.listen();
 }
 bootstrap();

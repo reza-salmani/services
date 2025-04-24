@@ -1,0 +1,18 @@
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("POSTGRESS_SQL_CONNECTION")
+}
+
+model Personnel {
+    id           String   @id @default(uuid())
+    name         String   @db.VarChar(100)
+    family       String   @db.VarChar(100)
+    nationalCode String   @db.VarChar(200)
+    birthDate    DateTime @db.Timestamptz()
+    activation   Boolean  @default(false) @db.Boolean
+}

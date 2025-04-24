@@ -15,12 +15,18 @@
       "name": "Client",
       "request": "launch",
       "type": "node-terminal"
+    },
+    {
+      "command": "npm run hr",
+      "name": "server_hr",
+      "request": "launch",
+      "type": "node-terminal"
     }
   ],
   "compounds": [
     {
       "name": "Server/Client",
-      "configurations": ["Server", "Client"],
+      "configurations": ["Server", "Client", "server_hr"],
       "stopAll": true
     }
   ]

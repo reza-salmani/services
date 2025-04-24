@@ -312,3 +312,129 @@ export let UpsertUserAvatar = gql`
 //       }
 //     }
 //   `;
+
+//#region ======================================== personnely section =========================================
+
+//#region --------------- create_personnel ----------------
+export let CreatePersonnel = gql`
+  mutation (
+    $name: String!
+    $nationalCode: String!
+    $family: String!
+    $birthDate: String!
+    $activation: Boolean!
+  ) {
+    createPersonnel(
+      createPersonnelModel: {
+        activation: $activation
+        name: $name
+        family: $family
+        birthDate: $birthDate
+        nationalCode: $nationalCode
+      }
+    ) {
+      activation
+      birthDate
+      family
+      id
+      name
+      nationalCode
+    }
+  }
+`;
+//#endregion
+
+//#region --------------- get_all_personnel ---------------
+
+export let GetAllPersonnel = gql`
+  query ($queries: PrismaQuery!) {
+    getAllPersonnel(getAllPersonnelModel: $queries) {
+      activation
+      birthDate
+      family
+      id
+      name
+      nationalCode
+    }
+  }
+`;
+
+//#endregion ----------------------------------------------
+
+//#region --------------- get_by_personnel ---------------
+
+export let GetByPersonnel = gql`
+  query ($queries: PrismaSingleQuery!) {
+    getByPersonnel(getByPersonnelModel: $queries) {
+      activation
+      birthDate
+      family
+      id
+      name
+      nationalCode
+    }
+  }
+`;
+
+//#endregion ----------------------------------------------
+
+//#region --------------- update_personnel ---------------
+
+export let UpdatePersonnel = gql`
+  mutation UpdatePersonnel(
+    $id: String!
+    $name: String
+    $nationalCode: String
+    $family: String
+    $birthDate: String
+    $activation: Boolean
+  ) {
+    updatePersonnel(
+      updatePersonnelModel: {
+        activation: $activation
+        id: $id
+        name: $name
+        family: $family
+        birthDate: $birthDate
+        nationalCode: $nationalCode
+      }
+    ) {
+      activation
+      birthDate
+      family
+      id
+      name
+      nationalCode
+    }
+  }
+`;
+
+//#endregion ----------------------------------------------
+
+//#region --------------- delete_personnel ---------------
+
+export let DeletePersonnel = gql`
+  mutation DeletePersonnel($ids: [String!]!) {
+    deletePersonnel(deletePersonnelModel: $ids) {
+      count
+    }
+  }
+`;
+
+//#endregion ----------------------------------------------
+
+//#region --------------- toggle_activation_personnel ---------------
+
+export let ToggleActivationPersonnel = gql`
+  mutation ToggleActivation($ids: [String!]!, $status: Boolean!) {
+    TogglePersonnelActivation(
+      toggkePersonnelModel: { ids: $ids, status: $status }
+    ) {
+      count
+    }
+  }
+`;
+
+//#endregion ----------------------------------------------
+
+//#endregion ==================================================================================================

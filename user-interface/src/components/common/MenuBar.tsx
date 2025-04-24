@@ -18,6 +18,7 @@ import { IUser } from "@/interfaces/IUser";
 import { consts } from "@/utils/consts";
 import { Avatar } from "primereact/avatar";
 import { IMenuItemQuery } from "@/interfaces/IBase";
+import { createUserInfoStore } from "@/StorageManagement/userStorage";
 
 export default function MenuBar() {
   //#region ------------- variables -----------------------
@@ -26,6 +27,9 @@ export default function MenuBar() {
   let [userInfo, setUserInfo] = useState<IUser | null>(null);
   const profileRef = useRef<OverlayPanel>(null);
   let loading = false;
+  const { setState } = createUserInfoStore({
+    userInfo: null,
+  });
   //#endregion
 
   //#region ------------- render function -----------------
@@ -97,6 +101,7 @@ export default function MenuBar() {
   };
   const getUserInfo = async () => {
     setUserInfo((await query(GetUserInfo)).data.getUserInfo);
+    setState((await query(GetUserInfo)).data.getUserInfo);
   };
   const RecursiveMenuCreator = (items: IMenuItemQuery[]) => {
     let result: MenuItem[] = [];
